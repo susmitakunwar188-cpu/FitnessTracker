@@ -1,4 +1,13 @@
+import { useState } from "react";
 function HomePage({ showLogin, showRegister }) {
+  const [message, setMessage] = useState("");
+  const handleSubmit = () => {
+  setMessage("Inquiry submitted successfully!");
+
+  setTimeout(() => {
+    setMessage("");
+  }, 2000);
+};
   return (
     <div>
 
@@ -96,9 +105,17 @@ function HomePage({ showLogin, showRegister }) {
           className="border p-3 w-full mb-4 h-32"
         />
 
-        <button className="bg-blue-500 text-white px-5 py-2 rounded">
-          Send
-        </button>
+        <button
+  onClick={handleSubmit}
+  className="bg-blue-500 text-white px-5 py-2 rounded"
+>
+  Send
+</button>
+{message && (
+  <p className="text-green-600 mt-4">
+    {message}
+  </p>
+)}
 
       </section>
 
