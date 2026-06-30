@@ -1,16 +1,13 @@
-function UserLogin({ goHome }) {
+function Register({ nextPage, goHome }) {
   return (
     <div className="max-w-md mx-auto mt-20 p-8 border rounded">
 
-      <button
-        onClick={goHome}
-        className="mb-5"
-      >
+      <button onClick={goHome}>
         ← Back
       </button>
 
-      <h2 className="text-3xl font-bold mb-6">
-        Login
+      <h2 className="text-3xl font-bold my-5">
+        Register
       </h2>
 
       <input
@@ -25,16 +22,19 @@ function UserLogin({ goHome }) {
         className="border p-3 w-full mb-4"
       />
 
-      <button className="bg-blue-500 text-white px-5 py-2 rounded w-full">
-        Login
+      <button className="border w-full py-2 mb-4">
+        Continue with Google
       </button>
 
-      <button className="border w-full mt-3 py-2 rounded">
-        Continue with Google
+      <button
+        onClick={nextPage}
+        className="bg-blue-500 text-white w-full py-2 rounded"
+      >
+        Next
       </button>
 
     </div>
   );
 }
 
-export default UserLogin;
+export default Register;
