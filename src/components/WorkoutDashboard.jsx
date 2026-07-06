@@ -1,266 +1,673 @@
-import { useState } from "react";
-function WorkoutDashboard({ next }) {
-  const [age, setAge] = useState("");
-const [weight, setWeight] = useState("");
-const [height, setHeight] = useState("");
+import { useState, useEffect } from "react";
+import { api } from "../utils/api";
 
-const [bmi, setBmi] = useState(null);
-const [status, setStatus] = useState("");
-const [goal, setGoal] = useState("");
-const [menuOpen, setMenuOpen] = useState(null);
-const [editingId, setEditingId] = useState(null);
-const [editingName, setEditingName] = useState("");
+const DumbbellIcon = ({ className = "h-8 w-8 text-brand-pink" }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M6.5 6.5h11M6.5 17.5h11M12 6.5v11M3 10v4M21 10v4M6.5 5v14M17.5 5v14" />
+  </svg>
+);
 
-const [workouts, setWorkouts] = useState([
-  { id: 1, name: "Biceps Workout", exercises: "4 Exercises" },
-  { id: 2, name: "Chest Workout", exercises: "4 Exercises" },
-  { id: 3, name: "Legs Workout", exercises: "4 Exercises" },
-  { id: 4, name: "Core Workout", exercises: "4 Exercises" },
-]);
+const ScaleIcon = ({ className = "h-8 w-8 text-brand-pink" }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="3" y="3" width="18" height="18" rx="2" />
+    <path d="M9 12h6M12 9v6M3 9h18M3 15h18" />
+  </svg>
+);
 
-const deleteWorkout = (id) => {
-  const updatedWorkouts = workouts.filter((workout) => workout.id !== id);
-  setWorkouts(updatedWorkouts);
-  setMenuOpen(null);
-};
+const TargetIcon = () => (
+  <svg viewBox="0 0 24 24" className="h-8 w-8 text-brand-pink" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10" />
+    <circle cx="12" cy="12" r="6" />
+    <circle cx="12" cy="12" r="2" />
+  </svg>
+);
 
-const startEdit = (id, currentName) => {
-  setEditingId(id);
-  setEditingName(currentName);
-  setMenuOpen(null);
-};
+const TrashIcon = () => (
+  <svg viewBox="0 0 24 24" className="h-5 w-5 text-red-400 inline-block" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+  </svg>
+);
 
-const saveEdit = () => {
-  if (editingName.trim() === "") {
-    alert("Workout name cannot be empty");
-    return;
-  }
+const EditIcon = () => (
+  <svg viewBox="0 0 24 24" className="h-5 w-5 text-brand-pink inline-block" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+  </svg>
+);
 
-  const updatedWorkouts = workouts.map((workout) =>
-    workout.id === editingId
-      ? { ...workout, name: editingName }
-      : workout
-  );
+const GridIcon = ({ className = "h-6 w-6" }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="3" y="3" width="7" height="7" />
+    <rect x="14" y="3" width="7" height="7" />
+    <rect x="14" y="14" width="7" height="7" />
+    <rect x="3" y="14" width="7" height="7" />
+  </svg>
+);
+
+const LogoutIcon = () => (
+  <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" />
+  </svg>
+);
+
+const BrandIcon = () => (
+  <svg viewBox="0 0 24 24" className="h-8 w-8 text-brand-pink" fill="none" stroke="currentColor" strokeWidth="2.5">
+    <path d="M8 3.5c1.2 0 2.3 1 2.3 2.2 0 1.7-1.4 2.9-2.3 4.3-.9-1.4-2.3-2.6-2.3-4.3C5.7 4.5 6.8 3.5 8 3.5Z" />
+    <path d="M16 3.5c1.2 0 2.3 1 2.3 2.2 0 1.7-1.4 2.9-2.3 4.3-.9-1.4-2.3-2.6-2.3-4.3C13.7 4.5 14.8 3.5 16 3.5Z" />
+    <path d="M6 11c0-2.2 1.8-4 4-4h4c2.2 0 4 1.8 4 4v5c0 2.2-1.8 4-4 4h-4c-2.2 0-4-1.8-4-4v-5Z" />
+    <path d="M10 15h4" />
+  </svg>
+);
+
+function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
+  const [workouts, setWorkouts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  // Navigation tab state: "overview", "workouts", "bmi"
+  const [activeTab, setActiveTab] = useState("overview");
+
+  // BMI form states
+  const [age, setAge] = useState(user?.age || "");
+  const [weight, setWeight] = useState(user?.weight || "");
+  const [height, setHeight] = useState(user?.height || "");
   
-  setWorkouts(updatedWorkouts);
-  setEditingId(null);
-  setEditingName("");
-};
+  // Local active menu states
+  const [menuOpen, setMenuOpen] = useState(null);
+  const [editingId, setEditingId] = useState(null);
+  const [editingName, setEditingName] = useState("");
 
-const cancelEdit = () => {
-  setEditingId(null);
-  setEditingName("");
-};
-const calculateBMI = () => {
-  if (!weight || !height) {
-    alert("Please enter weight and height.");
-    return;
-  }
+  // Add Workout states
+  const [addingWorkout, setAddingWorkout] = useState(false);
+  const [newWorkoutName, setNewWorkoutName] = useState("");
 
-  const heightInMeters = height / 100;
-  const bmiValue = weight / (heightInMeters * heightInMeters);
+  // Load workouts on mount
+  useEffect(() => {
+    const fetchWorkouts = async () => {
+      try {
+        const data = await api.getWorkouts();
+        setWorkouts(data);
+      } catch (err) {
+        console.error("Failed to load workouts:", err);
+        setError("Could not load workouts from server.");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  setBmi(bmiValue.toFixed(1));
+    fetchWorkouts();
+  }, []);
 
-  if (bmiValue < 18.5) {
-    setStatus("Underweight");
-    setGoal("Gain healthy weight.");
-  } else if (bmiValue < 25) {
-    setStatus("Healthy Weight");
-    setGoal("Maintain your current weight.");
-  } else if (bmiValue < 30) {
-    setStatus("Overweight");
-    setGoal("Lose weight with exercise and healthy eating.");
-  } else {
-    setStatus("Obese");
-    setGoal("Focus on gradual weight loss.");
-  }
-};
+  // Sync BMI input states if user object changes
+  useEffect(() => {
+    if (user) {
+      setAge(user.age || "");
+      setWeight(user.weight || "");
+      setHeight(user.height || "");
+    }
+  }, [user]);
+
+  // Add Workout
+  const handleAddWorkout = async (e) => {
+    e.preventDefault();
+    if (!newWorkoutName.trim()) {
+      alert("Please enter a workout name.");
+      return;
+    }
+
+    try {
+      const newW = await api.createWorkout(newWorkoutName.trim(), "4 Exercises");
+      setWorkouts([...workouts, newW]);
+      setNewWorkoutName("");
+      setAddingWorkout(false);
+      setActiveTab("workouts");
+    } catch (err) {
+      alert(err.message || "Failed to create workout.");
+    }
+  };
+
+  // Delete Workout
+  const handleDeleteWorkout = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this workout?")) return;
+    try {
+      await api.deleteWorkout(id);
+      setWorkouts(workouts.filter((w) => w.id !== id));
+      setMenuOpen(null);
+    } catch (err) {
+      alert(err.message || "Failed to delete workout.");
+    }
+  };
+
+  // Edit Workout
+  const startEdit = (id, currentName) => {
+    setEditingId(id);
+    setEditingName(currentName);
+    setMenuOpen(null);
+  };
+
+  const saveEdit = async () => {
+    if (!editingName.trim()) {
+      alert("Workout name cannot be empty");
+      return;
+    }
+    try {
+      const updated = await api.updateWorkout(editingId, editingName.trim());
+      setWorkouts(workouts.map((w) => (w.id === editingId ? updated : w)));
+      setEditingId(null);
+      setEditingName("");
+    } catch (err) {
+      alert(err.message || "Failed to save edit.");
+    }
+  };
+
+  const cancelEdit = () => {
+    setEditingId(null);
+    setEditingName("");
+  };
+
+  // BMI calculation & save
+  const calculateBMI = async () => {
+    if (!weight || !height) {
+      alert("Please enter weight and height.");
+      return;
+    }
+    const heightInMeters = height / 100;
+    const bmiValue = (weight / (heightInMeters * heightInMeters)).toFixed(1);
+    
+    let status = "";
+    let goal = "";
+
+    if (bmiValue < 18.5) {
+      status = "Underweight";
+      goal = "Gain healthy weight with proper nutrition.";
+    } else if (bmiValue < 25) {
+      status = "Healthy Weight";
+      goal = "Maintain your current weight with regular exercise.";
+    } else if (bmiValue < 30) {
+      status = "Overweight";
+      goal = "Lose weight with exercise and healthy eating.";
+    } else {
+      status = "Obese";
+      goal = "Focus on gradual weight loss with professional guidance.";
+    }
+
+    try {
+      const updatedUser = await api.updateProfile({
+        age,
+        weight,
+        height,
+        bmi: bmiValue,
+        status,
+        goal
+      });
+      setUser(updatedUser);
+    } catch (err) {
+      alert(err.message || "Failed to save BMI profile data to server.");
+    }
+  };
+
+  const userDisplayName = user?.email ? user.email.split("@")[0] : "Athlete";
+  
+  // Custom Profile Picture Placeholder Link from Pin
+  const profilePlaceholder = "https://i.pinimg.com/1200x/4e/6f/a8/4e6fa8c1d410ae7d30d8c79b8728a56b.jpg";
+
   return (
-    <div className="max-w-5xl mx-auto p-10">
-
-     <h1 className="text-4xl font-bold">
-  Welcome Back, Suna!
-</h1>
-
-<p className="mb-10 text-gray-600">
-  Let's calculate your BMI before starting your workout.
-</p>
-<div className="border rounded p-6 mb-10">
-
-  <h2 className="text-2xl font-bold mb-5">
-    BMI Calculator
-  </h2>
-
- <input
-  type="number"
-  placeholder="Age"
-  value={age}
-  onChange={(e) => setAge(e.target.value)}
-  className="border p-3 w-full mb-4"
-/>
-
-<input
-  type="number"
-  placeholder="Weight (kg)"
-  value={weight}
-  onChange={(e) => setWeight(e.target.value)}
-  className="border p-3 w-full mb-4"
-/>
-<input
-  type="number"
-  placeholder="Height (cm)"
-  value={height}
-  onChange={(e) => setHeight(e.target.value)}
-  className="border p-3 w-full mb-5"
-/>
-<button
-  onClick={calculateBMI}
-  className="bg-blue-500 text-white px-5 py-2 rounded"
->
-  Calculate BMI
-</button>
-{bmi && (
-  <div className="border rounded p-6 mb-10">
-
-    <h2 className="text-2xl font-bold mb-4">
-      Your BMI
-    </h2>
-
-    <h1 className="text-5xl font-bold mb-3">
-      {bmi}
-    </h1>
-
-    <p className="mb-5">
-      {status}
-    </p>
-
-    <h3 className="font-bold">
-      Goal
-    </h3>
-
-    <p>
-      {goal}
-    </p>
-
-  </div>
-)}
-</div>
-<h2 className="text-2xl font-bold mb-6">
-  Recommended Workouts
-</h2>
-
-<ul className="list-disc ml-6 mb-10">
-  <li>Upper Body</li>
-  <li>Cardio</li>
-  <li>HIIT</li>
-</ul>
-<h2 className="text-2xl font-bold mb-6">
-  All Workouts
-</h2>
-
-{editingId && (
-  <div className="border border-blue-500 rounded p-6 mb-10 bg-blue-50">
-    <h3 className="text-xl font-bold mb-4">Edit Workout</h3>
-    <input
-      type="text"
-      value={editingName}
-      onChange={(e) => setEditingName(e.target.value)}
-      className="border p-3 w-full mb-4"
-      placeholder="Enter workout name"
-      autoFocus
-    />
-    <div className="flex gap-3">
-      <button
-        onClick={saveEdit}
-        className="bg-green-500 text-white px-5 py-2 rounded hover:bg-green-600"
-      >
-        Save
-      </button>
-      <button
-        onClick={cancelEdit}
-        className="bg-gray-500 text-white px-5 py-2 rounded hover:bg-gray-600"
-      >
-        Cancel
-      </button>
-    </div>
-  </div>
-)}
-
-      {workouts.map((workout) => (
-
-  <div
-    key={workout.id}
-    className="border rounded p-5 flex items-center justify-between mb-5"
-  >
-
-    <div className="flex items-center gap-5">
-
-      <div className="w-36 h-24 border flex items-center justify-center">
-        {/* IMAGE HERE */}
-      </div>
-
-      <div>
-
-        <h2 className="text-xl font-semibold">
-          {workout.name}
-        </h2>
-
-        <p>
-          {workout.exercises}
-        </p>
-
-      </div>
-
-    </div>
-
-    <div className="relative flex items-center gap-3">
-
-      <button
-        onClick={next}
-        className="bg-blue-500 text-white px-5 py-2 rounded"
-      >
-        Start
-      </button>
-
-      <button
-        onClick={() =>
-          setMenuOpen(
-            menuOpen === workout.id ? null : workout.id
-          )
-        }
-        className="text-2xl px-2"
-      >
-        ⋮
-      </button>
-
-      {menuOpen === workout.id && (
-
-        <div className="absolute right-0 top-12 bg-white border rounded shadow-lg w-32">
-
-          <button
-            onClick={() => startEdit(workout.id, workout.name)}
-            className="block w-full text-left px-4 py-2 hover:bg-gray-100"
-          >
-            Edit
-          </button>
-
-          <button
-            onClick={() => deleteWorkout(workout.id)}
-            className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600"
-          >
-            Delete
-          </button>
-
+    <div className="min-h-screen bg-bg-dark/40 flex flex-col md:flex-row text-white font-sans">
+      
+      {/* 1. Bigger Navigation Sidebar */}
+      <aside className="w-full md:w-96 bg-card-dark/90 backdrop-blur-md border-b md:border-b-0 md:border-r border-border-pink/40 flex flex-col shrink-0">
+        
+        {/* Brand header with larger text and icon */}
+        <div className="p-8 border-b border-border-pink/30 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <BrandIcon />
+            <div className="flex flex-col">
+              <span className="font-display text-2xl font-bold tracking-tight text-white leading-none">Fitique</span>
+              <span className="text-[10px] text-brand-pink tracking-[0.22em] font-quick font-bold uppercase mt-1 leading-none">light weight baby</span>
+            </div>
+          </div>
         </div>
 
-      )}
+        {/* User profile section with larger photo and text */}
+        <div className="p-10 text-center border-b border-border-pink/30">
+          <div className="relative inline-block mb-6">
+            <div className="w-28 h-28 rounded-full overflow-hidden border-2 border-brand-pink shadow-lg shadow-brand-pink/20">
+              <img
+                src={profilePlaceholder}
+                alt="Profile Avatar placeholder"
+                className="w-full h-full object-cover object-top"
+              />
+            </div>
+            {/* Online badge */}
+            <span className="absolute bottom-2 right-2 block h-4 w-4 rounded-full bg-green-500 border-2 border-card-dark" />
+          </div>
+          <h3 className="font-display font-bold text-2xl text-white capitalize truncate px-2">{userDisplayName}</h3>
+          <p className="font-sans text-text-muted text-sm mt-1.5 font-semibold">Premium Member</p>
+        </div>
 
-    </div>
+        {/* Navigation list with larger padding and font sizes */}
+        <nav className="flex-1 p-6 space-y-3.5 mt-6">
+          <button
+            onClick={() => setActiveTab("overview")}
+            className={`w-full flex items-center gap-5 px-6 py-4.5 rounded-xl font-display text-base font-bold tracking-wide transition duration-200 ${
+              activeTab === "overview"
+                ? "bg-border-pink/40 border-l-4 border-brand-pink text-brand-pink"
+                : "text-text-muted hover:bg-border-pink/20 hover:text-white"
+            }`}
+          >
+            <GridIcon className="h-6 w-6" />
+            <span>Overview Dashboard</span>
+          </button>
 
-  </div>
+          <button
+            onClick={() => setActiveTab("workouts")}
+            className={`w-full flex items-center gap-5 px-6 py-4.5 rounded-xl font-display text-base font-bold tracking-wide transition duration-200 ${
+              activeTab === "workouts"
+                ? "bg-border-pink/40 border-l-4 border-brand-pink text-brand-pink"
+                : "text-text-muted hover:bg-border-pink/20 hover:text-white"
+            }`}
+          >
+            <DumbbellIcon className="h-6 w-6" />
+            <span>Workouts Log</span>
+          </button>
 
-))}
+          <button
+            onClick={() => setActiveTab("bmi")}
+            className={`w-full flex items-center gap-5 px-6 py-4.5 rounded-xl font-display text-base font-bold tracking-wide transition duration-200 ${
+              activeTab === "bmi"
+                ? "bg-border-pink/40 border-l-4 border-brand-pink text-brand-pink"
+                : "text-text-muted hover:bg-border-pink/20 hover:text-white"
+            }`}
+          >
+            <ScaleIcon className="h-6 w-6" />
+            <span>BMI Analytics</span>
+          </button>
+        </nav>
+
+        {/* Logout bottom with larger font */}
+        <div className="p-6 border-t border-border-pink/30">
+          <button
+            onClick={logout}
+            className="w-full flex items-center gap-5 px-6 py-4 rounded-xl text-red-400 hover:bg-red-500/10 font-display text-base font-bold transition duration-200"
+          >
+            <LogoutIcon />
+            <span>Log Out</span>
+          </button>
+        </div>
+      </aside>
+
+      {/* 2. Main content area (wide container layout) */}
+      <main className="flex-1 p-8 md:p-12 lg:p-16 overflow-y-auto max-w-[1440px]">
+        {error && (
+          <div className="bg-red-500/10 border border-red-500/30 text-red-400 p-4 rounded-xl mb-8 font-medium">
+            ⚠️ {error}
+          </div>
+        )}
+
+        {/* TAB 1: OVERVIEW */}
+        {activeTab === "overview" && (
+          <div className="animate-fadeIn">
+            {/* Header */}
+            <div className="mb-12">
+              <h1 className="text-4xl md:text-5xl font-display font-extrabold text-white tracking-tight">
+                Dashboard Overview
+              </h1>
+              <p className="font-sans text-text-muted text-base mt-2">
+                Keep tabs on your key metrics and dynamic statistics
+              </p>
+            </div>
+
+            {/* Stats Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+              <div className="bg-card-dark/80 rounded-3xl p-8 border border-border-pink/40 hover:border-brand-pink/30 hover:-translate-y-1 transition duration-300 shadow-lg">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-quick text-xs font-bold text-text-muted tracking-widest uppercase mb-1">Total Workouts</p>
+                    <h3 className="font-display text-5xl font-bold text-white">
+                      {loading ? "..." : workouts.length}
+                    </h3>
+                  </div>
+                  <div className="p-3 rounded-2xl bg-border-pink/20 border border-brand-pink/15">
+                    <DumbbellIcon />
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-card-dark/80 rounded-3xl p-8 border border-border-pink/40 hover:border-brand-pink/30 hover:-translate-y-1 transition duration-300 shadow-lg">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-quick text-xs font-bold text-text-muted tracking-widest uppercase mb-1">Current BMI</p>
+                    <h3 className="font-display text-5xl font-bold text-white">
+                      {user?.bmi || "—"}
+                    </h3>
+                  </div>
+                  <div className="p-3 rounded-2xl bg-border-pink/20 border border-brand-pink/15">
+                    <ScaleIcon />
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-card-dark/80 rounded-3xl p-8 border border-border-pink/40 hover:border-brand-pink/30 hover:-translate-y-1 transition duration-300 shadow-lg">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-quick text-xs font-bold text-text-muted tracking-widest uppercase mb-1">Weekly Goal</p>
+                    <h3 className="font-display text-5xl font-bold text-white">
+                      {workouts.length > 0 ? `${Math.min(workouts.length, 7)}/7` : "0/7"}
+                    </h3>
+                  </div>
+                  <div className="p-3 rounded-2xl bg-border-pink/20 border border-brand-pink/15">
+                    <TargetIcon />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Recommended Workouts */}
+            <div className="mb-12">
+              <h2 className="text-2xl md:text-3xl font-display font-bold text-white mb-6 tracking-tight">
+                Recommended Workouts
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
+                {["Upper Body", "Cardio", "HIIT"].map((workout) => (
+                  <div key={workout} className="bg-card-dark rounded-3xl p-6 border border-border-pink/40 flex items-center justify-between shadow-md">
+                    <span className="font-display font-bold text-white text-lg">{workout}</span>
+                    <span className="bg-border-pink/40 border border-brand-pink/20 text-brand-pink text-xs font-bold px-3 py-1 rounded-full uppercase font-quick">
+                      Recommended
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Short quick link summary */}
+            <div className="bg-card-dark rounded-3xl p-8 border border-border-pink/40 shadow-lg flex flex-col md:flex-row justify-between items-center gap-6">
+              <div>
+                <h3 className="font-display text-xl font-bold text-white">Customize Your Routine</h3>
+                <p className="font-sans text-text-muted text-sm mt-1">Add, edit, or remove workout categories inside the Log panel.</p>
+              </div>
+              <button
+                onClick={() => setActiveTab("workouts")}
+                className="glow-button font-display font-bold px-8 py-3 rounded-xl text-sm"
+              >
+                Open Workouts Log
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 2: WORKOUTS LOG (CRUD) */}
+        {activeTab === "workouts" && (
+          <div className="animate-fadeIn">
+            {/* Title + Action */}
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-10">
+              <div>
+                <h1 className="text-4xl md:text-5xl font-display font-extrabold text-white tracking-tight">
+                  Workouts Log
+                </h1>
+                <p className="font-sans text-text-muted text-base mt-2">Create and edit your custom workout routines</p>
+              </div>
+              {!addingWorkout && (
+                <button
+                  onClick={() => setAddingWorkout(true)}
+                  className="bg-border-pink/30 hover:bg-border-pink border border-brand-pink/25 hover:border-brand-pink text-white font-display font-bold text-base px-6 py-3 rounded-xl transition duration-200"
+                >
+                  + Add Workout
+                </button>
+              )}
+            </div>
+
+            {/* Add Workout Form Inline */}
+            {addingWorkout && (
+              <form onSubmit={handleAddWorkout} className="bg-card-dark rounded-3xl p-6 border-2 border-brand-pink/30 mb-8 animate-fadeIn">
+                <h3 className="text-lg font-display font-bold text-white mb-4">Add New Workout Category</h3>
+                <div className="flex flex-col sm:flex-row gap-4 mb-2">
+                  <input
+                    type="text"
+                    required
+                    value={newWorkoutName}
+                    onChange={(e) => setNewWorkoutName(e.target.value)}
+                    placeholder="e.g. Back Day, Shoulder Burner"
+                    className="glow-input font-sans border-2 border-border-pink rounded-xl p-3.5 bg-bg-dark text-white text-base focus:border-brand-pink focus:outline-none flex-1"
+                    autoFocus
+                  />
+                  <div className="flex gap-2">
+                    <button
+                      type="submit"
+                      className="glow-button font-display font-bold px-6 py-3.5 rounded-xl text-sm"
+                    >
+                      Create
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setNewWorkoutName("");
+                        setAddingWorkout(false);
+                      }}
+                      className="bg-bg-dark hover:bg-card-dark text-text-muted border border-border-pink/80 font-display font-bold px-6 py-3.5 rounded-xl text-sm transition"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </form>
+            )}
+
+            {/* Edit Workout Block */}
+            {editingId && (
+              <div className="bg-card-dark rounded-3xl p-6 mb-8 border-2 border-brand-pink/40 animate-fadeIn">
+                <h3 className="text-lg font-display font-bold text-white mb-4">Edit Workout Title</h3>
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <input
+                    type="text"
+                    value={editingName}
+                    onChange={(e) => setEditingName(e.target.value)}
+                    className="glow-input font-sans border-2 border-border-pink rounded-xl p-3.5 bg-bg-dark text-white text-base focus:border-brand-pink focus:outline-none flex-1"
+                    placeholder="Enter workout name"
+                    autoFocus
+                  />
+                  <div className="flex gap-2">
+                    <button
+                      onClick={saveEdit}
+                      className="glow-button font-display font-bold px-6 py-3.5 rounded-xl text-sm"
+                    >
+                      Save Changes
+                    </button>
+                    <button
+                      onClick={cancelEdit}
+                      className="bg-bg-dark hover:bg-card-dark text-text-muted border border-border-pink/80 font-display font-bold px-6 py-3.5 rounded-xl text-sm transition"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Workouts List */}
+            {loading ? (
+              <div className="text-center py-12 bg-card-dark rounded-3xl border border-border-pink/30">
+                <div className="w-10 h-10 border-4 border-t-brand-pink border-r-transparent border-b-brand-pink border-l-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                <p className="font-sans text-text-muted">Loading workouts list...</p>
+              </div>
+            ) : workouts.length === 0 ? (
+              <div className="text-center py-16 bg-card-dark rounded-3xl border border-border-pink/30">
+                <div className="mb-4">
+                  <DumbbellIcon className="h-16 w-16 text-text-muted mx-auto filter drop-shadow-[0_0_8px_rgba(226,109,133,0.2)] animate-pulse" />
+                </div>
+                <p className="font-display font-bold text-lg text-white mb-2">No workouts logged yet</p>
+                <p className="font-sans text-text-muted text-sm max-w-sm mx-auto mb-6">
+                  Create your first customized workout category by clicking the "+ Add Workout" button above.
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-6">
+                {workouts.map((workout) => (
+                  <div
+                    key={workout.id}
+                    className="bg-card-dark rounded-[1.8rem] p-6 md:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between border border-border-pink/40 hover:border-brand-pink/20 hover:shadow-lg transition duration-200 gap-6"
+                  >
+                    <div className="flex items-center gap-6">
+                      <div className="w-24 h-20 bg-gradient-to-br from-brand-pink/20 to-border-pink/10 rounded-2xl flex items-center justify-center border border-brand-pink/15">
+                        <DumbbellIcon />
+                      </div>
+                      <div>
+                        <h2 className="text-xl md:text-2xl font-display font-bold text-white">
+                          {workout.name}
+                        </h2>
+                        <p className="font-sans text-text-muted text-sm mt-1">{workout.exercises}</p>
+                      </div>
+                    </div>
+                    <div className="relative flex items-center gap-4 w-full sm:w-auto justify-end">
+                      <button
+                        onClick={() => startWorkout(workout)}
+                        className="glow-button font-display font-bold px-6 py-2.5 rounded-full text-sm shadow-md"
+                      >
+                        Start Workout
+                      </button>
+                      <button
+                        onClick={() => setMenuOpen(menuOpen === workout.id ? null : workout.id)}
+                        className="text-2xl px-3 py-1 hover:bg-border-pink/40 text-text-muted hover:text-white rounded-full transition"
+                      >
+                        ⋮
+                      </button>
+                      {menuOpen === workout.id && (
+                        <div className="absolute right-0 top-12 bg-bg-dark rounded-2xl shadow-2xl border border-border-pink/60 w-44 overflow-hidden z-20">
+                          <button
+                            onClick={() => startEdit(workout.id, workout.name)}
+                            className="w-full text-left px-5 py-3.5 font-sans text-sm hover:bg-card-dark text-white hover:text-brand-pink transition flex items-center gap-2.5"
+                          >
+                            <EditIcon />
+                            <span>Edit Name</span>
+                          </button>
+                          <button
+                            onClick={() => handleDeleteWorkout(workout.id)}
+                            className="w-full text-left px-5 py-3.5 font-sans text-sm text-red-400 hover:bg-card-dark transition flex items-center gap-2.5"
+                          >
+                            <TrashIcon />
+                            <span>Delete</span>
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* TAB 3: BMI ANALYTICS (Split Grid Optimization for Space) */}
+        {activeTab === "bmi" && (
+          <div className="animate-fadeIn">
+            {/* Header */}
+            <div className="mb-10">
+              <h1 className="text-4xl md:text-5xl font-display font-extrabold text-white tracking-tight">
+                BMI Analytics
+              </h1>
+              <p className="font-sans text-text-muted text-base mt-2">Track weight goals and check body mass indexes</p>
+            </div>
+
+            {/* Split Grid to eliminate empty wide margins */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
+              
+              {/* Left Column: Calculator inputs */}
+              <div className="lg:col-span-7 bg-card-dark/85 backdrop-blur-md rounded-3xl p-8 md:p-10 border border-border-pink/40 shadow-xl flex flex-col justify-between">
+                <div>
+                  <h2 className="text-2xl md:text-3xl font-display font-bold text-white mb-8 tracking-tight">
+                    BMI Calculator
+                  </h2>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
+                    <div>
+                      <label className="block text-xs font-bold text-text-muted mb-2.5 uppercase font-quick">Age</label>
+                      <input
+                        type="number"
+                        placeholder="Years"
+                        value={age}
+                        onChange={(e) => setAge(e.target.value)}
+                        className="glow-input font-sans border-2 border-border-pink rounded-xl p-4 w-full bg-bg-dark text-white text-base focus:border-brand-pink focus:outline-none"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-text-muted mb-2.5 uppercase font-quick">Weight (kg)</label>
+                      <input
+                        type="number"
+                        placeholder="kg"
+                        value={weight}
+                        onChange={(e) => setWeight(e.target.value)}
+                        className="glow-input font-sans border-2 border-border-pink rounded-xl p-4 w-full bg-bg-dark text-white text-base focus:border-brand-pink focus:outline-none"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-text-muted mb-2.5 uppercase font-quick">Height (cm)</label>
+                      <input
+                        type="number"
+                        placeholder="cm"
+                        value={height}
+                        onChange={(e) => setHeight(e.target.value)}
+                        className="glow-input font-sans border-2 border-border-pink rounded-xl p-4 w-full bg-bg-dark text-white text-base focus:border-brand-pink focus:outline-none"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <button
+                  onClick={calculateBMI}
+                  className="glow-button font-display font-bold px-8 py-4 rounded-xl text-base w-full sm:w-auto"
+                >
+                  Calculate & Save BMI
+                </button>
+              </div>
+
+              {/* Right Column: Standard Guidelines reference table */}
+              <div className="lg:col-span-5 bg-card-dark/85 backdrop-blur-md rounded-3xl p-8 border border-border-pink/40 shadow-xl flex flex-col justify-between">
+                <div>
+                  <h3 className="text-xl font-display font-bold text-white mb-4">BMI Standards Reference</h3>
+                  <p className="font-sans text-text-muted text-sm mb-6 leading-relaxed">
+                    Body Mass Index (BMI) is a simplified measurement using height and weight to assess weight categories.
+                  </p>
+                  
+                  <div className="space-y-3.5">
+                    <div className="flex justify-between items-center p-3.5 rounded-xl bg-bg-dark/40 border border-border-pink/20">
+                      <span className="font-sans text-sm text-white">Underweight</span>
+                      <span className="font-display font-bold text-brand-pink text-sm">&lt; 18.5</span>
+                    </div>
+                    <div className="flex justify-between items-center p-3.5 rounded-xl bg-bg-dark/40 border border-border-pink/20">
+                      <span className="font-sans text-sm text-white">Normal Weight</span>
+                      <span className="font-display font-bold text-green-400 text-sm">18.5 – 24.9</span>
+                    </div>
+                    <div className="flex justify-between items-center p-3.5 rounded-xl bg-bg-dark/40 border border-border-pink/20">
+                      <span className="font-sans text-sm text-white">Overweight</span>
+                      <span className="font-display font-bold text-orange-400 text-sm">25.0 – 29.9</span>
+                    </div>
+                    <div className="flex justify-between items-center p-3.5 rounded-xl bg-bg-dark/40 border border-border-pink/20">
+                      <span className="font-sans text-sm text-white">Obese</span>
+                      <span className="font-display font-bold text-red-400 text-sm">&ge; 30.0</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            {/* Calculated BMI Display Card */}
+            {user?.bmi && (
+              <div className="bg-gradient-to-br from-[#3D2125] to-card-dark rounded-3xl p-8 border border-brand-pink/30 shadow-xl animate-fadeIn">
+                <div className="text-center">
+                  <p className="font-quick text-xs font-bold text-brand-pink tracking-widest uppercase">YOUR BODY MASS INDEX</p>
+                  <h1 className="text-6xl md:text-7xl font-display font-extrabold text-white my-3 tracking-tight">
+                    {user.bmi}
+                  </h1>
+                  <p className="font-display text-2xl font-bold text-brand-pink mb-6">
+                    {user.status}
+                  </p>
+                  <div className="bg-bg-dark rounded-2xl p-5 border border-border-pink/40 max-w-md mx-auto">
+                    <p className="font-display font-bold text-white text-sm tracking-wider uppercase mb-1">Recommended Goal</p>
+                    <p className="font-sans text-text-muted text-sm md:text-base leading-relaxed">{user.goal}</p>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </main>
     </div>
   );
 }
