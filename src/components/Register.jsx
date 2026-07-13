@@ -99,7 +99,7 @@ function Register({ onRegisterSuccess, goHome, showLogin }) {
           <CloseIcon />
         </button>
 
-        {/* Left Image Panel - Clean design with NO text overlays */}
+        {/* Left Image Panel */}
         <div className="hidden lg:block w-[45%] relative border-r border-border-pink/40">
           <img
             src="https://i.pinimg.com/736x/f7/cf/bc/f7cfbc3af4e9948806d113a4c6005a4c.jpg"

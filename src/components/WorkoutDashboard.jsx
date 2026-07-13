@@ -211,7 +211,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
   const profilePlaceholder = "https://i.pinimg.com/1200x/4e/6f/a8/4e6fa8c1d410ae7d30d8c79b8728a56b.jpg";
 
   return (
-    <div className="min-h-screen bg-bg-dark/40 flex flex-col md:flex-row text-white font-sans">
+    <div className="min-h-screen bg-bg-dark flex flex-col md:flex-row text-white font-sans">
       
       {/* 1. Bigger Navigation Sidebar */}
       <aside className="w-full md:w-96 bg-card-dark/90 backdrop-blur-md border-b md:border-b-0 md:border-r border-border-pink/40 flex flex-col shrink-0">

@@ -1,4 +1,15 @@
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+
+const parseJsonResponse = async (res) => {
+  const text = await res.text();
+  if (!text) return null;
+
+  try {
+    return JSON.parse(text);
+  } catch {
+    return { message: text };
+  }
+};
 
 const getHeaders = () => {
   const token = localStorage.getItem('token');
@@ -16,8 +27,8 @@ export const api = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
     });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Login failed');
+    const data = await parseJsonResponse(res);
+    if (!res.ok) throw new Error(data?.error || data?.message || 'Login failed');
     return data;
   },
 
@@ -27,8 +38,8 @@ export const api = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
     });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Registration failed');
+    const data = await parseJsonResponse(res);
+    if (!res.ok) throw new Error(data?.error || data?.message || 'Registration failed');
     return data;
   },
 
@@ -36,8 +47,8 @@ export const api = {
     const res = await fetch(`${API_BASE_URL}/auth/profile`, {
       headers: getHeaders()
     });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Failed to fetch profile');
+    const data = await parseJsonResponse(res);
+    if (!res.ok) throw new Error(data?.error || data?.message || 'Failed to fetch profile');
     return data;
   },
 
@@ -47,8 +58,8 @@ export const api = {
       headers: getHeaders(),
       body: JSON.stringify(stats)
     });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Failed to update profile');
+    const data = await parseJsonResponse(res);
+    if (!res.ok) throw new Error(data?.error || data?.message || 'Failed to update profile');
     return data;
   },
 
@@ -58,8 +69,8 @@ export const api = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email })
     });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Failed to submit forgot password request');
+    const data = await parseJsonResponse(res);
+    if (!res.ok) throw new Error(data?.error || data?.message || 'Failed to submit forgot password request');
     return data;
   },
 
@@ -69,8 +80,8 @@ export const api = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, token, newPassword })
     });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Failed to reset password');
+    const data = await parseJsonResponse(res);
+    if (!res.ok) throw new Error(data?.error || data?.message || 'Failed to reset password');
     return data;
   },
 
@@ -79,8 +90,8 @@ export const api = {
     const res = await fetch(`${API_BASE_URL}/workouts`, {
       headers: getHeaders()
     });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Failed to fetch workouts');
+    const data = await parseJsonResponse(res);
+    if (!res.ok) throw new Error(data?.error || data?.message || 'Failed to fetch workouts');
     return data;
   },
 
@@ -90,8 +101,8 @@ export const api = {
       headers: getHeaders(),
       body: JSON.stringify({ name, exercises })
     });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Failed to create workout');
+    const data = await parseJsonResponse(res);
+    if (!res.ok) throw new Error(data?.error || data?.message || 'Failed to create workout');
     return data;
   },
 
@@ -101,8 +112,8 @@ export const api = {
       headers: getHeaders(),
       body: JSON.stringify({ name })
     });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Failed to update workout');
+    const data = await parseJsonResponse(res);
+    if (!res.ok) throw new Error(data?.error || data?.message || 'Failed to update workout');
     return data;
   },
 
@@ -111,8 +122,8 @@ export const api = {
       method: 'DELETE',
       headers: getHeaders()
     });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Failed to delete workout');
+    const data = await parseJsonResponse(res);
+    if (!res.ok) throw new Error(data?.error || data?.message || 'Failed to delete workout');
     return data;
   }
 };

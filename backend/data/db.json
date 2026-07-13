@@ -9,6 +9,30 @@
       "height": "",
       "bmi": null,
       "status": "",
+      "goal": "",
+      "resetToken": "797409",
+      "resetTokenExpiry": 1783919006550
+    },
+    {
+      "id": "1783917901297",
+      "email": "test@example.com",
+      "password": "$2a$10$25OapWkaPmxsStmuT23pse1E8TgBfeoo5fFCr.KUR54.k058GK1Ke",
+      "age": "",
+      "weight": "",
+      "height": "",
+      "bmi": null,
+      "status": "",
+      "goal": ""
+    },
+    {
+      "id": "1783918145411",
+      "email": "sunamadeemail30@gmail.com",
+      "password": "$2a$10$oVo3bT2MIU.iVkrpsLMyuO0Dekh1NFRmsPGITAoWBvTzsOTDY8jtC",
+      "age": "",
+      "weight": "",
+      "height": "",
+      "bmi": null,
+      "status": "",
       "goal": ""
     }
   ],
@@ -34,6 +58,30 @@
     {
       "id": "1783317609626-4",
       "userId": "1783317609290",
+      "name": "Core Workout",
+      "exercises": "4 Exercises"
+    },
+    {
+      "id": "1783918145606-1",
+      "userId": "1783918145411",
+      "name": "Biceps Workout",
+      "exercises": "4 Exercises"
+    },
+    {
+      "id": "1783918145606-2",
+      "userId": "1783918145411",
+      "name": "Chest Workout",
+      "exercises": "4 Exercises"
+    },
+    {
+      "id": "1783918145607-3",
+      "userId": "1783918145411",
+      "name": "Legs Workout",
+      "exercises": "4 Exercises"
+    },
+    {
+      "id": "1783918145607-4",
+      "userId": "1783918145411",
       "name": "Core Workout",
       "exercises": "4 Exercises"
     }
