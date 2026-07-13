@@ -208,7 +208,7 @@ router.get('/profile', authenticateToken, async (req, res) => {
 });
 
 router.put('/profile', authenticateToken, async (req, res) => {
-  const { age, weight, height, bmi, status, goal } = req.body;
+  const { age, weight, height, bmi, status, goal, username, avatarUrl, bio } = req.body;
   try {
     const updatedUser = await db.updateUserStats(req.userId, {
       age,
@@ -216,7 +216,10 @@ router.put('/profile', authenticateToken, async (req, res) => {
       height,
       bmi,
       status,
-      goal
+      goal,
+      username,
+      avatarUrl,
+      bio
     });
     if (!updatedUser) {
       return res.status(404).json({ error: 'User not found' });

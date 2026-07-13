@@ -62,9 +62,15 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
   const [workouts, setWorkouts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [profileMessage, setProfileMessage] = useState("");
 
-  // Navigation tab state: "overview", "workouts", "bmi"
+  // Navigation tab state: "overview", "workouts", "bmi", "profile"
   const [activeTab, setActiveTab] = useState("overview");
+  const [profileForm, setProfileForm] = useState({
+    username: user?.username || user?.email?.split("@")[0] || "Athlete",
+    avatarUrl: user?.avatarUrl || "",
+    bio: user?.bio || ""
+  });
 
   // BMI form states
   const [age, setAge] = useState(user?.age || "");
@@ -103,6 +109,11 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
       setAge(user.age || "");
       setWeight(user.weight || "");
       setHeight(user.height || "");
+      setProfileForm({
+        username: user.username || user.email?.split("@")[0] || "Athlete",
+        avatarUrl: user.avatarUrl || "",
+        bio: user.bio || ""
+      });
     }
   }, [user]);
 
@@ -205,9 +216,29 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
     }
   };
 
-  const userDisplayName = user?.email ? user.email.split("@")[0] : "Athlete";
-  
-  // Custom Profile Picture Placeholder Link from Pin
+  const handleSaveProfile = async (e) => {
+    e.preventDefault();
+    try {
+      const updatedUser = await api.updateProfile({
+        age: user?.age || "",
+        weight: user?.weight || "",
+        height: user?.height || "",
+        bmi: user?.bmi ?? null,
+        status: user?.status || "",
+        goal: user?.goal || "",
+        username: profileForm.username.trim() || user?.email?.split("@")[0] || "Athlete",
+        avatarUrl: profileForm.avatarUrl.trim(),
+        bio: profileForm.bio.trim()
+      });
+      setUser(updatedUser);
+      setProfileMessage("Profile updated successfully.");
+      setActiveTab("overview");
+    } catch (err) {
+      alert(err.message || "Failed to update profile.");
+    }
+  };
+
+  const userDisplayName = user?.username || (user?.email ? user.email.split("@")[0] : "Athlete");
   const profilePlaceholder = "https://i.pinimg.com/1200x/4e/6f/a8/4e6fa8c1d410ae7d30d8c79b8728a56b.jpg";
 
   return (
@@ -228,20 +259,40 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
         </div>
 
         {/* User profile section with larger photo and text */}
-        <div className="p-10 text-center border-b border-border-pink/30">
-          <div className="relative inline-block mb-6">
-            <div className="w-28 h-28 rounded-full overflow-hidden border-2 border-brand-pink shadow-lg shadow-brand-pink/20">
-              <img
-                src={profilePlaceholder}
-                alt="Profile Avatar placeholder"
-                className="w-full h-full object-cover object-top"
-              />
+        <div className="p-8 border-b border-border-pink/30">
+          <div className="flex items-center gap-4">
+            <div className="relative shrink-0">
+              <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-brand-pink/70 shadow-lg shadow-brand-pink/20 bg-bg-dark/70">
+                <img
+                  src={user?.avatarUrl || profilePlaceholder}
+                  alt="Profile Avatar"
+                  className="w-full h-full object-cover object-center"
+                />
+              </div>
+              <span className="absolute bottom-1 right-1 block h-3.5 w-3.5 rounded-full bg-green-500 border-2 border-card-dark" />
             </div>
-            {/* Online badge */}
-            <span className="absolute bottom-2 right-2 block h-4 w-4 rounded-full bg-green-500 border-2 border-card-dark" />
+            <div className="min-w-0 flex-1">
+              <h3 className="font-display font-bold text-xl text-white truncate">{userDisplayName}</h3>
+              <p className="font-sans text-text-muted text-sm mt-1 font-semibold truncate">
+                {user?.bio || "Premium Member"}
+              </p>
+            </div>
           </div>
-          <h3 className="font-display font-bold text-2xl text-white capitalize truncate px-2">{userDisplayName}</h3>
-          <p className="font-sans text-text-muted text-sm mt-1.5 font-semibold">Premium Member</p>
+          <button
+            onClick={() => {
+              setProfileForm({
+                username: user?.username || user?.email?.split("@")[0] || "Athlete",
+                avatarUrl: user?.avatarUrl || "",
+                bio: user?.bio || ""
+              });
+              setProfileMessage("");
+              setActiveTab("profile");
+            }}
+            className="mt-4 w-full flex items-center justify-center gap-2 rounded-xl border border-border-pink/40 bg-bg-dark/60 px-4 py-2.5 text-sm font-display font-bold text-brand-pink transition hover:bg-card-dark hover:text-white"
+          >
+            <EditIcon />
+            Edit Profile
+          </button>
         </div>
 
         {/* Navigation list with larger padding and font sizes */}
@@ -300,6 +351,107 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
         {error && (
           <div className="bg-red-500/10 border border-red-500/30 text-red-400 p-4 rounded-xl mb-8 font-medium">
             ⚠️ {error}
+          </div>
+        )}
+
+        {activeTab === "profile" && (
+          <div className="animate-fadeIn">
+            <div className="mb-8">
+              <h1 className="text-4xl md:text-5xl font-display font-extrabold text-white tracking-tight">
+                Profile Editor
+              </h1>
+              <p className="font-sans text-text-muted text-base mt-2">
+                Update your profile details and personalize your experience.
+              </p>
+            </div>
+
+            <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
+              <form onSubmit={handleSaveProfile} className="bg-card-dark/90 rounded-[2rem] border border-border-pink/40 p-8 shadow-[0_20px_50px_rgba(0,0,0,0.35)]">
+                {profileMessage && (
+                  <div className="mb-6 rounded-xl border border-brand-pink/30 bg-brand-pink/10 px-4 py-3 text-sm text-brand-pink">
+                    {profileMessage}
+                  </div>
+                )}
+
+                <div className="space-y-5">
+                  <div>
+                    <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.25em] text-text-muted">
+                      Username
+                    </label>
+                    <input
+                      value={profileForm.username}
+                      onChange={(e) => setProfileForm({ ...profileForm, username: e.target.value })}
+                      placeholder="Enter a display name"
+                      className="glow-input w-full rounded-xl border border-border-pink/40 bg-bg-dark px-4 py-3.5 text-white outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.25em] text-text-muted">
+                      Profile Image URL
+                    </label>
+                    <input
+                      value={profileForm.avatarUrl}
+                      onChange={(e) => setProfileForm({ ...profileForm, avatarUrl: e.target.value })}
+                      placeholder="Paste an image URL"
+                      className="glow-input w-full rounded-xl border border-border-pink/40 bg-bg-dark px-4 py-3.5 text-white outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.25em] text-text-muted">
+                      Bio
+                    </label>
+                    <textarea
+                      value={profileForm.bio}
+                      onChange={(e) => setProfileForm({ ...profileForm, bio: e.target.value })}
+                      placeholder="Tell others about your fitness vibe"
+                      rows={5}
+                      className="glow-input w-full resize-none rounded-xl border border-border-pink/40 bg-bg-dark px-4 py-3.5 text-white outline-none"
+                    />
+                  </div>
+                </div>
+
+                <div className="mt-8 flex flex-wrap gap-3">
+                  <button
+                    type="submit"
+                    className="rounded-xl bg-brand-pink px-6 py-3 font-display font-bold text-white transition hover:bg-brand-pink-hover"
+                  >
+                    Save Changes
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab("overview")}
+                    className="rounded-xl border border-border-pink/40 bg-bg-dark/70 px-6 py-3 font-display font-bold text-text-muted transition hover:text-white"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+
+              <div className="rounded-[2rem] border border-border-pink/40 bg-card-dark/80 p-8 shadow-[0_20px_50px_rgba(0,0,0,0.25)]">
+                <p className="mb-4 text-xs font-semibold uppercase tracking-[0.25em] text-text-muted">
+                  Profile Preview
+                </p>
+                <div className="rounded-[1.6rem] border border-border-pink/30 bg-bg-dark/70 p-6">
+                  <div className="flex items-center gap-4">
+                    <img
+                      src={profileForm.avatarUrl || profilePlaceholder}
+                      alt="Preview avatar"
+                      className="h-20 w-20 rounded-full border-2 border-brand-pink/70 object-cover object-center"
+                    />
+                    <div>
+                      <h2 className="font-display text-2xl font-bold text-white">
+                        {profileForm.username || userDisplayName}
+                      </h2>
+                      <p className="mt-1 text-sm font-medium text-text-muted">
+                        {profileForm.bio || "Premium Member"}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         )}
 

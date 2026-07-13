@@ -62,6 +62,9 @@ export const db = {
       bmi: null,
       status: "",
       goal: "",
+      username: user.username || user.email.split("@")[0],
+      avatarUrl: user.avatarUrl || "",
+      bio: user.bio || "",
       ...user
     };
     data.users.push(newUser);
@@ -81,7 +84,10 @@ export const db = {
       height: stats.height,
       bmi: stats.bmi,
       status: stats.status,
-      goal: stats.goal
+      goal: stats.goal,
+      username: stats.username,
+      avatarUrl: stats.avatarUrl,
+      bio: stats.bio
     };
     await writeDb(data);
     return data.users[userIndex];

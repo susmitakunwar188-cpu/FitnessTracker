@@ -28,12 +28,12 @@
       "id": "1783918145411",
       "email": "sunamadeemail30@gmail.com",
       "password": "$2a$10$oVo3bT2MIU.iVkrpsLMyuO0Dekh1NFRmsPGITAoWBvTzsOTDY8jtC",
-      "age": "",
-      "weight": "",
-      "height": "",
-      "bmi": null,
-      "status": "",
-      "goal": ""
+      "age": "21",
+      "weight": "62",
+      "height": "152",
+      "bmi": "26.8",
+      "status": "Overweight",
+      "goal": "Lose weight with exercise and healthy eating."
     }
   ],
   "workouts": [
