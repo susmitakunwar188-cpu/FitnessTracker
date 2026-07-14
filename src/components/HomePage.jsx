@@ -128,7 +128,7 @@ function HomePage({ user, showLogin, showRegister, goDashboard, logout }) {
             <span className="text-brand-pink bg-gradient-to-r from-brand-pink to-[#FFA2C5] bg-clip-text text-transparent">Journey Starts Here</span>
           </h1>
           <p className="font-sans text-text-muted text-xl md:text-2xl mb-12 max-w-xl leading-relaxed mx-auto lg:mx-0">
-            Track your workouts, calculate your BMI dynamically, and reach your full potential with our dark-inspired fitness planner.
+            Track your workouts, calories, and reach your full potential with our fitness planner. One percent better EVERY. SINGLE. DAY.
           </p>
           <button
             onClick={user ? goDashboard : showRegister}

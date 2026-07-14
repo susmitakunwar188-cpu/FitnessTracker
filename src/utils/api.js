@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
 const parseJsonResponse = async (res) => {
   const text = await res.text();
@@ -106,11 +106,11 @@ export const api = {
     return data;
   },
 
-  async updateWorkout(id, name) {
+  async updateWorkout(id, name, exercises) {
     const res = await fetch(`${API_BASE_URL}/workouts/${id}`, {
       method: 'PUT',
       headers: getHeaders(),
-      body: JSON.stringify({ name })
+      body: JSON.stringify({ name, exercises })
     });
     const data = await parseJsonResponse(res);
     if (!res.ok) throw new Error(data?.error || data?.message || 'Failed to update workout');

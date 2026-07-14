@@ -81,6 +81,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
   const [menuOpen, setMenuOpen] = useState(null);
   const [editingId, setEditingId] = useState(null);
   const [editingName, setEditingName] = useState("");
+  const [editingExercises, setEditingExercises] = useState([]);
 
   // Add Workout states
   const [addingWorkout, setAddingWorkout] = useState(false);
@@ -149,9 +150,13 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
   };
 
   // Edit Workout
-  const startEdit = (id, currentName) => {
-    setEditingId(id);
-    setEditingName(currentName);
+  const startEdit = (workout) => {
+    setEditingId(workout.id);
+    setEditingName(workout.name);
+    const clonedExercises = Array.isArray(workout.exercises)
+      ? workout.exercises.map(ex => ({ ...ex }))
+      : [];
+    setEditingExercises(clonedExercises);
     setMenuOpen(null);
   };
 
@@ -160,11 +165,20 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
       alert("Workout name cannot be empty");
       return;
     }
+    const cleanedExercises = editingExercises
+      .map(ex => ({
+        name: ex.name.trim(),
+        sets: ex.sets.toString().trim(),
+        reps: ex.reps.toString().trim()
+      }))
+      .filter(ex => ex.name !== "");
+
     try {
-      const updated = await api.updateWorkout(editingId, editingName.trim());
+      const updated = await api.updateWorkout(editingId, editingName.trim(), cleanedExercises);
       setWorkouts(workouts.map((w) => (w.id === editingId ? updated : w)));
       setEditingId(null);
       setEditingName("");
+      setEditingExercises([]);
     } catch (err) {
       alert(err.message || "Failed to save edit.");
     }
@@ -173,6 +187,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
   const cancelEdit = () => {
     setEditingId(null);
     setEditingName("");
+    setEditingExercises([]);
   };
 
   // BMI calculation & save
@@ -245,7 +260,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
     <div className="min-h-screen bg-bg-dark flex flex-col md:flex-row text-white font-sans">
       
       {/* 1. Bigger Navigation Sidebar */}
-      <aside className="w-full md:w-96 bg-card-dark/90 backdrop-blur-md border-b md:border-b-0 md:border-r border-border-pink/40 flex flex-col shrink-0">
+      <aside className="w-full md:w-96 bg-sidebar-gradient border-b md:border-b-0 md:border-r border-border-pink/40 flex flex-col shrink-0">
         
         {/* Brand header with larger text and icon */}
         <div className="p-8 border-b border-border-pink/30 flex items-center justify-between">
@@ -288,7 +303,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
               setProfileMessage("");
               setActiveTab("profile");
             }}
-            className="mt-4 w-full flex items-center justify-center gap-2 rounded-xl border border-border-pink/40 bg-bg-dark/60 px-4 py-2.5 text-sm font-display font-bold text-brand-pink transition hover:bg-card-dark hover:text-white"
+            className="mt-4 w-full flex items-center justify-center gap-2 rounded-xl border border-brand-cocoa/40 bg-brand-cocoa/10 px-4 py-2.5 text-sm font-display font-bold text-brand-cocoa-light hover:text-white transition hover:bg-brand-cocoa/20 cursor-pointer"
           >
             <EditIcon />
             Edit Profile
@@ -299,10 +314,10 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
         <nav className="flex-1 p-6 space-y-3.5 mt-6">
           <button
             onClick={() => setActiveTab("overview")}
-            className={`w-full flex items-center gap-5 px-6 py-4.5 rounded-xl font-display text-base font-bold tracking-wide transition duration-200 ${
+            className={`w-full flex items-center gap-5 px-6 py-4.5 rounded-xl font-display text-base font-bold tracking-wide transition duration-200 cursor-pointer ${
               activeTab === "overview"
-                ? "bg-border-pink/40 border-l-4 border-brand-pink text-brand-pink"
-                : "text-text-muted hover:bg-border-pink/20 hover:text-white"
+                ? "bg-brand-cocoa/20 border-l-4 border-brand-pink text-brand-pink shadow-[inset_0_0_12px_rgba(226,109,133,0.08)]"
+                : "text-text-muted hover:bg-brand-cocoa/10 hover:text-white"
             }`}
           >
             <GridIcon className="h-6 w-6" />
@@ -311,10 +326,10 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
 
           <button
             onClick={() => setActiveTab("workouts")}
-            className={`w-full flex items-center gap-5 px-6 py-4.5 rounded-xl font-display text-base font-bold tracking-wide transition duration-200 ${
+            className={`w-full flex items-center gap-5 px-6 py-4.5 rounded-xl font-display text-base font-bold tracking-wide transition duration-200 cursor-pointer ${
               activeTab === "workouts"
-                ? "bg-border-pink/40 border-l-4 border-brand-pink text-brand-pink"
-                : "text-text-muted hover:bg-border-pink/20 hover:text-white"
+                ? "bg-brand-cocoa/20 border-l-4 border-brand-pink text-brand-pink shadow-[inset_0_0_12px_rgba(226,109,133,0.08)]"
+                : "text-text-muted hover:bg-brand-cocoa/10 hover:text-white"
             }`}
           >
             <DumbbellIcon className="h-6 w-6" />
@@ -323,10 +338,10 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
 
           <button
             onClick={() => setActiveTab("bmi")}
-            className={`w-full flex items-center gap-5 px-6 py-4.5 rounded-xl font-display text-base font-bold tracking-wide transition duration-200 ${
+            className={`w-full flex items-center gap-5 px-6 py-4.5 rounded-xl font-display text-base font-bold tracking-wide transition duration-200 cursor-pointer ${
               activeTab === "bmi"
-                ? "bg-border-pink/40 border-l-4 border-brand-pink text-brand-pink"
-                : "text-text-muted hover:bg-border-pink/20 hover:text-white"
+                ? "bg-brand-cocoa/20 border-l-4 border-brand-pink text-brand-pink shadow-[inset_0_0_12px_rgba(226,109,133,0.08)]"
+                : "text-text-muted hover:bg-brand-cocoa/10 hover:text-white"
             }`}
           >
             <ScaleIcon className="h-6 w-6" />
@@ -338,7 +353,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
         <div className="p-6 border-t border-border-pink/30">
           <button
             onClick={logout}
-            className="w-full flex items-center gap-5 px-6 py-4 rounded-xl text-red-400 hover:bg-red-500/10 font-display text-base font-bold transition duration-200"
+            className="w-full flex items-center gap-5 px-6 py-4 rounded-xl text-red-400 hover:bg-red-500/10 font-display text-base font-bold transition duration-200 cursor-pointer"
           >
             <LogoutIcon />
             <span>Log Out</span>
@@ -366,14 +381,14 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
             </div>
 
             <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
-              <form onSubmit={handleSaveProfile} className="bg-card-dark/90 rounded-[2rem] border border-border-pink/40 p-8 shadow-[0_20px_50px_rgba(0,0,0,0.35)]">
+              <form onSubmit={handleSaveProfile} className="bg-card-dark/90 rounded-[2rem] border border-brand-cocoa/40 p-8 shadow-[0_20px_50px_rgba(0,0,0,0.35)]">
                 {profileMessage && (
                   <div className="mb-6 rounded-xl border border-brand-pink/30 bg-brand-pink/10 px-4 py-3 text-sm text-brand-pink">
                     {profileMessage}
                   </div>
                 )}
 
-                <div className="space-y-5">
+                <div className="space-y-6">
                   <div>
                     <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.25em] text-text-muted">
                       Username
@@ -382,32 +397,63 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
                       value={profileForm.username}
                       onChange={(e) => setProfileForm({ ...profileForm, username: e.target.value })}
                       placeholder="Enter a display name"
-                      className="glow-input w-full rounded-xl border border-border-pink/40 bg-bg-dark px-4 py-3.5 text-white outline-none"
+                      className="glow-input w-full rounded-xl border border-border-pink/40 bg-bg-dark px-4 py-3.5 text-white outline-none focus:border-brand-pink"
                     />
                   </div>
 
                   <div>
                     <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.25em] text-text-muted">
-                      Profile Image URL
+                      Profile Picture
                     </label>
-                    <input
-                      value={profileForm.avatarUrl}
-                      onChange={(e) => setProfileForm({ ...profileForm, avatarUrl: e.target.value })}
-                      placeholder="Paste an image URL"
-                      className="glow-input w-full rounded-xl border border-border-pink/40 bg-bg-dark px-4 py-3.5 text-white outline-none"
-                    />
+                    <div className="flex flex-col sm:flex-row gap-4 items-center bg-bg-dark p-4 rounded-xl border border-border-pink/40">
+                      <div className="shrink-0 w-16 h-16 rounded-full overflow-hidden border-2 border-brand-pink bg-card-dark flex items-center justify-center">
+                        {profileForm.avatarUrl ? (
+                          <img src={profileForm.avatarUrl} alt="Preview" className="w-full h-full object-cover" />
+                        ) : (
+                          <span className="text-[10px] text-text-muted">No Image</span>
+                        )}
+                      </div>
+                      <div className="flex-1 w-full">
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => {
+                            const file = e.target.files[0];
+                            if (file) {
+                              if (file.size > 2 * 1024 * 1024) {
+                                alert("Image is too large. Please upload an image smaller than 2MB.");
+                                return;
+                              }
+                              const reader = new FileReader();
+                              reader.onload = (event) => {
+                                setProfileForm({ ...profileForm, avatarUrl: event.target.result });
+                              };
+                              reader.readAsDataURL(file);
+                            }
+                          }}
+                          className="w-full text-sm text-text-muted file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-brand-cocoa/20 file:text-brand-cocoa-light hover:file:bg-brand-cocoa/30 file:cursor-pointer"
+                        />
+                        <p className="text-[10px] text-text-muted mt-1">Accepts JPG, PNG, GIF. Max size 2MB.</p>
+                      </div>
+                    </div>
                   </div>
 
                   <div>
-                    <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.25em] text-text-muted">
-                      Bio
-                    </label>
+                    <div className="flex justify-between items-center mb-2">
+                      <label className="block text-xs font-semibold uppercase tracking-[0.25em] text-text-muted">
+                        Bio
+                      </label>
+                      <span className={`text-xs font-bold ${profileForm.bio.length >= 140 ? 'text-brand-pink animate-pulse' : 'text-text-muted'}`}>
+                        {profileForm.bio.length}/150
+                      </span>
+                    </div>
                     <textarea
                       value={profileForm.bio}
-                      onChange={(e) => setProfileForm({ ...profileForm, bio: e.target.value })}
+                      onChange={(e) => setProfileForm({ ...profileForm, bio: e.target.value.slice(0, 150) })}
                       placeholder="Tell others about your fitness vibe"
-                      rows={5}
-                      className="glow-input w-full resize-none rounded-xl border border-border-pink/40 bg-bg-dark px-4 py-3.5 text-white outline-none"
+                      rows={4}
+                      maxLength={150}
+                      className="glow-input w-full resize-none rounded-xl border border-border-pink/40 bg-bg-dark px-4 py-3.5 text-white outline-none focus:border-brand-pink"
                     />
                   </div>
                 </div>
@@ -415,14 +461,14 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
                 <div className="mt-8 flex flex-wrap gap-3">
                   <button
                     type="submit"
-                    className="rounded-xl bg-brand-pink px-6 py-3 font-display font-bold text-white transition hover:bg-brand-pink-hover"
+                    className="rounded-xl bg-brand-pink px-8 py-3.5 font-display font-bold text-white transition hover:bg-brand-pink-hover cursor-pointer"
                   >
                     Save Changes
                   </button>
                   <button
                     type="button"
                     onClick={() => setActiveTab("overview")}
-                    className="rounded-xl border border-border-pink/40 bg-bg-dark/70 px-6 py-3 font-display font-bold text-text-muted transition hover:text-white"
+                    className="rounded-xl border border-border-pink/40 bg-bg-dark/70 px-8 py-3.5 font-display font-bold text-text-muted transition hover:text-white cursor-pointer"
                   >
                     Cancel
                   </button>
@@ -438,13 +484,13 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
                     <img
                       src={profileForm.avatarUrl || profilePlaceholder}
                       alt="Preview avatar"
-                      className="h-20 w-20 rounded-full border-2 border-brand-pink/70 object-cover object-center"
+                      className="h-20 w-20 rounded-full border-2 border-brand-pink/70 object-cover object-center bg-card-dark"
                     />
-                    <div>
-                      <h2 className="font-display text-2xl font-bold text-white">
+                    <div className="min-w-0 flex-1">
+                      <h2 className="font-display text-2xl font-bold text-white truncate">
                         {profileForm.username || userDisplayName}
                       </h2>
-                      <p className="mt-1 text-sm font-medium text-text-muted">
+                      <p className="mt-1 text-sm font-medium text-text-muted break-words leading-relaxed">
                         {profileForm.bio || "Premium Member"}
                       </p>
                     </div>
@@ -470,7 +516,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
 
             {/* Stats Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-              <div className="bg-card-dark/80 rounded-3xl p-8 border border-border-pink/40 hover:border-brand-pink/30 hover:-translate-y-1 transition duration-300 shadow-lg">
+              <div className="bg-gradient-to-br from-card-dark to-[#251715]/40 rounded-3xl p-8 border border-brand-cocoa/30 hover:border-brand-pink/40 hover:-translate-y-1 transition duration-300 shadow-xl shadow-black/10">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-quick text-xs font-bold text-text-muted tracking-widest uppercase mb-1">Total Workouts</p>
@@ -478,13 +524,13 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
                       {loading ? "..." : workouts.length}
                     </h3>
                   </div>
-                  <div className="p-3 rounded-2xl bg-border-pink/20 border border-brand-pink/15">
+                  <div className="p-3.5 rounded-2xl bg-brand-cocoa/20 border border-brand-cocoa/30 text-brand-pink">
                     <DumbbellIcon />
                   </div>
                 </div>
               </div>
 
-              <div className="bg-card-dark/80 rounded-3xl p-8 border border-border-pink/40 hover:border-brand-pink/30 hover:-translate-y-1 transition duration-300 shadow-lg">
+              <div className="bg-gradient-to-br from-card-dark to-[#251715]/40 rounded-3xl p-8 border border-brand-cocoa/30 hover:border-brand-pink/40 hover:-translate-y-1 transition duration-300 shadow-xl shadow-black/10">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-quick text-xs font-bold text-text-muted tracking-widest uppercase mb-1">Current BMI</p>
@@ -492,13 +538,13 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
                       {user?.bmi || "—"}
                     </h3>
                   </div>
-                  <div className="p-3 rounded-2xl bg-border-pink/20 border border-brand-pink/15">
+                  <div className="p-3.5 rounded-2xl bg-brand-cocoa/20 border border-brand-cocoa/30 text-brand-pink">
                     <ScaleIcon />
                   </div>
                 </div>
               </div>
 
-              <div className="bg-card-dark/80 rounded-3xl p-8 border border-border-pink/40 hover:border-brand-pink/30 hover:-translate-y-1 transition duration-300 shadow-lg">
+              <div className="bg-gradient-to-br from-card-dark to-[#251715]/40 rounded-3xl p-8 border border-brand-cocoa/30 hover:border-brand-pink/40 hover:-translate-y-1 transition duration-300 shadow-xl shadow-black/10">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-quick text-xs font-bold text-text-muted tracking-widest uppercase mb-1">Weekly Goal</p>
@@ -506,7 +552,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
                       {workouts.length > 0 ? `${Math.min(workouts.length, 7)}/7` : "0/7"}
                     </h3>
                   </div>
-                  <div className="p-3 rounded-2xl bg-border-pink/20 border border-brand-pink/15">
+                  <div className="p-3.5 rounded-2xl bg-brand-cocoa/20 border border-brand-cocoa/30 text-brand-pink">
                     <TargetIcon />
                   </div>
                 </div>
@@ -520,9 +566,9 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
                 {["Upper Body", "Cardio", "HIIT"].map((workout) => (
-                  <div key={workout} className="bg-card-dark rounded-3xl p-6 border border-border-pink/40 flex items-center justify-between shadow-md">
+                  <div key={workout} className="bg-card-dark rounded-3xl p-6 border border-brand-cocoa/30 flex items-center justify-between shadow-md">
                     <span className="font-display font-bold text-white text-lg">{workout}</span>
-                    <span className="bg-border-pink/40 border border-brand-pink/20 text-brand-pink text-xs font-bold px-3 py-1 rounded-full uppercase font-quick">
+                    <span className="bg-brand-cocoa/20 border border-brand-cocoa/30 text-brand-cocoa-light text-xs font-bold px-3 py-1.5 rounded-full uppercase font-quick">
                       Recommended
                     </span>
                   </div>
@@ -531,14 +577,14 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
             </div>
 
             {/* Short quick link summary */}
-            <div className="bg-card-dark rounded-3xl p-8 border border-border-pink/40 shadow-lg flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="bg-card-dark rounded-3xl p-8 border border-brand-cocoa/30 shadow-lg flex flex-col md:flex-row justify-between items-center gap-6">
               <div>
                 <h3 className="font-display text-xl font-bold text-white">Customize Your Routine</h3>
                 <p className="font-sans text-text-muted text-sm mt-1">Add, edit, or remove workout categories inside the Log panel.</p>
               </div>
               <button
                 onClick={() => setActiveTab("workouts")}
-                className="glow-button font-display font-bold px-8 py-3 rounded-xl text-sm"
+                className="glow-button font-display font-bold px-8 py-3.5 rounded-xl text-sm cursor-pointer"
               >
                 Open Workouts Log
               </button>
@@ -560,7 +606,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
               {!addingWorkout && (
                 <button
                   onClick={() => setAddingWorkout(true)}
-                  className="bg-border-pink/30 hover:bg-border-pink border border-brand-pink/25 hover:border-brand-pink text-white font-display font-bold text-base px-6 py-3 rounded-xl transition duration-200"
+                  className="bg-brand-cocoa/20 hover:bg-brand-cocoa/35 border border-brand-cocoa/40 hover:border-brand-cocoa text-white font-display font-bold text-base px-6 py-3 rounded-xl transition duration-200 cursor-pointer"
                 >
                   + Add Workout
                 </button>
@@ -569,7 +615,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
 
             {/* Add Workout Form Inline */}
             {addingWorkout && (
-              <form onSubmit={handleAddWorkout} className="bg-card-dark rounded-3xl p-6 border-2 border-brand-pink/30 mb-8 animate-fadeIn">
+              <form onSubmit={handleAddWorkout} className="bg-card-dark rounded-3xl p-6 border-2 border-brand-cocoa/40 mb-8 animate-fadeIn">
                 <h3 className="text-lg font-display font-bold text-white mb-4">Add New Workout Category</h3>
                 <div className="flex flex-col sm:flex-row gap-4 mb-2">
                   <input
@@ -584,7 +630,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
                   <div className="flex gap-2">
                     <button
                       type="submit"
-                      className="glow-button font-display font-bold px-6 py-3.5 rounded-xl text-sm"
+                      className="glow-button font-display font-bold px-6 py-3.5 rounded-xl text-sm cursor-pointer"
                     >
                       Create
                     </button>
@@ -594,7 +640,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
                         setNewWorkoutName("");
                         setAddingWorkout(false);
                       }}
-                      className="bg-bg-dark hover:bg-card-dark text-text-muted border border-border-pink/80 font-display font-bold px-6 py-3.5 rounded-xl text-sm transition"
+                      className="bg-bg-dark hover:bg-card-dark text-text-muted border border-border-pink/80 hover:text-white font-display font-bold px-6 py-3.5 rounded-xl text-sm transition cursor-pointer"
                     >
                       Cancel
                     </button>
@@ -605,43 +651,144 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
 
             {/* Edit Workout Block */}
             {editingId && (
-              <div className="bg-card-dark rounded-3xl p-6 mb-8 border-2 border-brand-pink/40 animate-fadeIn">
-                <h3 className="text-lg font-display font-bold text-white mb-4">Edit Workout Title</h3>
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <input
-                    type="text"
-                    value={editingName}
-                    onChange={(e) => setEditingName(e.target.value)}
-                    className="glow-input font-sans border-2 border-border-pink rounded-xl p-3.5 bg-bg-dark text-white text-base focus:border-brand-pink focus:outline-none flex-1"
-                    placeholder="Enter workout name"
-                    autoFocus
-                  />
-                  <div className="flex gap-2">
-                    <button
-                      onClick={saveEdit}
-                      className="glow-button font-display font-bold px-6 py-3.5 rounded-xl text-sm"
-                    >
-                      Save Changes
-                    </button>
-                    <button
-                      onClick={cancelEdit}
-                      className="bg-bg-dark hover:bg-card-dark text-text-muted border border-border-pink/80 font-display font-bold px-6 py-3.5 rounded-xl text-sm transition"
-                    >
-                      Cancel
-                    </button>
+              <div className="bg-card-dark rounded-[2rem] p-6 md:p-8 mb-8 border border-brand-cocoa/45 shadow-2xl animate-fadeIn">
+                <h3 className="text-xl font-display font-bold text-white mb-6 border-b border-border-pink/30 pb-4">
+                  Edit Workout Plan
+                </h3>
+                
+                <div className="space-y-6">
+                  {/* Workout Name Input */}
+                  <div>
+                    <label className="block text-xs font-semibold text-text-muted mb-2.5 tracking-widest uppercase font-quick">Workout Name</label>
+                    <input
+                      type="text"
+                      value={editingName}
+                      onChange={(e) => setEditingName(e.target.value)}
+                      className="glow-input font-sans border-2 border-border-pink rounded-xl p-4 w-full bg-bg-dark text-white text-base focus:border-brand-pink focus:outline-none"
+                      placeholder="e.g. Leg Day Burner"
+                      autoFocus
+                    />
                   </div>
+
+                  {/* Exercises List in Form */}
+                  <div>
+                    <div className="flex justify-between items-center mb-4">
+                      <label className="block text-xs font-semibold text-text-muted tracking-widest uppercase font-quick">Exercises</label>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setEditingExercises([
+                            ...editingExercises,
+                            { name: "", sets: "", reps: "" }
+                          ]);
+                        }}
+                        className="text-xs bg-brand-cocoa/20 hover:bg-brand-cocoa/30 text-brand-cocoa-light hover:text-white font-display font-bold px-3 py-1.5 rounded-xl border border-brand-cocoa/30 transition cursor-pointer"
+                      >
+                        + Add Exercise
+                      </button>
+                    </div>
+
+                    {editingExercises.length === 0 ? (
+                      <div className="text-center py-6 bg-bg-dark/50 rounded-2xl border border-border-pink/20">
+                        <p className="text-sm font-sans text-text-muted">No exercises added. Click "+ Add Exercise" to start building your routine.</p>
+                      </div>
+                    ) : (
+                      <div className="space-y-4">
+                        {editingExercises.map((exercise, index) => (
+                          <div key={index} className="flex flex-col md:flex-row items-center gap-3 bg-bg-dark/40 p-4 rounded-2xl border border-border-pink/25 animate-fadeIn">
+                            {/* Exercise Name */}
+                            <div className="flex-1 w-full">
+                              <input
+                                type="text"
+                                placeholder="Exercise Name (e.g. Bench Press)"
+                                value={exercise.name}
+                                onChange={(e) => {
+                                  const updated = [...editingExercises];
+                                  updated[index].name = e.target.value;
+                                  setEditingExercises(updated);
+                                }}
+                                className="glow-input font-sans border-2 border-border-pink rounded-xl p-3.5 w-full bg-bg-dark text-white text-sm focus:border-brand-pink focus:outline-none"
+                              />
+                            </div>
+                            
+                            {/* Sets */}
+                            <div className="w-full md:w-28 flex items-center gap-2">
+                              <input
+                                type="text"
+                                placeholder="Sets"
+                                value={exercise.sets}
+                                onChange={(e) => {
+                                  const updated = [...editingExercises];
+                                  updated[index].sets = e.target.value;
+                                  setEditingExercises(updated);
+                                }}
+                                className="glow-input font-sans border-2 border-border-pink rounded-xl p-3.5 w-full bg-bg-dark text-white text-sm focus:border-brand-pink focus:outline-none text-center"
+                              />
+                              <span className="text-xs text-text-muted md:hidden font-quick font-bold uppercase">sets</span>
+                            </div>
+
+                            {/* Reps */}
+                            <div className="w-full md:w-28 flex items-center gap-2">
+                              <input
+                                type="text"
+                                placeholder="Reps"
+                                value={exercise.reps}
+                                onChange={(e) => {
+                                  const updated = [...editingExercises];
+                                  updated[index].reps = e.target.value;
+                                  setEditingExercises(updated);
+                                }}
+                                className="glow-input font-sans border-2 border-border-pink rounded-xl p-3.5 w-full bg-bg-dark text-white text-sm focus:border-brand-pink focus:outline-none text-center"
+                              />
+                              <span className="text-xs text-text-muted md:hidden font-quick font-bold uppercase">reps</span>
+                            </div>
+
+                            {/* Delete button */}
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setEditingExercises(editingExercises.filter((_, idx) => idx !== index));
+                              }}
+                              className="p-3 text-red-400 hover:text-white hover:bg-red-500/10 border border-transparent hover:border-red-500/30 rounded-xl transition cursor-pointer"
+                              title="Delete Exercise Row"
+                            >
+                              <TrashIcon />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Save and Cancel buttons */}
+                <div className="mt-8 flex justify-end gap-3.5 border-t border-border-pink/30 pt-6">
+                  <button
+                    type="button"
+                    onClick={saveEdit}
+                    className="glow-button font-display font-bold px-8 py-3.5 rounded-xl text-sm cursor-pointer"
+                  >
+                    Save Changes
+                  </button>
+                  <button
+                    type="button"
+                    onClick={cancelEdit}
+                    className="bg-bg-dark hover:bg-card-dark text-text-muted border border-border-pink/80 hover:text-white font-display font-bold px-8 py-3.5 rounded-xl text-sm transition cursor-pointer"
+                  >
+                    Cancel
+                  </button>
                 </div>
               </div>
             )}
 
             {/* Workouts List */}
             {loading ? (
-              <div className="text-center py-12 bg-card-dark rounded-3xl border border-border-pink/30">
+              <div className="text-center py-12 bg-card-dark rounded-3xl border border-brand-cocoa/30">
                 <div className="w-10 h-10 border-4 border-t-brand-pink border-r-transparent border-b-brand-pink border-l-transparent rounded-full animate-spin mx-auto mb-4"></div>
                 <p className="font-sans text-text-muted">Loading workouts list...</p>
               </div>
             ) : workouts.length === 0 ? (
-              <div className="text-center py-16 bg-card-dark rounded-3xl border border-border-pink/30">
+              <div className="text-center py-16 bg-card-dark rounded-3xl border border-brand-cocoa/30">
                 <div className="mb-4">
                   <DumbbellIcon className="h-16 w-16 text-text-muted mx-auto filter drop-shadow-[0_0_8px_rgba(226,109,133,0.2)] animate-pulse" />
                 </div>
@@ -655,44 +802,46 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
                 {workouts.map((workout) => (
                   <div
                     key={workout.id}
-                    className="bg-card-dark rounded-[1.8rem] p-6 md:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between border border-border-pink/40 hover:border-brand-pink/20 hover:shadow-lg transition duration-200 gap-6"
+                    className="bg-card-dark rounded-[1.8rem] p-6 md:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between border border-brand-cocoa/30 hover:border-brand-pink/20 hover:shadow-lg hover:shadow-brand-cocoa/5 transition duration-200 gap-6"
                   >
                     <div className="flex items-center gap-6">
-                      <div className="w-24 h-20 bg-gradient-to-br from-brand-pink/20 to-border-pink/10 rounded-2xl flex items-center justify-center border border-brand-pink/15">
+                      <div className="w-24 h-20 bg-gradient-to-br from-brand-pink/15 to-brand-cocoa/10 rounded-2xl flex items-center justify-center border border-brand-cocoa/20">
                         <DumbbellIcon />
                       </div>
                       <div>
                         <h2 className="text-xl md:text-2xl font-display font-bold text-white">
                           {workout.name}
                         </h2>
-                        <p className="font-sans text-text-muted text-sm mt-1">{workout.exercises}</p>
+                        <p className="font-sans text-brand-cocoa-light text-sm mt-1 font-semibold">
+                          {Array.isArray(workout.exercises) ? `${workout.exercises.length} Exercises` : '0 Exercises'}
+                        </p>
                       </div>
                     </div>
                     <div className="relative flex items-center gap-4 w-full sm:w-auto justify-end">
                       <button
                         onClick={() => startWorkout(workout)}
-                        className="glow-button font-display font-bold px-6 py-2.5 rounded-full text-sm shadow-md"
+                        className="glow-button font-display font-bold px-6 py-2.5 rounded-full text-sm shadow-md cursor-pointer"
                       >
                         Start Workout
                       </button>
                       <button
                         onClick={() => setMenuOpen(menuOpen === workout.id ? null : workout.id)}
-                        className="text-2xl px-3 py-1 hover:bg-border-pink/40 text-text-muted hover:text-white rounded-full transition"
+                        className="text-2xl px-3 py-1 hover:bg-border-pink/40 text-text-muted hover:text-white rounded-full transition cursor-pointer"
                       >
                         ⋮
                       </button>
                       {menuOpen === workout.id && (
-                        <div className="absolute right-0 top-12 bg-bg-dark rounded-2xl shadow-2xl border border-border-pink/60 w-44 overflow-hidden z-20">
+                        <div className="absolute right-0 top-12 bg-bg-dark rounded-2xl shadow-2xl border border-brand-cocoa/40 w-44 overflow-hidden z-20">
                           <button
-                            onClick={() => startEdit(workout.id, workout.name)}
-                            className="w-full text-left px-5 py-3.5 font-sans text-sm hover:bg-card-dark text-white hover:text-brand-pink transition flex items-center gap-2.5"
+                            onClick={() => startEdit(workout)}
+                            className="w-full text-left px-5 py-3.5 font-sans text-sm hover:bg-card-dark text-white hover:text-brand-pink transition flex items-center gap-2.5 cursor-pointer"
                           >
                             <EditIcon />
-                            <span>Edit Name</span>
+                            <span>Edit Workout</span>
                           </button>
                           <button
                             onClick={() => handleDeleteWorkout(workout.id)}
-                            className="w-full text-left px-5 py-3.5 font-sans text-sm text-red-400 hover:bg-card-dark transition flex items-center gap-2.5"
+                            className="w-full text-left px-5 py-3.5 font-sans text-sm text-red-400 hover:bg-card-dark transition flex items-center gap-2.5 cursor-pointer"
                           >
                             <TrashIcon />
                             <span>Delete</span>
@@ -707,7 +856,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
           </div>
         )}
 
-        {/* TAB 3: BMI ANALYTICS (Split Grid Optimization for Space) */}
+        {/* TAB 3: BMI ANALYTICS */}
         {activeTab === "bmi" && (
           <div className="animate-fadeIn">
             {/* Header */}
@@ -722,14 +871,14 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
               
               {/* Left Column: Calculator inputs */}
-              <div className="lg:col-span-7 bg-card-dark/85 backdrop-blur-md rounded-3xl p-8 md:p-10 border border-border-pink/40 shadow-xl flex flex-col justify-between">
+              <div className="lg:col-span-7 bg-gradient-to-br from-card-dark to-[#251715]/65 backdrop-blur-md rounded-3xl p-8 md:p-10 border border-brand-cocoa/30 shadow-xl flex flex-col justify-between">
                 <div>
                   <h2 className="text-2xl md:text-3xl font-display font-bold text-white mb-8 tracking-tight">
                     BMI Calculator
                   </h2>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
                     <div>
-                      <label className="block text-xs font-bold text-text-muted mb-2.5 uppercase font-quick">Age</label>
+                      <label className="block text-xs font-bold text-text-muted mb-2.5 uppercase font-quick tracking-wider">Age</label>
                       <input
                         type="number"
                         placeholder="Years"
@@ -739,7 +888,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-bold text-text-muted mb-2.5 uppercase font-quick">Weight (kg)</label>
+                      <label className="block text-xs font-bold text-text-muted mb-2.5 uppercase font-quick tracking-wider">Weight (kg)</label>
                       <input
                         type="number"
                         placeholder="kg"
@@ -749,7 +898,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-bold text-text-muted mb-2.5 uppercase font-quick">Height (cm)</label>
+                      <label className="block text-xs font-bold text-text-muted mb-2.5 uppercase font-quick tracking-wider">Height (cm)</label>
                       <input
                         type="number"
                         placeholder="cm"
@@ -762,14 +911,14 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
                 </div>
                 <button
                   onClick={calculateBMI}
-                  className="glow-button font-display font-bold px-8 py-4 rounded-xl text-base w-full sm:w-auto"
+                  className="glow-button font-display font-bold px-8 py-4 rounded-xl text-base w-full sm:w-auto cursor-pointer"
                 >
                   Calculate & Save BMI
                 </button>
               </div>
 
               {/* Right Column: Standard Guidelines reference table */}
-              <div className="lg:col-span-5 bg-card-dark/85 backdrop-blur-md rounded-3xl p-8 border border-border-pink/40 shadow-xl flex flex-col justify-between">
+              <div className="lg:col-span-5 bg-card-dark/95 backdrop-blur-md rounded-3xl p-8 border border-brand-cocoa/25 shadow-xl flex flex-col justify-between">
                 <div>
                   <h3 className="text-xl font-display font-bold text-white mb-4">BMI Standards Reference</h3>
                   <p className="font-sans text-text-muted text-sm mb-6 leading-relaxed">
@@ -777,19 +926,19 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
                   </p>
                   
                   <div className="space-y-3.5">
-                    <div className="flex justify-between items-center p-3.5 rounded-xl bg-bg-dark/40 border border-border-pink/20">
+                    <div className="flex justify-between items-center p-3.5 rounded-xl bg-bg-dark/40 border border-brand-cocoa/20">
                       <span className="font-sans text-sm text-white">Underweight</span>
                       <span className="font-display font-bold text-brand-pink text-sm">&lt; 18.5</span>
                     </div>
-                    <div className="flex justify-between items-center p-3.5 rounded-xl bg-bg-dark/40 border border-border-pink/20">
+                    <div className="flex justify-between items-center p-3.5 rounded-xl bg-bg-dark/40 border border-brand-cocoa/20">
                       <span className="font-sans text-sm text-white">Normal Weight</span>
                       <span className="font-display font-bold text-green-400 text-sm">18.5 – 24.9</span>
                     </div>
-                    <div className="flex justify-between items-center p-3.5 rounded-xl bg-bg-dark/40 border border-border-pink/20">
+                    <div className="flex justify-between items-center p-3.5 rounded-xl bg-bg-dark/40 border border-brand-cocoa/20">
                       <span className="font-sans text-sm text-white">Overweight</span>
                       <span className="font-display font-bold text-orange-400 text-sm">25.0 – 29.9</span>
                     </div>
-                    <div className="flex justify-between items-center p-3.5 rounded-xl bg-bg-dark/40 border border-border-pink/20">
+                    <div className="flex justify-between items-center p-3.5 rounded-xl bg-bg-dark/40 border border-brand-cocoa/20">
                       <span className="font-sans text-sm text-white">Obese</span>
                       <span className="font-display font-bold text-red-400 text-sm">&ge; 30.0</span>
                     </div>
@@ -801,7 +950,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
 
             {/* Calculated BMI Display Card */}
             {user?.bmi && (
-              <div className="bg-gradient-to-br from-[#3D2125] to-card-dark rounded-3xl p-8 border border-brand-pink/30 shadow-xl animate-fadeIn">
+              <div className="bg-gradient-to-br from-[#3D2320] via-[#2A1816] to-[#1C1211] rounded-3xl p-8 md:p-12 border border-brand-cocoa/40 shadow-2xl animate-fadeIn">
                 <div className="text-center">
                   <p className="font-quick text-xs font-bold text-brand-pink tracking-widest uppercase">YOUR BODY MASS INDEX</p>
                   <h1 className="text-6xl md:text-7xl font-display font-extrabold text-white my-3 tracking-tight">
@@ -810,7 +959,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
                   <p className="font-display text-2xl font-bold text-brand-pink mb-6">
                     {user.status}
                   </p>
-                  <div className="bg-bg-dark rounded-2xl p-5 border border-border-pink/40 max-w-md mx-auto">
+                  <div className="bg-[#160E0D] rounded-2xl p-5 border border-brand-cocoa/30 max-w-md mx-auto">
                     <p className="font-display font-bold text-white text-sm tracking-wider uppercase mb-1">Recommended Goal</p>
                     <p className="font-sans text-text-muted text-sm md:text-base leading-relaxed">{user.goal}</p>
                   </div>

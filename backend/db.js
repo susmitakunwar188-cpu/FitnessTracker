@@ -37,6 +37,67 @@ async function writeDb(data) {
   await fs.writeFile(dbPath, JSON.stringify(data, null, 2));
 }
 
+function getDefaultExercises(name) {
+  const n = name.toLowerCase();
+  if (n.includes("bicep") || n.includes("arm")) {
+    return [
+      { name: "Dumbbell Bicep Curl", sets: "3", reps: "12" },
+      { name: "Hammer Curl", sets: "3", reps: "10" },
+      { name: "Concentration Curl", sets: "3", reps: "12" },
+      { name: "EZ-Bar Preacher Curl", sets: "4", reps: "8" }
+    ];
+  } else if (n.includes("chest") || n.includes("push")) {
+    return [
+      { name: "Flat Barbell Bench Press", sets: "4", reps: "10" },
+      { name: "Incline Dumbbell Press", sets: "3", reps: "12" },
+      { name: "Cable Chest Fly", sets: "3", reps: "15" },
+      { name: "Bodyweight Push-up", sets: "3", reps: "Max" }
+    ];
+  } else if (n.includes("leg") || n.includes("squat")) {
+    return [
+      { name: "Barbell Back Squat", sets: "4", reps: "8" },
+      { name: "Leg Press Machine", sets: "3", reps: "12" },
+      { name: "Dumbbell Romanian Deadlift", sets: "3", reps: "10" },
+      { name: "Seated Calf Raise", sets: "4", reps: "15" }
+    ];
+  } else if (n.includes("core") || n.includes("abs") || n.includes("belly")) {
+    return [
+      { name: "Forearm Plank Hold", sets: "3", reps: "60s" },
+      { name: "Hanging Leg Raise", sets: "3", reps: "12" },
+      { name: "Weighted Russian Twist", sets: "3", reps: "20" },
+      { name: "Ab Wheel Rollout", sets: "3", reps: "10" }
+    ];
+  } else if (n.includes("back") || n.includes("pull")) {
+    return [
+      { name: "Barbell Conventional Deadlift", sets: "4", reps: "5" },
+      { name: "Wide-Grip Pull-up", sets: "3", reps: "Max" },
+      { name: "Single-Arm Dumbbell Row", sets: "3", reps: "10" },
+      { name: "Lat Pulldown Machine", sets: "3", reps: "12" }
+    ];
+  } else if (n.includes("shoulder") || n.includes("press")) {
+    return [
+      { name: "Seated Overhead Dumbbell Press", sets: "4", reps: "10" },
+      { name: "Dumbbell Lateral Raise", sets: "4", reps: "12" },
+      { name: "Bent-Over Rear Delt Fly", sets: "3", reps: "15" },
+      { name: "Cable Face Pull", sets: "3", reps: "15" }
+    ];
+  } else if (n.includes("cardio") || n.includes("hiit") || n.includes("run")) {
+    return [
+      { name: "High-Intensity Burpees", sets: "4", reps: "45s" },
+      { name: "Mountain Climbers", sets: "4", reps: "50s" },
+      { name: "Bodyweight Air Squats", sets: "4", reps: "20" },
+      { name: "Jumping Jacks", sets: "3", reps: "60s" }
+    ];
+  } else {
+    return [
+      { name: "Bodyweight Air Squat", sets: "4", reps: "15" },
+      { name: "Incline Push-up", sets: "3", reps: "12" },
+      { name: "Plank Shoulder Tap", sets: "3", reps: "20" },
+      { name: "Jumping Jack Cardio Boost", sets: "3", reps: "45s" }
+    ];
+  }
+}
+
 // DB Operations
 export const db = {
   // Users
@@ -109,41 +170,60 @@ export const db = {
   // Workouts
   async getWorkouts(userId) {
     const data = await readDb();
-    const userWorkouts = data.workouts.filter(w => w.userId === userId);
+    let userWorkouts = data.workouts.filter(w => w.userId === userId);
     // If user has no workouts, return some default workouts mapped to this user
     if (userWorkouts.length === 0) {
       const defaults = [
-        { id: `${Date.now()}-1`, userId, name: "Biceps Workout", exercises: "4 Exercises" },
-        { id: `${Date.now()}-2`, userId, name: "Chest Workout", exercises: "4 Exercises" },
-        { id: `${Date.now()}-3`, userId, name: "Legs Workout", exercises: "4 Exercises" },
-        { id: `${Date.now()}-4`, userId, name: "Core Workout", exercises: "4 Exercises" }
+        { id: `${Date.now()}-1`, userId, name: "Biceps Workout", exercises: getDefaultExercises("Biceps Workout") },
+        { id: `${Date.now()}-2`, userId, name: "Chest Workout", exercises: getDefaultExercises("Chest Workout") },
+        { id: `${Date.now()}-3`, userId, name: "Legs Workout", exercises: getDefaultExercises("Legs Workout") },
+        { id: `${Date.now()}-4`, userId, name: "Core Workout", exercises: getDefaultExercises("Core Workout") }
       ];
       data.workouts.push(...defaults);
       await writeDb(data);
       return defaults;
     }
+
+    // Migrate string exercises to array exercises in database if any exist
+    let migrated = false;
+    data.workouts.forEach(w => {
+      if (w.userId === userId && typeof w.exercises === 'string') {
+        w.exercises = getDefaultExercises(w.name);
+        migrated = true;
+      }
+    });
+
+    if (migrated) {
+      await writeDb(data);
+      userWorkouts = data.workouts.filter(w => w.userId === userId);
+    }
+
     return userWorkouts;
   },
 
-  async createWorkout(userId, name, exercises = "4 Exercises") {
+  async createWorkout(userId, name, exercises) {
     const data = await readDb();
+    const resolvedExercises = Array.isArray(exercises) ? exercises : getDefaultExercises(name);
     const newWorkout = {
       id: Date.now().toString(),
       userId,
       name,
-      exercises
+      exercises: resolvedExercises
     };
     data.workouts.push(newWorkout);
     await writeDb(data);
     return newWorkout;
   },
 
-  async updateWorkout(workoutId, userId, name) {
+  async updateWorkout(workoutId, userId, name, exercises) {
     const data = await readDb();
     const workoutIndex = data.workouts.findIndex(w => w.id === workoutId && w.userId === userId);
     if (workoutIndex === -1) return null;
 
     data.workouts[workoutIndex].name = name;
+    if (Array.isArray(exercises)) {
+      data.workouts[workoutIndex].exercises = exercises;
+    }
     await writeDb(data);
     return data.workouts[workoutIndex];
   },

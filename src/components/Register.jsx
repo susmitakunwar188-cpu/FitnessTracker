@@ -86,14 +86,14 @@ function Register({ onRegisterSuccess, goHome, showLogin }) {
   };
 
   return (
-    <div className="min-h-screen bg-bg-dark flex items-center justify-center p-6 md:p-10">
+    <div className="min-h-screen bg-bg-dark flex items-center justify-center p-6 md:p-12 lg:p-16">
       {/* Centered, Split Card with Less Corner Radius */}
-      <div className="relative w-full max-w-5xl overflow-hidden rounded-xl border border-border-pink/40 bg-card-dark flex min-h-[640px] flex-col lg:flex-row shadow-[0_20px_50px_rgba(0,0,0,0.6)]">
+      <div className="relative w-full max-w-5xl overflow-hidden rounded-3xl border border-border-pink/40 bg-card-dark flex min-h-[660px] flex-col lg:flex-row shadow-[0_25px_60px_rgba(0,0,0,0.65)]">
         
         {/* Floating Close Button at top-right corner to exit/go home */}
         <button
           onClick={goHome}
-          className="absolute top-6 right-6 text-text-muted hover:text-brand-pink transition duration-200 z-30 p-1.5 hover:bg-border-pink/30 rounded-lg"
+          className="absolute top-6 right-6 text-text-muted hover:text-brand-pink transition duration-200 z-30 p-2 hover:bg-border-pink/30 rounded-xl"
           title="Close and Return to Home"
         >
           <CloseIcon />
@@ -106,36 +106,40 @@ function Register({ onRegisterSuccess, goHome, showLogin }) {
             alt="Fitness motivation weights"
             className="absolute inset-0 h-full w-full object-cover opacity-80"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-bg-dark/70 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-bg-dark/85 via-bg-dark/30 to-transparent" />
+          <div className="absolute bottom-10 left-10 right-10 z-10">
+            <p className="font-display text-2xl font-bold text-white mb-2 drop-shadow-md">Forge Your Legacy</p>
+            <p className="font-sans text-brand-cocoa-light text-sm font-semibold">Join thousands of athletes track their daily progression.</p>
+          </div>
         </div>
 
         {/* Right Form Panel */}
-        <div className="w-full lg:w-[55%] flex items-center justify-center p-8 sm:p-12 lg:p-14">
+        <div className="w-full lg:w-[55%] flex items-center justify-center p-8 sm:p-14 lg:p-16">
           <div className="w-full max-w-md">
 
             {/* Notices */}
             {error && (
-              <div className="bg-red-500/10 border border-red-500/30 text-red-400 p-4 rounded-lg mb-6 text-sm font-medium flex items-start gap-2.5 animate-fadeIn">
+              <div className="bg-red-500/10 border border-red-500/30 text-red-400 p-4.5 rounded-xl mb-8 text-sm font-medium flex items-start gap-3 animate-fadeIn">
                 <WarningIcon />
                 <span>{error}</span>
               </div>
             )}
 
-            <div className="text-left mb-8">
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-border-pink/30 border border-brand-pink/20 shadow-inner">
+            <div className="text-left mb-10">
+              <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-cocoa/20 border border-brand-cocoa/30 shadow-inner">
                 <RegisterIcon />
               </div>
-              <h2 className="text-3xl font-display font-bold text-white mb-2 tracking-tight">
+              <h2 className="text-3xl md:text-4xl font-display font-bold text-white mb-3 tracking-tight">
                 Create Account
               </h2>
-              <p className="font-sans text-text-muted text-sm">
-                Join Fitique to begin monitoring your workouts
+              <p className="font-sans text-text-muted text-base">
+                Join <span className="text-brand-pink font-semibold">Fitique</span> to begin monitoring your workouts
               </p>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-5">
+            <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label className="block text-xs font-semibold text-text-muted mb-2 tracking-wider font-quick">EMAIL ADDRESS</label>
+                <label className="block text-xs font-semibold text-text-muted mb-2.5 tracking-widest uppercase font-quick">Email Address</label>
                 <div className="relative">
                   <span className="absolute inset-y-0 left-4 flex items-center pr-3 pointer-events-none">
                     <MailIcon />
@@ -146,13 +150,13 @@ function Register({ onRegisterSuccess, goHome, showLogin }) {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="name@example.com"
-                    className="glow-input font-sans border-2 border-border-pink rounded-lg p-3.5 pl-12 w-full bg-bg-dark text-white text-base transition focus:border-brand-pink focus:outline-none"
+                    className="glow-input font-sans border-2 border-border-pink rounded-xl p-4 pl-12 w-full bg-bg-dark text-white text-base transition focus:border-brand-pink focus:outline-none"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-text-muted mb-2 tracking-wider font-quick">PASSWORD</label>
+                <label className="block text-xs font-semibold text-text-muted mb-2.5 tracking-widest uppercase font-quick">Password</label>
                 <div className="relative">
                   <span className="absolute inset-y-0 left-4 flex items-center pr-3 pointer-events-none">
                     <LockIcon />
@@ -163,7 +167,7 @@ function Register({ onRegisterSuccess, goHome, showLogin }) {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Min. 6 chars with letters & numbers"
-                    className="glow-input font-sans border-2 border-border-pink rounded-lg p-3.5 pl-12 w-full bg-bg-dark text-white text-base transition focus:border-brand-pink focus:outline-none"
+                    className="glow-input font-sans border-2 border-border-pink rounded-xl p-4 pl-12 w-full bg-bg-dark text-white text-base transition focus:border-brand-pink focus:outline-none"
                   />
                 </div>
               </div>
@@ -171,23 +175,23 @@ function Register({ onRegisterSuccess, goHome, showLogin }) {
               <button
                 type="submit"
                 disabled={loading}
-                className="glow-button font-display font-bold w-full py-3.5 rounded-lg text-base mt-2 flex items-center justify-center gap-2"
+                className="glow-button font-display font-bold w-full py-4 rounded-xl text-base mt-2 flex items-center justify-center gap-2 cursor-pointer"
               >
                 {loading ? (
                   <>
                     <div className="w-5 h-5 border-2 border-t-transparent border-white rounded-full animate-spin"></div>
-                    Registering...
+                    <span>Registering...</span>
                   </>
                 ) : (
-                  "Create Account"
+                  <span>Create Account</span>
                 )}
               </button>
             </form>
 
-            <div className="mt-4">
+            <div className="mt-4.5">
               <button
                 onClick={handleGoogleLogin}
-                className="w-full bg-[#241718] hover:bg-[#341F21] text-white border border-border-pink/80 py-3.5 rounded-lg font-display text-sm font-semibold transition duration-200 flex items-center justify-center gap-3.5"
+                className="w-full bg-brand-cocoa/10 hover:bg-brand-cocoa/20 text-white border border-brand-cocoa/40 hover:border-brand-cocoa py-4 rounded-xl font-display text-sm font-semibold transition duration-200 flex items-center justify-center gap-3.5 shadow-md shadow-brand-cocoa/5 cursor-pointer"
               >
                 <GoogleIcon />
                 <span>Continue with Google</span>
@@ -195,12 +199,12 @@ function Register({ onRegisterSuccess, goHome, showLogin }) {
             </div>
 
             {/* Footer Navigation */}
-            <div className="mt-8 text-center border-t border-border-pink/30 pt-6">
+            <div className="mt-10 text-center border-t border-border-pink/30 pt-8">
               <p className="font-sans text-text-muted text-sm">
                 Already have an account?{" "}
                 <button
                   onClick={showLogin}
-                  className="text-brand-pink hover:text-brand-pink-hover font-bold font-display hover:underline transition"
+                  className="text-brand-pink hover:text-brand-pink-hover font-bold font-display hover:underline transition cursor-pointer"
                 >
                   Login here
                 </button>

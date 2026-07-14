@@ -9,19 +9,19 @@ function Welcome({ next, user }) {
   const userDisplayName = userEmail.split("@")[0];
 
   return (
-    <div className="min-h-screen bg-bg-dark flex items-center justify-center p-6 md:p-10">
-      <div className="max-w-2xl w-full bg-card-dark rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.6)] border border-border-pink/40 p-10 md:p-16 text-center">
+    <div className="min-h-screen bg-bg-dark flex items-center justify-center p-6 md:p-12 lg:p-16">
+      <div className="max-w-2xl w-full bg-gradient-to-br from-card-dark via-[#1E1312] to-[#251715] rounded-[2.5rem] shadow-[0_25px_60px_rgba(0,0,0,0.7)] border border-border-pink/40 p-10 md:p-20 text-center animate-fadeIn">
         <WelcomeIcon />
-        <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-4 tracking-tight">
+        <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-6 tracking-tight">
           Welcome, <span className="text-brand-pink capitalize">{userDisplayName}</span>!
         </h1>
-        <p className="font-sans text-text-muted text-base md:text-lg mb-10 max-w-md mx-auto leading-relaxed">
+        <p className="font-sans text-text-muted text-base md:text-lg mb-12 max-w-md mx-auto leading-relaxed">
           Your account has been created successfully.<br />
           Let's setup your goals and log your first exercises!
         </p>
         <button
           onClick={next}
-          className="glow-button font-display font-bold px-10 py-4 rounded-full text-base md:text-lg shadow-lg shadow-brand-pink/20 hover:shadow-brand-pink/45 transition duration-300"
+          className="glow-button font-display font-bold px-12 py-5 rounded-full text-base md:text-lg shadow-lg shadow-brand-pink/20 hover:shadow-brand-pink/45 transition duration-300 cursor-pointer"
         >
           Start Workout Dashboard →
         </button>

@@ -147,14 +147,14 @@ function UserLogin({ goHome, onLoginSuccess, showRegister }) {
   };
 
   return (
-    <div className="min-h-screen bg-bg-dark flex items-center justify-center p-6 md:p-10">
+    <div className="min-h-screen bg-bg-dark flex items-center justify-center p-6 md:p-12 lg:p-16">
       {/* Centered, Split Card with Less Corner Radius */}
-      <div className="relative w-full max-w-5xl overflow-hidden rounded-xl border border-border-pink/40 bg-card-dark flex min-h-[640px] flex-col lg:flex-row shadow-[0_20px_50px_rgba(0,0,0,0.6)]">
+      <div className="relative w-full max-w-5xl overflow-hidden rounded-3xl border border-border-pink/40 bg-card-dark flex min-h-[660px] flex-col lg:flex-row shadow-[0_25px_60px_rgba(0,0,0,0.65)]">
         
         {/* Floating Close Button at top-right corner to exit/go home */}
         <button
           onClick={goHome}
-          className="absolute top-6 right-6 text-text-muted hover:text-brand-pink transition duration-200 z-30 p-1.5 hover:bg-border-pink/30 rounded-lg"
+          className="absolute top-6 right-6 text-text-muted hover:text-brand-pink transition duration-200 z-30 p-2 hover:bg-border-pink/30 rounded-xl"
           title="Close and Return to Home"
         >
           <CloseIcon />
@@ -167,23 +167,27 @@ function UserLogin({ goHome, onLoginSuccess, showRegister }) {
             alt="Fitness motivation weights"
             className="absolute inset-0 h-full w-full object-cover opacity-80"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-bg-dark/70 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-bg-dark/85 via-bg-dark/30 to-transparent" />
+          <div className="absolute bottom-10 left-10 right-10 z-10">
+            <p className="font-display text-2xl font-bold text-white mb-2 drop-shadow-md">Forge Your Legacy</p>
+            <p className="font-sans text-brand-cocoa-light text-sm font-semibold">Join thousands of athletes track their daily progression.</p>
+          </div>
         </div>
 
         {/* Right Form Panel */}
-        <div className="w-full lg:w-[55%] flex items-center justify-center p-8 sm:p-12 lg:p-14">
+        <div className="w-full lg:w-[55%] flex items-center justify-center p-8 sm:p-14 lg:p-16">
           <div className="w-full max-w-md">
 
             {/* Notices */}
             {error && (
-              <div className="bg-red-500/10 border border-red-500/30 text-red-400 p-4 rounded-lg mb-6 text-sm font-medium flex items-start gap-2.5 animate-fadeIn">
+              <div className="bg-red-500/10 border border-red-500/30 text-red-400 p-4.5 rounded-xl mb-8 text-sm font-medium flex items-start gap-3 animate-fadeIn">
                 <WarningIcon />
                 <span>{error}</span>
               </div>
             )}
 
             {success && (
-              <div className="bg-green-500/10 border border-green-500/30 text-green-400 p-4 rounded-lg mb-6 text-sm font-medium flex items-start gap-2.5 animate-fadeIn">
+              <div className="bg-green-500/10 border border-green-500/30 text-green-400 p-4.5 rounded-xl mb-8 text-sm font-medium flex items-start gap-3 animate-fadeIn">
                 <svg viewBox="0 0 24 24" className="h-5 w-5 text-green-400 shrink-0" fill="none" stroke="currentColor" strokeWidth="2.5">
                   <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
                   <polyline points="22 4 12 14.01 9 11.01" />
@@ -195,21 +199,21 @@ function UserLogin({ goHome, onLoginSuccess, showRegister }) {
             {/* PANEL 1: LOGIN */}
             {panel === "login" && (
               <div>
-                <div className="text-left mb-8">
-                  <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-border-pink/30 border border-brand-pink/20 shadow-inner">
+                <div className="text-left mb-10">
+                  <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-cocoa/20 border border-brand-cocoa/30 shadow-inner">
                     <UserIcon />
                   </div>
-                  <h2 className="text-3xl font-display font-bold text-white mb-2 tracking-tight">
+                  <h2 className="text-3xl md:text-4xl font-display font-bold text-white mb-3 tracking-tight">
                     Welcome Back
                   </h2>
-                  <p className="font-sans text-text-muted text-sm">
+                  <p className="font-sans text-text-muted text-base">
                     Login to continue your fitness journey
                   </p>
                 </div>
 
-                <form onSubmit={handleLogin} className="space-y-5">
+                <form onSubmit={handleLogin} className="space-y-6">
                   <div>
-                    <label className="block text-xs font-semibold text-text-muted mb-2 tracking-wider font-quick">EMAIL ADDRESS</label>
+                    <label className="block text-xs font-semibold text-text-muted mb-2.5 tracking-widest uppercase font-quick">Email Address</label>
                     <div className="relative">
                       <span className="absolute inset-y-0 left-4 flex items-center pr-3 pointer-events-none">
                         <MailIcon />
@@ -220,14 +224,14 @@ function UserLogin({ goHome, onLoginSuccess, showRegister }) {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="name@example.com"
-                        className="glow-input font-sans border-2 border-border-pink rounded-lg p-3.5 pl-12 w-full bg-bg-dark text-white text-base transition focus:border-brand-pink focus:outline-none"
+                        className="glow-input font-sans border-2 border-border-pink rounded-xl p-4 pl-12 w-full bg-bg-dark text-white text-base transition focus:border-brand-pink focus:outline-none"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <div className="flex justify-between items-center mb-2">
-                      <label className="block text-xs font-semibold text-text-muted tracking-wider font-quick">PASSWORD</label>
+                    <div className="flex justify-between items-center mb-2.5">
+                      <label className="block text-xs font-semibold text-text-muted tracking-widest uppercase font-quick">Password</label>
                       <button
                         type="button"
                         onClick={() => {
@@ -236,7 +240,7 @@ function UserLogin({ goHome, onLoginSuccess, showRegister }) {
                           setError("");
                           setSuccess("");
                         }}
-                        className="text-xs text-brand-pink hover:text-brand-pink-hover font-bold hover:underline transition"
+                        className="text-xs text-brand-pink hover:text-brand-pink-hover font-bold hover:underline transition cursor-pointer"
                       >
                         Forgot password?
                       </button>
@@ -251,7 +255,7 @@ function UserLogin({ goHome, onLoginSuccess, showRegister }) {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="Enter password"
-                        className="glow-input font-sans border-2 border-border-pink rounded-lg p-3.5 pl-12 w-full bg-bg-dark text-white text-base transition focus:border-brand-pink focus:outline-none"
+                        className="glow-input font-sans border-2 border-border-pink rounded-xl p-4 pl-12 w-full bg-bg-dark text-white text-base transition focus:border-brand-pink focus:outline-none"
                       />
                     </div>
                   </div>
@@ -259,23 +263,23 @@ function UserLogin({ goHome, onLoginSuccess, showRegister }) {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="glow-button font-display font-bold w-full py-3.5 rounded-lg text-base mt-2 flex items-center justify-center gap-2"
+                    className="glow-button font-display font-bold w-full py-4 rounded-xl text-base mt-2 flex items-center justify-center gap-2 cursor-pointer"
                   >
                     {loading ? (
                       <>
                         <div className="w-5 h-5 border-2 border-t-transparent border-white rounded-full animate-spin"></div>
-                        Logging in...
+                        <span>Logging in...</span>
                       </>
                     ) : (
-                      "Login"
+                      <span>Login</span>
                     )}
                   </button>
                 </form>
 
-                <div className="mt-4">
+                <div className="mt-4.5">
                   <button
                     onClick={handleGoogleLogin}
-                    className="w-full bg-[#241718] hover:bg-[#341F21] text-white border border-border-pink/80 py-3.5 rounded-lg font-display text-sm font-semibold transition duration-200 flex items-center justify-center gap-3.5"
+                    className="w-full bg-brand-cocoa/10 hover:bg-brand-cocoa/20 text-white border border-brand-cocoa/40 hover:border-brand-cocoa py-4 rounded-xl font-display text-sm font-semibold transition duration-200 flex items-center justify-center gap-3.5 shadow-md shadow-brand-cocoa/5 cursor-pointer"
                   >
                     <GoogleIcon />
                     <span>Continue with Google</span>
@@ -286,19 +290,19 @@ function UserLogin({ goHome, onLoginSuccess, showRegister }) {
 
             {/* PANEL 2: FORGOT PASSWORD */}
             {panel === "forgot" && (
-              <div>
-                <div className="text-left mb-8">
-                  <h2 className="text-3xl font-display font-bold text-white mb-2 tracking-tight">
+              <div className="animate-fadeIn">
+                <div className="text-left mb-10">
+                  <h2 className="text-3xl font-display font-bold text-white mb-3 tracking-tight">
                     Reset Password
                   </h2>
-                  <p className="font-sans text-text-muted text-sm">
+                  <p className="font-sans text-text-muted text-base">
                     Enter your email address to receive a password reset code
                   </p>
                 </div>
 
-                <form onSubmit={handleForgotPassword} className="space-y-5">
+                <form onSubmit={handleForgotPassword} className="space-y-6">
                   <div>
-                    <label className="block text-xs font-semibold text-text-muted mb-2 tracking-wider font-quick">EMAIL ADDRESS</label>
+                    <label className="block text-xs font-semibold text-text-muted mb-2.5 tracking-widest uppercase font-quick">Email Address</label>
                     <div className="relative">
                       <span className="absolute inset-y-0 left-4 flex items-center pr-3 pointer-events-none">
                         <MailIcon />
@@ -309,7 +313,7 @@ function UserLogin({ goHome, onLoginSuccess, showRegister }) {
                         value={resetEmail}
                         onChange={(e) => setResetEmail(e.target.value)}
                         placeholder="name@example.com"
-                        className="glow-input font-sans border-2 border-border-pink rounded-lg p-3.5 pl-12 w-full bg-bg-dark text-white text-base transition focus:border-brand-pink focus:outline-none"
+                        className="glow-input font-sans border-2 border-border-pink rounded-xl p-4 pl-12 w-full bg-bg-dark text-white text-base transition focus:border-brand-pink focus:outline-none"
                       />
                     </div>
                   </div>
@@ -317,20 +321,20 @@ function UserLogin({ goHome, onLoginSuccess, showRegister }) {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="glow-button font-display font-bold w-full py-3.5 rounded-lg text-base mt-2 flex items-center justify-center gap-2"
+                    className="glow-button font-display font-bold w-full py-4 rounded-xl text-base mt-2 flex items-center justify-center gap-2 cursor-pointer"
                   >
                     {loading ? (
                       <>
                         <div className="w-5 h-5 border-2 border-t-transparent border-white rounded-full animate-spin"></div>
-                        Sending Code...
+                        <span>Sending Code...</span>
                       </>
                     ) : (
-                      "Send Reset Code"
+                      <span>Send Reset Code</span>
                     )}
                   </button>
                 </form>
 
-                <div className="mt-6 text-center">
+                <div className="mt-8 text-center">
                   <button
                     type="button"
                     onClick={() => {
@@ -338,7 +342,7 @@ function UserLogin({ goHome, onLoginSuccess, showRegister }) {
                       setError("");
                       setSuccess("");
                     }}
-                    className="text-sm font-semibold text-brand-pink hover:text-brand-pink-hover hover:underline transition"
+                    className="text-sm font-semibold text-brand-pink hover:text-brand-pink-hover hover:underline transition cursor-pointer"
                   >
                     ← Back to Login
                   </button>
@@ -348,19 +352,19 @@ function UserLogin({ goHome, onLoginSuccess, showRegister }) {
 
             {/* PANEL 3: RESET PASSWORD DETAILS */}
             {panel === "reset" && (
-              <div>
-                <div className="text-left mb-8">
-                  <h2 className="text-3xl font-display font-bold text-white mb-2 tracking-tight">
+              <div className="animate-fadeIn">
+                <div className="text-left mb-10">
+                  <h2 className="text-3xl font-display font-bold text-white mb-3 tracking-tight">
                     Enter Reset Details
                   </h2>
-                  <p className="font-sans text-text-muted text-sm">
+                  <p className="font-sans text-text-muted text-base">
                     A verification code has been logged to the server console log
                   </p>
                 </div>
 
-                <form onSubmit={handleResetPassword} className="space-y-5">
+                <form onSubmit={handleResetPassword} className="space-y-6">
                   <div>
-                    <label className="block text-xs font-semibold text-text-muted mb-2 tracking-wider font-quick">CONFIRM EMAIL</label>
+                    <label className="block text-xs font-semibold text-text-muted mb-2.5 tracking-widest uppercase font-quick">Confirm Email</label>
                     <div className="relative">
                       <span className="absolute inset-y-0 left-4 flex items-center pr-3 pointer-events-none">
                         <MailIcon />
@@ -371,13 +375,13 @@ function UserLogin({ goHome, onLoginSuccess, showRegister }) {
                         value={resetEmail}
                         onChange={(e) => setResetEmail(e.target.value)}
                         placeholder="name@example.com"
-                        className="glow-input font-sans border-2 border-border-pink rounded-lg p-3.5 pl-12 w-full bg-bg-dark text-white text-base transition focus:border-brand-pink focus:outline-none"
+                        className="glow-input font-sans border-2 border-border-pink rounded-xl p-4 pl-12 w-full bg-bg-dark text-white text-base transition focus:border-brand-pink focus:outline-none"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold text-text-muted mb-2 tracking-wider font-quick">6-DIGIT VERIFICATION CODE</label>
+                    <label className="block text-xs font-semibold text-text-muted mb-2.5 tracking-widest uppercase font-quick">6-Digit Verification Code</label>
                     <div className="relative">
                       <span className="absolute inset-y-0 left-4 flex items-center pr-3 pointer-events-none">
                         <KeyIcon />
@@ -389,13 +393,13 @@ function UserLogin({ goHome, onLoginSuccess, showRegister }) {
                         value={resetToken}
                         onChange={(e) => setResetToken(e.target.value)}
                         placeholder="Enter 6-digit code"
-                        className="glow-input font-sans border-2 border-border-pink rounded-lg p-3.5 pl-12 w-full bg-bg-dark text-white text-base transition focus:border-brand-pink focus:outline-none tracking-widest font-bold"
+                        className="glow-input font-sans border-2 border-border-pink rounded-xl p-4 pl-12 w-full bg-bg-dark text-white text-base transition focus:border-brand-pink focus:outline-none tracking-widest font-bold text-center"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold text-text-muted mb-2 tracking-wider font-quick">NEW PASSWORD</label>
+                    <label className="block text-xs font-semibold text-text-muted mb-2.5 tracking-widest uppercase font-quick">New Password</label>
                     <div className="relative">
                       <span className="absolute inset-y-0 left-4 flex items-center pr-3 pointer-events-none">
                         <LockIcon />
@@ -406,7 +410,7 @@ function UserLogin({ goHome, onLoginSuccess, showRegister }) {
                         value={newPassword}
                         onChange={(e) => setNewPassword(e.target.value)}
                         placeholder="Min. 6 chars with letters & numbers"
-                        className="glow-input font-sans border-2 border-border-pink rounded-lg p-3.5 pl-12 w-full bg-bg-dark text-white text-base transition focus:border-brand-pink focus:outline-none"
+                        className="glow-input font-sans border-2 border-border-pink rounded-xl p-4 pl-12 w-full bg-bg-dark text-white text-base transition focus:border-brand-pink focus:outline-none"
                       />
                     </div>
                   </div>
@@ -414,20 +418,20 @@ function UserLogin({ goHome, onLoginSuccess, showRegister }) {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="glow-button font-display font-bold w-full py-3.5 rounded-lg text-base mt-2 flex items-center justify-center gap-2"
+                    className="glow-button font-display font-bold w-full py-4 rounded-xl text-base mt-2 flex items-center justify-center gap-2 cursor-pointer"
                   >
                     {loading ? (
                       <>
                         <div className="w-5 h-5 border-2 border-t-transparent border-white rounded-full animate-spin"></div>
-                        Resetting...
+                        <span>Resetting...</span>
                       </>
                     ) : (
-                      "Reset Password"
+                      <span>Reset Password</span>
                     )}
                   </button>
                 </form>
 
-                <div className="mt-6 text-center">
+                <div className="mt-8 text-center">
                   <button
                     type="button"
                     onClick={() => {
@@ -435,7 +439,7 @@ function UserLogin({ goHome, onLoginSuccess, showRegister }) {
                       setError("");
                       setSuccess("");
                     }}
-                    className="text-sm font-semibold text-brand-pink hover:text-brand-pink-hover hover:underline transition"
+                    className="text-sm font-semibold text-brand-pink hover:text-brand-pink-hover hover:underline transition cursor-pointer"
                   >
                     ← Cancel and return to Login
                   </button>
@@ -444,12 +448,12 @@ function UserLogin({ goHome, onLoginSuccess, showRegister }) {
             )}
 
             {/* Footer Navigation */}
-            <div className="mt-8 text-center border-t border-border-pink/30 pt-6">
+            <div className="mt-10 text-center border-t border-border-pink/30 pt-8">
               <p className="font-sans text-text-muted text-sm">
                 Don't have an account yet?{" "}
                 <button
                   onClick={showRegister}
-                  className="text-brand-pink hover:text-brand-pink-hover font-bold font-display hover:underline transition"
+                  className="text-brand-pink hover:text-brand-pink-hover font-bold font-display hover:underline transition cursor-pointer"
                 >
                   Create one here
                 </button>

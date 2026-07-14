@@ -25,7 +25,7 @@ router.post('/', async (req, res) => {
     return res.status(400).json({ error: 'Workout name is required' });
   }
   try {
-    const newWorkout = await db.createWorkout(req.userId, name, exercises || '4 Exercises');
+    const newWorkout = await db.createWorkout(req.userId, name, exercises);
     res.status(201).json(newWorkout);
   } catch (err) {
     console.error(err);
@@ -35,12 +35,12 @@ router.post('/', async (req, res) => {
 
 // Update workout name
 router.put('/:id', async (req, res) => {
-  const { name } = req.body;
+  const { name, exercises } = req.body;
   if (!name) {
     return res.status(400).json({ error: 'Workout name is required' });
   }
   try {
-    const updated = await db.updateWorkout(req.params.id, req.userId, name);
+    const updated = await db.updateWorkout(req.params.id, req.userId, name, exercises);
     if (!updated) {
       return res.status(404).json({ error: 'Workout not found or unauthorized' });
     }
