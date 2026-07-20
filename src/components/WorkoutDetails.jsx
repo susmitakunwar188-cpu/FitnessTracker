@@ -25,6 +25,25 @@ const ResetIcon = () => (
   </svg>
 );
 
+const getWorkoutVisual = (workout) => {
+  if (workout?.imageUrl) return workout.imageUrl;
+
+  const name = (workout?.name || "").toLowerCase();
+  if (name.includes("leg") || name.includes("squat") || name.includes("glute")) {
+    return "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=900&q=80";
+  }
+  if (name.includes("back") || name.includes("pull")) {
+    return "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=900&q=80";
+  }
+  if (name.includes("chest") || name.includes("push") || name.includes("upper")) {
+    return "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=900&q=80";
+  }
+  if (name.includes("core") || name.includes("abs") || name.includes("cardio") || name.includes("hiit")) {
+    return "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=900&q=80";
+  }
+  return "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=900&q=80";
+};
+
 function WorkoutDetails({ workout, goDashboard }) {
   const workoutName = workout?.name || "Workout Session";
 
@@ -176,6 +195,14 @@ function WorkoutDetails({ workout, goDashboard }) {
           >
             ← Back to Dashboard
           </button>
+        </div>
+
+        <div className="mb-8 overflow-hidden rounded-[2rem] border border-brand-cocoa/30 bg-[#1b1212] shadow-lg">
+          <img
+            src={getWorkoutVisual(workout)}
+            alt={`${workoutName} workout preview`}
+            className="h-56 w-full object-cover"
+          />
         </div>
 
         {timerAlert && (

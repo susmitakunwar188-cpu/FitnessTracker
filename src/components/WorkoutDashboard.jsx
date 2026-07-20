@@ -58,6 +58,28 @@ const BrandIcon = () => (
   </svg>
 );
 
+const getWorkoutVisual = (workout) => {
+  if (workout?.imageUrl) return workout.imageUrl;
+
+  const name = (workout?.name || "").toLowerCase();
+  if (name.includes("leg") || name.includes("squat") || name.includes("glute")) {
+    return "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=900&q=80";
+  }
+  if (name.includes("back") || name.includes("pull")) {
+    return "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=900&q=80";
+  }
+  if (name.includes("chest") || name.includes("push") || name.includes("upper")) {
+    return "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=900&q=80";
+  }
+  if (name.includes("core") || name.includes("abs") || name.includes("cardio") || name.includes("hiit")) {
+    return "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=900&q=80";
+  }
+  if (name.includes("yoga") || name.includes("mobility") || name.includes("flow")) {
+    return "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=900&q=80";
+  }
+  return "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=900&q=80";
+};
+
 function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
   const [workouts, setWorkouts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -941,8 +963,13 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
                     className="bg-card-dark rounded-[1.8rem] p-6 md:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between border border-brand-cocoa/30 hover:border-brand-pink/20 hover:shadow-lg hover:shadow-brand-cocoa/5 transition duration-200 gap-6"
                   >
                     <div className="flex items-center gap-6">
-                      <div className="w-24 h-20 bg-gradient-to-br from-brand-pink/15 to-brand-cocoa/10 rounded-2xl flex items-center justify-center border border-brand-cocoa/20">
-                        <DumbbellIcon />
+                      <div className="w-24 h-20 overflow-hidden rounded-2xl border border-brand-cocoa/20 bg-bg-dark shadow-inner">
+                        <img
+                          src={getWorkoutVisual(workout)}
+                          alt={`${workout.name} workout preview`}
+                          className="h-full w-full object-cover"
+                          loading="lazy"
+                        />
                       </div>
                       <div>
                         <h2 className="text-xl md:text-2xl font-display font-bold text-white">
