@@ -9,10 +9,32 @@ import { api } from "./utils/api";
 
 function App() {
   const [page, setPage] = useState("home");
-  const [token, setToken] = useState(localStorage.getItem("token"));
+  const [, setToken] = useState(localStorage.getItem("token"));
   const [user, setUser] = useState(null);
   const [activeWorkout, setActiveWorkout] = useState(null);
   const [loading, setLoading] = useState(!!localStorage.getItem("token"));
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setToken(null);
+    setUser(null);
+    setActiveWorkout(null);
+    setPage("home");
+  };
+
+  const handleLogin = (newToken, userData) => {
+    localStorage.setItem("token", newToken);
+    setToken(newToken);
+    setUser(userData);
+    setPage("dashboard");
+  };
+
+  const handleRegister = (newToken, userData) => {
+    localStorage.setItem("token", newToken);
+    setToken(newToken);
+    setUser(userData);
+    setPage("welcome");
+  };
 
   // Check token and fetch user details on mount
   useEffect(() => {
@@ -34,28 +56,6 @@ function App() {
 
     initAuth();
   }, []);
-
-  const handleLogin = (newToken, userData) => {
-    localStorage.setItem("token", newToken);
-    setToken(newToken);
-    setUser(userData);
-    setPage("dashboard");
-  };
-
-  const handleRegister = (newToken, userData) => {
-    localStorage.setItem("token", newToken);
-    setToken(newToken);
-    setUser(userData);
-    setPage("welcome");
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    setToken(null);
-    setUser(null);
-    setActiveWorkout(null);
-    setPage("home");
-  };
 
   if (loading) {
     return (

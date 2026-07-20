@@ -52,7 +52,8 @@ router.post('/register', async (req, res) => {
     });
 
     const token = jwt.sign({ userId: newUser.id }, JWT_SECRET, { expiresIn: '7d' });
-    const { password: _, ...userWithoutPassword } = newUser;
+    const userWithoutPassword = { ...newUser };
+    delete userWithoutPassword.password;
 
     res.status(201).json({
       message: 'User registered successfully',
@@ -87,7 +88,8 @@ router.post('/login', async (req, res) => {
     }
 
     const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '7d' });
-    const { password: _, ...userWithoutPassword } = user;
+    const userWithoutPassword = { ...user };
+    delete userWithoutPassword.password;
 
     res.json({
       message: 'Login successful',
@@ -199,7 +201,10 @@ router.get('/profile', authenticateToken, async (req, res) => {
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
-    const { password: _, resetToken: __, resetTokenExpiry: ___, ...userWithoutSecrets } = user;
+    const userWithoutSecrets = { ...user };
+    delete userWithoutSecrets.password;
+    delete userWithoutSecrets.resetToken;
+    delete userWithoutSecrets.resetTokenExpiry;
     res.json(userWithoutSecrets);
   } catch (err) {
     console.error(err);
@@ -224,7 +229,10 @@ router.put('/profile', authenticateToken, async (req, res) => {
     if (!updatedUser) {
       return res.status(404).json({ error: 'User not found' });
     }
-    const { password: _, resetToken: __, resetTokenExpiry: ___, ...userWithoutSecrets } = updatedUser;
+    const userWithoutSecrets = { ...updatedUser };
+    delete userWithoutSecrets.password;
+    delete userWithoutSecrets.resetToken;
+    delete userWithoutSecrets.resetTokenExpiry;
     res.json(userWithoutSecrets);
   } catch (err) {
     console.error(err);

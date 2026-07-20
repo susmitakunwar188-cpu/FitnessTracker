@@ -105,6 +105,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
   }, []);
 
   // Sync BMI input states if user object changes
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     if (user) {
       setAge(user.age || "");
@@ -117,6 +118,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
       });
     }
   }, [user]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   // Add Workout
   const handleAddWorkout = async (e) => {
@@ -198,9 +200,8 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
     }
     const heightInMeters = height / 100;
     const bmiValue = (weight / (heightInMeters * heightInMeters)).toFixed(1);
-    
-    let status = "";
-    let goal = "";
+    let status;
+    let goal;
 
     if (bmiValue < 18.5) {
       status = "Underweight";

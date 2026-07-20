@@ -1,3 +1,4 @@
+/* global process */
 import jwt from 'jsonwebtoken';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'fitique-super-secret-key-13579';
