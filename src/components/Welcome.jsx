@@ -9,8 +9,14 @@ function Welcome({ next, user }) {
   const userDisplayName = userEmail.split("@")[0];
 
   return (
-    <div className="min-h-screen bg-bg-dark flex items-center justify-center p-6 md:p-12 lg:p-16">
-      <div className="max-w-2xl w-full bg-gradient-to-br from-card-dark via-[#1E1312] to-[#251715] rounded-[2.5rem] shadow-[0_25px_60px_rgba(0,0,0,0.7)] border border-border-pink/40 p-10 md:p-20 text-center animate-fadeIn">
+    <div className="min-h-screen bg-bg-dark flex items-center justify-center p-6 md:p-12 lg:p-16 relative overflow-hidden">
+      {/* Background glow blobs */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+        <div className="absolute top-[-20%] right-[-20%] w-[60vw] h-[60vw] rounded-full bg-brand-pink/5 blur-[120px]" />
+        <div className="absolute bottom-[-20%] left-[-20%] w-[60vw] h-[60vw] rounded-full bg-brand-cocoa/5 blur-[150px]" />
+      </div>
+
+      <div className="max-w-2xl w-full bg-gradient-to-br from-card-dark via-[#1E1312] to-[#251715] rounded-[2.5rem] shadow-[0_25px_60px_rgba(0,0,0,0.7)] border border-border-pink/40 p-10 md:p-20 text-center animate-fadeIn z-10">
         <WelcomeIcon />
         <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-6 tracking-tight">
           Welcome, <span className="text-brand-pink capitalize">{userDisplayName}</span>!
