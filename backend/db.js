@@ -1,145 +1,157 @@
+/* global process */
 import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const dbPath = path.join(__dirname, 'data', 'db.json');
+const DATA_FILE = path.join(__dirname, 'data', 'db.json');
 
-// Ensure database file and directories exist
-async function initDb() {
-  try {
-    await fs.mkdir(path.dirname(dbPath), { recursive: true });
-    try {
-      await fs.access(dbPath);
-    } catch {
-      // Create empty db.json if not exists
-      await fs.writeFile(dbPath, JSON.stringify({ users: [], workouts: [] }, null, 2));
-    }
-  } catch (err) {
-    console.error("Failed to initialize database:", err);
-  }
-}
-
-// Read whole database
-async function readDb() {
-  await initDb();
-  try {
-    const data = await fs.readFile(dbPath, 'utf8');
-    return JSON.parse(data);
-  } catch {
-    return { users: [], workouts: [] };
-  }
-}
-
-// Write to database
-async function writeDb(data) {
-  await initDb();
-  await fs.writeFile(dbPath, JSON.stringify(data, null, 2));
-}
+let cachedStore = null;
 
 function getDefaultExercises(name) {
-  const n = name.toLowerCase();
-  if (n.includes("bicep") || n.includes("arm")) {
+  const n = String(name || '').toLowerCase();
+  if (n.includes('bicep') || n.includes('arm')) {
     return [
-      { name: "Dumbbell Bicep Curl", sets: "3", reps: "12" },
-      { name: "Hammer Curl", sets: "3", reps: "10" },
-      { name: "Concentration Curl", sets: "3", reps: "12" },
-      { name: "EZ-Bar Preacher Curl", sets: "4", reps: "8" }
+      { name: 'Dumbbell Bicep Curl', sets: '3', reps: '12' },
+      { name: 'Hammer Curl', sets: '3', reps: '10' },
+      { name: 'Concentration Curl', sets: '3', reps: '12' },
+      { name: 'EZ-Bar Preacher Curl', sets: '4', reps: '8' }
     ];
-  } else if (n.includes("chest") || n.includes("push")) {
+  } else if (n.includes('chest') || n.includes('push')) {
     return [
-      { name: "Flat Barbell Bench Press", sets: "4", reps: "10" },
-      { name: "Incline Dumbbell Press", sets: "3", reps: "12" },
-      { name: "Cable Chest Fly", sets: "3", reps: "15" },
-      { name: "Bodyweight Push-up", sets: "3", reps: "Max" }
+      { name: 'Flat Barbell Bench Press', sets: '4', reps: '10' },
+      { name: 'Incline Dumbbell Press', sets: '3', reps: '12' },
+      { name: 'Cable Chest Fly', sets: '3', reps: '15' },
+      { name: 'Bodyweight Push-up', sets: '3', reps: 'Max' }
     ];
-  } else if (n.includes("leg") || n.includes("squat")) {
+  } else if (n.includes('leg') || n.includes('squat')) {
     return [
-      { name: "Barbell Back Squat", sets: "4", reps: "8" },
-      { name: "Leg Press Machine", sets: "3", reps: "12" },
-      { name: "Dumbbell Romanian Deadlift", sets: "3", reps: "10" },
-      { name: "Seated Calf Raise", sets: "4", reps: "15" }
+      { name: 'Barbell Back Squat', sets: '4', reps: '8' },
+      { name: 'Leg Press Machine', sets: '3', reps: '12' },
+      { name: 'Dumbbell Romanian Deadlift', sets: '3', reps: '10' },
+      { name: 'Seated Calf Raise', sets: '4', reps: '15' }
     ];
-  } else if (n.includes("core") || n.includes("abs") || n.includes("belly")) {
+  } else if (n.includes('core') || n.includes('abs') || n.includes('belly')) {
     return [
-      { name: "Forearm Plank Hold", sets: "3", reps: "60s" },
-      { name: "Hanging Leg Raise", sets: "3", reps: "12" },
-      { name: "Weighted Russian Twist", sets: "3", reps: "20" },
-      { name: "Ab Wheel Rollout", sets: "3", reps: "10" }
+      { name: 'Forearm Plank Hold', sets: '3', reps: '60s' },
+      { name: 'Hanging Leg Raise', sets: '3', reps: '12' },
+      { name: 'Weighted Russian Twist', sets: '3', reps: '20' },
+      { name: 'Ab Wheel Rollout', sets: '3', reps: '10' }
     ];
-  } else if (n.includes("back") || n.includes("pull")) {
+  } else if (n.includes('back') || n.includes('pull')) {
     return [
-      { name: "Barbell Conventional Deadlift", sets: "4", reps: "5" },
-      { name: "Wide-Grip Pull-up", sets: "3", reps: "Max" },
-      { name: "Single-Arm Dumbbell Row", sets: "3", reps: "10" },
-      { name: "Lat Pulldown Machine", sets: "3", reps: "12" }
+      { name: 'Barbell Conventional Deadlift', sets: '4', reps: '5' },
+      { name: 'Wide-Grip Pull-up', sets: '3', reps: 'Max' },
+      { name: 'Single-Arm Dumbbell Row', sets: '3', reps: '10' },
+      { name: 'Lat Pulldown Machine', sets: '3', reps: '12' }
     ];
-  } else if (n.includes("shoulder") || n.includes("press")) {
+  } else if (n.includes('shoulder') || n.includes('press')) {
     return [
-      { name: "Seated Overhead Dumbbell Press", sets: "4", reps: "10" },
-      { name: "Dumbbell Lateral Raise", sets: "4", reps: "12" },
-      { name: "Bent-Over Rear Delt Fly", sets: "3", reps: "15" },
-      { name: "Cable Face Pull", sets: "3", reps: "15" }
+      { name: 'Seated Overhead Dumbbell Press', sets: '4', reps: '10' },
+      { name: 'Dumbbell Lateral Raise', sets: '4', reps: '12' },
+      { name: 'Bent-Over Rear Delt Fly', sets: '3', reps: '15' },
+      { name: 'Cable Face Pull', sets: '3', reps: '15' }
     ];
-  } else if (n.includes("cardio") || n.includes("hiit") || n.includes("run")) {
+  } else if (n.includes('cardio') || n.includes('hiit') || n.includes('run')) {
     return [
-      { name: "High-Intensity Burpees", sets: "4", reps: "45s" },
-      { name: "Mountain Climbers", sets: "4", reps: "50s" },
-      { name: "Bodyweight Air Squats", sets: "4", reps: "20" },
-      { name: "Jumping Jacks", sets: "3", reps: "60s" }
+      { name: 'High-Intensity Burpees', sets: '4', reps: '45s' },
+      { name: 'Mountain Climbers', sets: '4', reps: '50s' },
+      { name: 'Bodyweight Air Squats', sets: '4', reps: '20' },
+      { name: 'Jumping Jacks', sets: '3', reps: '60s' }
     ];
-  } else {
-    return [
-      { name: "Bodyweight Air Squat", sets: "4", reps: "15" },
-      { name: "Incline Push-up", sets: "3", reps: "12" },
-      { name: "Plank Shoulder Tap", sets: "3", reps: "20" },
-      { name: "Jumping Jack Cardio Boost", sets: "3", reps: "45s" }
-    ];
+  }
+
+  return [
+    { name: 'Bodyweight Air Squat', sets: '4', reps: '15' },
+    { name: 'Incline Push-up', sets: '3', reps: '12' },
+    { name: 'Plank Shoulder Tap', sets: '3', reps: '20' },
+    { name: 'Jumping Jack Cardio Boost', sets: '3', reps: '45s' }
+  ];
+}
+
+function toUserRecord(user) {
+  if (!user) return null;
+  return { ...user, id: user.id || user._id || String(user._id || '') };
+}
+
+function toWorkoutRecord(workout) {
+  if (!workout) return null;
+  return { ...workout, id: workout.id || workout._id || String(workout._id || '') };
+}
+
+async function readStore() {
+  if (cachedStore) return cachedStore;
+
+  try {
+    await fs.mkdir(path.dirname(DATA_FILE), { recursive: true });
+    const raw = await fs.readFile(DATA_FILE, 'utf8');
+    const parsed = JSON.parse(raw);
+    cachedStore = {
+      users: Array.isArray(parsed.users) ? parsed.users : [],
+      workouts: Array.isArray(parsed.workouts) ? parsed.workouts : []
+    };
+    return cachedStore;
+  } catch (error) {
+    if (error.code !== 'ENOENT') {
+      console.warn('Using empty JSON store because the data file could not be read:', error.message);
+    }
+    cachedStore = { users: [], workouts: [] };
+    await fs.writeFile(DATA_FILE, JSON.stringify(cachedStore, null, 2), 'utf8');
+    return cachedStore;
   }
 }
 
-// DB Operations
+async function writeStore(nextStore) {
+  cachedStore = nextStore;
+  await fs.mkdir(path.dirname(DATA_FILE), { recursive: true });
+  await fs.writeFile(DATA_FILE, JSON.stringify(nextStore, null, 2), 'utf8');
+}
+
 export const db = {
-  // Users
   async findUserByEmail(email) {
-    const data = await readDb();
-    return data.users.find(u => u.email.toLowerCase() === email.toLowerCase());
+    const state = await readStore();
+    const targetEmail = String(email || '').toLowerCase();
+    const user = state.users.find((entry) => String(entry.email || '').toLowerCase() === targetEmail);
+    return toUserRecord(user);
   },
 
   async findUserById(id) {
-    const data = await readDb();
-    return data.users.find(u => u.id === id);
+    const state = await readStore();
+    const user = state.users.find((entry) => String(entry.id) === String(id));
+    return toUserRecord(user);
   },
 
   async createUser(user) {
-    const data = await readDb();
+    const state = await readStore();
+    const usernameVal = user.username || user.email.split('@')[0];
     const newUser = {
-      id: Date.now().toString(),
+      id: String(Date.now()),
       email: user.email,
-      password: user.password, // already hashed
-      age: "",
-      weight: "",
-      height: "",
-      bmi: null,
-      status: "",
-      goal: "",
-      username: user.username || user.email.split("@")[0],
-      avatarUrl: user.avatarUrl || "",
-      bio: user.bio || "",
-      ...user
+      password: user.password,
+      username: usernameVal,
+      avatarUrl: user.avatarUrl || '',
+      bio: user.bio || '',
+      age: user.age || '',
+      weight: user.weight || '',
+      height: user.height || '',
+      bmi: user.bmi || null,
+      status: user.status || '',
+      goal: user.goal || '',
+      resetToken: user.resetToken || null,
+      resetTokenExpiry: user.resetTokenExpiry || null
     };
-    data.users.push(newUser);
-    await writeDb(data);
-    return newUser;
+    state.users.push(newUser);
+    await writeStore(state);
+    return toUserRecord(newUser);
   },
 
   async updateUserStats(userId, stats) {
-    const data = await readDb();
-    const userIndex = data.users.findIndex(u => u.id === userId);
-    if (userIndex === -1) return null;
+    const state = await readStore();
+    const index = state.users.findIndex((entry) => String(entry.id) === String(userId));
+    if (index === -1) return null;
 
-    data.users[userIndex] = {
-      ...data.users[userIndex],
+    state.users[index] = {
+      ...state.users[index],
       age: stats.age,
       weight: stats.weight,
       height: stats.height,
@@ -150,90 +162,74 @@ export const db = {
       avatarUrl: stats.avatarUrl,
       bio: stats.bio
     };
-    await writeDb(data);
-    return data.users[userIndex];
+
+    await writeStore(state);
+    return toUserRecord(state.users[index]);
   },
 
   async updateUser(userId, updates) {
-    const data = await readDb();
-    const userIndex = data.users.findIndex(u => u.id === userId);
-    if (userIndex === -1) return null;
+    const state = await readStore();
+    const index = state.users.findIndex((entry) => String(entry.id) === String(userId));
+    if (index === -1) return null;
 
-    data.users[userIndex] = {
-      ...data.users[userIndex],
-      ...updates
-    };
-    await writeDb(data);
-    return data.users[userIndex];
+    state.users[index] = { ...state.users[index], ...updates };
+    await writeStore(state);
+    return toUserRecord(state.users[index]);
   },
 
-  // Workouts
   async getWorkouts(userId) {
-    const data = await readDb();
-    let userWorkouts = data.workouts.filter(w => w.userId === userId);
-    // If user has no workouts, return some default workouts mapped to this user
-    if (userWorkouts.length === 0) {
+    const state = await readStore();
+    let list = state.workouts.filter((entry) => String(entry.userId) === String(userId));
+
+    if (list.length === 0) {
       const defaults = [
-        { id: `${Date.now()}-1`, userId, name: "Biceps Workout", exercises: getDefaultExercises("Biceps Workout") },
-        { id: `${Date.now()}-2`, userId, name: "Chest Workout", exercises: getDefaultExercises("Chest Workout") },
-        { id: `${Date.now()}-3`, userId, name: "Legs Workout", exercises: getDefaultExercises("Legs Workout") },
-        { id: `${Date.now()}-4`, userId, name: "Core Workout", exercises: getDefaultExercises("Core Workout") }
+        { id: `${Date.now()}-1`, userId, name: 'Biceps Workout', exercises: getDefaultExercises('Biceps Workout') },
+        { id: `${Date.now()}-2`, userId, name: 'Chest Workout', exercises: getDefaultExercises('Chest Workout') },
+        { id: `${Date.now()}-3`, userId, name: 'Legs Workout', exercises: getDefaultExercises('Legs Workout') },
+        { id: `${Date.now()}-4`, userId, name: 'Core Workout', exercises: getDefaultExercises('Core Workout') }
       ];
-      data.workouts.push(...defaults);
-      await writeDb(data);
-      return defaults;
+      state.workouts.push(...defaults);
+      await writeStore(state);
+      list = defaults;
     }
 
-    // Migrate string exercises to array exercises in database if any exist
-    let migrated = false;
-    data.workouts.forEach(w => {
-      if (w.userId === userId && typeof w.exercises === 'string') {
-        w.exercises = getDefaultExercises(w.name);
-        migrated = true;
-      }
-    });
-
-    if (migrated) {
-      await writeDb(data);
-      userWorkouts = data.workouts.filter(w => w.userId === userId);
-    }
-
-    return userWorkouts;
+    return list.map(toWorkoutRecord);
   },
 
   async createWorkout(userId, name, exercises) {
-    const data = await readDb();
+    const state = await readStore();
     const resolvedExercises = Array.isArray(exercises) ? exercises : getDefaultExercises(name);
-    const newWorkout = {
-      id: Date.now().toString(),
+    const workout = {
+      id: `${Date.now()}`,
       userId,
       name,
       exercises: resolvedExercises
     };
-    data.workouts.push(newWorkout);
-    await writeDb(data);
-    return newWorkout;
+    state.workouts.push(workout);
+    await writeStore(state);
+    return toWorkoutRecord(workout);
   },
 
   async updateWorkout(workoutId, userId, name, exercises) {
-    const data = await readDb();
-    const workoutIndex = data.workouts.findIndex(w => w.id === workoutId && w.userId === userId);
-    if (workoutIndex === -1) return null;
+    const state = await readStore();
+    const index = state.workouts.findIndex((entry) => String(entry.id) === String(workoutId) && String(entry.userId) === String(userId));
+    if (index === -1) return null;
 
-    data.workouts[workoutIndex].name = name;
-    if (Array.isArray(exercises)) {
-      data.workouts[workoutIndex].exercises = exercises;
-    }
-    await writeDb(data);
-    return data.workouts[workoutIndex];
+    state.workouts[index] = {
+      ...state.workouts[index],
+      name,
+      exercises: Array.isArray(exercises) ? exercises : state.workouts[index].exercises
+    };
+
+    await writeStore(state);
+    return toWorkoutRecord(state.workouts[index]);
   },
 
   async deleteWorkout(workoutId, userId) {
-    const data = await readDb();
-    const filtered = data.workouts.filter(w => !(w.id === workoutId && w.userId === userId));
-    const wasDeleted = data.workouts.length !== filtered.length;
-    data.workouts = filtered;
-    await writeDb(data);
-    return wasDeleted;
+    const state = await readStore();
+    const beforeLength = state.workouts.length;
+    state.workouts = state.workouts.filter((entry) => !(String(entry.id) === String(workoutId) && String(entry.userId) === String(userId)));
+    await writeStore(state);
+    return state.workouts.length < beforeLength;
   }
 };
