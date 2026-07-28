@@ -125,5 +125,35 @@ export const api = {
     const data = await parseJsonResponse(res);
     if (!res.ok) throw new Error(data?.error || data?.message || 'Failed to delete workout');
     return data;
+  },
+
+  async getWorkoutHistory() {
+    const res = await fetch(`${API_BASE_URL}/workouts/history`, {
+      headers: getHeaders()
+    });
+    const data = await parseJsonResponse(res);
+    if (!res.ok) throw new Error(data?.error || data?.message || 'Failed to fetch history');
+    return data;
+  },
+
+  async logWorkoutHistory(workoutName, duration, completedExercises) {
+    const res = await fetch(`${API_BASE_URL}/workouts/history`, {
+      method: 'POST',
+      headers: getHeaders(),
+      body: JSON.stringify({ workoutName, duration, completedExercises })
+    });
+    const data = await parseJsonResponse(res);
+    if (!res.ok) throw new Error(data?.error || data?.message || 'Failed to log workout history');
+    return data;
+  },
+
+  async clearWorkoutHistory() {
+    const res = await fetch(`${API_BASE_URL}/workouts/history/all`, {
+      method: 'DELETE',
+      headers: getHeaders()
+    });
+    const data = await parseJsonResponse(res);
+    if (!res.ok) throw new Error(data?.error || data?.message || 'Failed to clear history');
+    return data;
   }
 };

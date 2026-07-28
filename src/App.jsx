@@ -109,7 +109,8 @@ function App() {
       {page === "details" && (
         <WorkoutDetails 
           workout={activeWorkout}
-          goDashboard={() => setPage("dashboard")} 
+          goDashboard={() => setPage("dashboard")}
+          user={user}
         />
       )}
     </>

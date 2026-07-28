@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { api } from "../utils/api";
+import { getStoredWorkoutStreak } from "../utils/streak";
 
 const DumbbellIcon = ({ className = "h-8 w-8 text-brand-pink" }) => (
   <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -120,6 +121,8 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
     const saved = localStorage.getItem(`activity_${user?.id || 'guest'}`);
     return saved ? JSON.parse(saved) : [false, false, false, false, false, false, false];
   });
+  const [dailyStreak, setDailyStreak] = useState(() => getStoredWorkoutStreak(user?.id || "guest").streak);
+  const [history, setHistory] = useState([]);
 
   useEffect(() => {
     if (user?.id) {
@@ -132,6 +135,21 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
       localStorage.setItem(`activity_${user.id}`, JSON.stringify(weeklyActivity));
     }
   }, [weeklyActivity, user]);
+
+  useEffect(() => {
+    const syncFromStorage = () => {
+      const saved = localStorage.getItem(`activity_${user?.id || "guest"}`);
+      if (saved) {
+        setWeeklyActivity(JSON.parse(saved));
+      }
+      setDailyStreak(getStoredWorkoutStreak(user?.id || "guest").streak);
+    };
+
+    syncFromStorage();
+    window.addEventListener("workout-streak-updated", syncFromStorage);
+
+    return () => window.removeEventListener("workout-streak-updated", syncFromStorage);
+  }, [user?.id]);
 
   const getWeeklyStreak = () => {
     let maxStreak = 0;
@@ -147,22 +165,54 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
     return maxStreak;
   };
 
-  // Load workouts on mount
+  // Load workouts and history on mount
   useEffect(() => {
-    const fetchWorkouts = async () => {
+    const fetchDashboardData = async () => {
       try {
-        const data = await api.getWorkouts();
-        setWorkouts(data);
+        const [workoutsData, historyData] = await Promise.all([
+          api.getWorkouts(),
+          api.getWorkoutHistory()
+        ]);
+        setWorkouts(workoutsData);
+        setHistory(historyData);
       } catch (err) {
-        console.error("Failed to load workouts:", err);
-        setError("Could not load workouts from server.");
+        console.error("Failed to load dashboard data:", err);
+        setError("Could not load dashboard data from server.");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchWorkouts();
+    fetchDashboardData();
   }, []);
+
+  const handleClearHistory = async () => {
+    const confirmClear = window.confirm("Are you sure you want to clear your completed workout history? This cannot be undone.");
+    if (!confirmClear) return;
+    try {
+      await api.clearWorkoutHistory();
+      setHistory([]);
+    } catch (err) {
+      alert(err.message || "Failed to clear history.");
+    }
+  };
+
+  const formatHistoryDuration = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    if (mins === 0) return `${secs}s`;
+    return `${mins}m ${secs}s`;
+  };
+
+  const formatDate = (dateStr) => {
+    const d = new Date(dateStr);
+    return d.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit"
+    });
+  };
 
   // Sync BMI input states if user object changes
   /* eslint-disable react-hooks/set-state-in-effect */
@@ -686,7 +736,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
                     <p className="font-sans text-text-muted text-sm mt-1">Check off days you completed a workout session</p>
                   </div>
                   <div className="flex items-center gap-1.5 text-xs font-bold text-white bg-brand-pink/25 px-3.5 py-2 rounded-xl border border-brand-pink/35 animate-pulse">
-                    <span>🔥 {getWeeklyStreak()} Day Streak</span>
+                    <span>🔥 {Math.max(getWeeklyStreak(), dailyStreak)} Day Streak</span>
                   </div>
                 </div>
 
@@ -715,6 +765,77 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
                   Tip: Consistency is key! Aim for at least 3-4 checkmarks per week to build a habit. Click any day badge above to toggle.
                 </p>
               </div>
+            </div>
+
+            {/* Recent Activities Feed */}
+            <div className="bg-gradient-to-br from-card-dark to-[#251715]/40 rounded-3xl p-8 border border-brand-cocoa/30 shadow-xl shadow-black/10 mb-12 animate-fadeIn">
+              <div className="flex justify-between items-center mb-6 flex-wrap gap-4">
+                <div>
+                  <h3 className="font-display text-xl font-bold text-white">Recent Completed Sessions</h3>
+                  <p className="font-sans text-text-muted text-sm mt-1">Timeline of your active training completions</p>
+                </div>
+                {history.length > 0 && (
+                  <button
+                    onClick={handleClearHistory}
+                    className="text-xs bg-red-500/10 hover:bg-red-500/20 text-red-400 font-display font-bold px-4 py-2.5 rounded-xl border border-red-500/20 hover:border-red-500/30 transition cursor-pointer"
+                  >
+                    Clear History
+                  </button>
+                )}
+              </div>
+
+              {history.length === 0 ? (
+                <div className="text-center py-10 bg-bg-dark/40 rounded-2xl border border-brand-cocoa/15">
+                  <p className="font-sans text-text-muted text-sm">No completed workouts logged yet. Start a workout routine in the Log tab to begin tracking your history!</p>
+                </div>
+              ) : (
+                <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+                  {history.map((record) => (
+                    <div
+                      key={record.id}
+                      className="bg-bg-dark/40 p-5 rounded-2xl border border-brand-cocoa/20 hover:border-brand-pink/20 transition duration-200 flex flex-col md:flex-row md:items-center justify-between gap-4"
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 bg-green-500/10 rounded-xl flex items-center justify-center border border-green-500/25 text-green-400 shrink-0">
+                          <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <polyline points="20 6 9 17 4 12" />
+                          </svg>
+                        </div>
+                        <div>
+                          <h4 className="font-display font-bold text-white text-base leading-snug">{record.workoutName}</h4>
+                          <p className="font-sans text-text-muted text-xs mt-0.5">{formatDate(record.completedAt)}</p>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center gap-6 flex-wrap md:flex-nowrap justify-between md:justify-end">
+                        <div className="text-right">
+                          <p className="font-quick text-[10px] font-bold text-text-muted tracking-widest uppercase">Duration</p>
+                          <p className="font-mono text-white text-sm font-semibold mt-0.5">{formatHistoryDuration(record.duration)}</p>
+                        </div>
+                        
+                        <div className="max-w-[200px] md:max-w-[280px]">
+                          <p className="font-quick text-[10px] font-bold text-text-muted tracking-widest uppercase mb-1">Completed Exercises</p>
+                          {record.completedExercises && record.completedExercises.length > 0 ? (
+                            <div className="flex flex-wrap gap-1">
+                              {record.completedExercises.map((ex, i) => (
+                                <span
+                                  key={i}
+                                  className="text-[9px] font-quick font-bold bg-brand-cocoa/25 border border-brand-cocoa/30 text-brand-pink px-2 py-0.5 rounded-md truncate max-w-[80px]"
+                                  title={ex}
+                                >
+                                  {ex}
+                                </span>
+                              ))}
+                            </div>
+                          ) : (
+                            <span className="text-[10px] font-sans text-text-muted/60 italic">No exercises logged</span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Recommended Workouts */}

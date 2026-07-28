@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from "react";
+import { api } from "../utils/api.js";
+import { awardWorkoutStreak, getStoredWorkoutStreak } from "../utils/streak";
 
 const DumbbellIcon = () => (
   <svg viewBox="0 0 24 24" className="h-10 w-10 text-brand-pink filter drop-shadow-[0_0_8px_rgba(255,74,139,0.4)] animate-pulse" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -44,7 +46,7 @@ const getWorkoutVisual = (workout) => {
   return "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=900&q=80";
 };
 
-function WorkoutDetails({ workout, goDashboard }) {
+function WorkoutDetails({ workout, goDashboard, user }) {
   const workoutName = workout?.name || "Workout Session";
 
   // Stopwatch states
@@ -59,6 +61,8 @@ function WorkoutDetails({ workout, goDashboard }) {
 
   // Checklist state
   const [completedExercises, setCompletedExercises] = useState({});
+  const [streakMessage, setStreakMessage] = useState("");
+  const [streakCount, setStreakCount] = useState(() => getStoredWorkoutStreak(user?.id || "guest").streak);
 
   // Refs for intervals
   const stopwatchIntervalRef = useRef(null);
@@ -164,17 +168,72 @@ function WorkoutDetails({ workout, goDashboard }) {
     ? workout.exercises
     : getLegacyExercises(workoutName);
 
+  const getTodayIndex = () => {
+    const day = new Date().getDay();
+    return day === 0 ? 6 : day - 1;
+  };
+
+  const syncDailyActivity = (isComplete) => {
+    const key = `activity_${user?.id || "guest"}`;
+    const saved = localStorage.getItem(key);
+    const parsed = saved ? JSON.parse(saved) : [false, false, false, false, false, false, false];
+    const updated = [...parsed];
+    updated[getTodayIndex()] = isComplete;
+    localStorage.setItem(key, JSON.stringify(updated));
+    window.dispatchEvent(new Event("workout-streak-updated"));
+  };
+
   const toggleCompleted = (idx) => {
-    setCompletedExercises((prev) => ({
-      ...prev,
-      [idx]: !prev[idx]
-    }));
+    setCompletedExercises((prev) => {
+      const updated = {
+        ...prev,
+        [idx]: !prev[idx]
+      };
+
+      const allCompleted = exercises.length > 0 && exercises.every((_, exerciseIdx) => updated[exerciseIdx]);
+
+      if (allCompleted) {
+        const result = awardWorkoutStreak(user?.id || "guest");
+        setStreakCount(result.streak);
+        setStreakMessage(result.message);
+        syncDailyActivity(true);
+        window.alert(result.message);
+      } else {
+        setStreakMessage("Keep going — your streak will be marked once every exercise is checked off.");
+        syncDailyActivity(false);
+      }
+
+      return updated;
+    });
   };
 
   const handleSetPreset = (seconds) => {
     setIsCountdownRunning(false);
     setInitialCountdown(seconds);
     setCountdownTime(seconds);
+  };
+
+  const handleFinishWorkout = async () => {
+    const completedExerciseNames = exercises
+      .filter((_, idx) => completedExercises[idx])
+      .map(ex => ex.name);
+
+    if (completedExerciseNames.length === 0) {
+      const confirmFinish = window.confirm(
+        "You haven't checked off any exercises. Are you sure you want to complete this workout session?"
+      );
+      if (!confirmFinish) return;
+    }
+
+    try {
+      await api.logWorkoutHistory(workoutName, stopwatchTime, completedExerciseNames);
+      setIsStopwatchRunning(false);
+      window.alert("🎉 Awesome job! Your workout session has been logged in your history!");
+      goDashboard();
+    } catch (err) {
+      console.error(err);
+      window.alert(err.message || "Failed to log workout completion.");
+    }
   };
 
   return (
@@ -189,12 +248,20 @@ function WorkoutDetails({ workout, goDashboard }) {
               {workoutName}
             </h1>
           </div>
-          <button
-            onClick={goDashboard}
-            className="glow-button-cocoa font-display font-bold px-8 py-3 rounded-full shadow-lg transition duration-200 cursor-pointer text-sm"
-          >
-            ← Back to Dashboard
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={handleFinishWorkout}
+              className="bg-green-600 hover:bg-green-500 text-white font-display font-bold px-6 py-3 rounded-full shadow-lg shadow-green-500/10 hover:shadow-green-500/25 transition duration-200 cursor-pointer text-sm"
+            >
+              ✓ Finish Workout
+            </button>
+            <button
+              onClick={goDashboard}
+              className="glow-button-cocoa font-display font-bold px-6 py-3 rounded-full shadow-lg transition duration-200 cursor-pointer text-sm"
+            >
+              ← Back to Dashboard
+            </button>
+          </div>
         </div>
 
         <div className="mb-8 overflow-hidden rounded-[2rem] border border-brand-cocoa/30 bg-[#1b1212] shadow-lg">
@@ -210,6 +277,22 @@ function WorkoutDetails({ workout, goDashboard }) {
             🔔 Rest Over! Time to start the next set! 💪
           </div>
         )}
+
+        {streakMessage && (
+          <div className={`mb-8 rounded-2xl border px-6 py-4 text-center font-display font-bold shadow-lg ${streakMessage.includes("Congratulations") ? "border-brand-pink/40 bg-brand-pink/20 text-white" : "border-amber-500/40 bg-amber-500/15 text-amber-200"}`}>
+            {streakMessage}
+          </div>
+        )}
+
+        <div className="mb-8 rounded-2xl border border-brand-cocoa/30 bg-[#171011]/80 p-4 md:p-5 flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-text-muted">Daily Streak</p>
+            <p className="font-display text-2xl font-bold text-white">🔥 {streakCount} day streak</p>
+          </div>
+          <div className="text-sm text-text-muted font-sans">
+            Complete every exercise and today’s day will light up automatically.
+          </div>
+        </div>
 
         {/* Content Layout Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">

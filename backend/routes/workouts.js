@@ -1,6 +1,6 @@
 import express from 'express';
 import { db } from '../db.js';
-import { authenticateToken } from '../middleware.js';
+import { authenticateToken } from '../middleware/auth.js';
 
 const router = express.Router();
 
@@ -30,6 +30,43 @@ router.post('/', async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Server error creating workout' });
+  }
+});
+
+// Get completed workout history
+router.get('/history', async (req, res) => {
+  try {
+    const history = await db.getWorkoutHistory(req.userId);
+    res.json(history);
+  } catch (err) {
+    console.error("Get History Error:", err);
+    res.status(500).json({ error: 'Server error retrieving workout history' });
+  }
+});
+
+// Log a completed workout
+router.post('/history', async (req, res) => {
+  const { workoutName, duration, completedExercises } = req.body;
+  if (!workoutName || duration === undefined) {
+    return res.status(400).json({ error: 'Workout name and duration are required' });
+  }
+  try {
+    const record = await db.logWorkoutHistory(req.userId, workoutName, duration, completedExercises);
+    res.status(201).json(record);
+  } catch (err) {
+    console.error("Log History Error:", err);
+    res.status(500).json({ error: 'Server error logging completed workout' });
+  }
+});
+
+// Clear workout history
+router.delete('/history/all', async (req, res) => {
+  try {
+    await db.clearWorkoutHistory(req.userId);
+    res.json({ message: 'Workout history cleared successfully' });
+  } catch (err) {
+    console.error("Clear History Error:", err);
+    res.status(500).json({ error: 'Server error clearing history' });
   }
 });
 
