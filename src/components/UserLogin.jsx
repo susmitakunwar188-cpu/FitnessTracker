@@ -147,9 +147,8 @@ function UserLogin({ goHome, onLoginSuccess, showRegister }) {
   };
 
   return (
-    <div className="min-h-screen bg-bg-dark flex items-center justify-center p-6 md:p-12 lg:p-16">
-      {/* Centered, Split Card with Less Corner Radius */}
-      <div className="relative w-full max-w-5xl overflow-hidden rounded-3xl border border-border-pink/40 bg-card-dark flex min-h-[660px] flex-col lg:flex-row shadow-[0_25px_60px_rgba(0,0,0,0.65)]">
+    <div className="page-shell flex items-center justify-center p-6 md:p-12 lg:p-16">
+      <div className="glass-panel relative flex min-h-[660px] w-full max-w-5xl flex-col overflow-hidden rounded-[2rem] border border-white/10 lg:flex-row">
         
         {/* Floating Close Button at top-right corner to exit/go home */}
         <button
@@ -199,14 +198,14 @@ function UserLogin({ goHome, onLoginSuccess, showRegister }) {
             {/* PANEL 1: LOGIN */}
             {panel === "login" && (
               <div>
-                <div className="text-left mb-10">
-                  <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-cocoa/20 border border-brand-cocoa/30 shadow-inner">
+                <div className="mb-10 text-left">
+                  <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl border border-brand-cocoa/30 bg-brand-cocoa/20 shadow-inner">
                     <UserIcon />
                   </div>
-                  <h2 className="text-3xl md:text-4xl font-display font-bold text-white mb-3 tracking-tight">
+                  <h2 className="mb-3 text-3xl font-display font-bold tracking-tight text-white md:text-4xl">
                     Welcome Back
                   </h2>
-                  <p className="font-sans text-text-muted text-base">
+                  <p className="font-sans text-base text-text-muted">
                     Login to continue your fitness journey
                   </p>
                 </div>

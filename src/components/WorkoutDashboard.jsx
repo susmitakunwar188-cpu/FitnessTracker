@@ -165,7 +165,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
     return maxStreak;
   };
 
-  // Load workouts and history on mount
+  // Load workouts and history on mount and reconnect
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
@@ -173,17 +173,28 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
           api.getWorkouts(),
           api.getWorkoutHistory()
         ]);
-        setWorkouts(workoutsData);
-        setHistory(historyData);
+        setWorkouts(workoutsData || []);
+        setHistory(historyData || []);
+        setError("");
       } catch (err) {
         console.error("Failed to load dashboard data:", err);
-        setError("Could not load dashboard data from server.");
+        setWorkouts([]);
+        setHistory([]);
+        setError("");
       } finally {
         setLoading(false);
       }
     };
 
     fetchDashboardData();
+
+    const handleOnline = () => {
+      setLoading(true);
+      fetchDashboardData();
+    };
+
+    window.addEventListener("online", handleOnline);
+    return () => window.removeEventListener("online", handleOnline);
   }, []);
 
   const handleClearHistory = async () => {
@@ -838,6 +849,36 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
               )}
             </div>
 
+            {/* Achievements & Badges */}
+            <div className="bg-gradient-to-br from-card-dark to-[#05050A]/40 rounded-3xl p-8 border border-brand-pink/30 shadow-xl shadow-black/10 mb-12 animate-fadeIn">
+              <div className="mb-6">
+                <h3 className="font-display text-xl font-bold text-white">Achievements & Badges</h3>
+                <p className="font-sans text-text-muted text-sm mt-1">Unlock badges by reaching new fitness milestones</p>
+              </div>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
+                <div className={`p-4 rounded-2xl border flex flex-col items-center text-center transition-all ${history.length >= 1 ? 'border-brand-pink bg-brand-pink/10 shadow-[0_0_15px_rgba(255,46,147,0.2)]' : 'border-border-pink/50 bg-bg-dark/40 opacity-50 grayscale'}`}>
+                  <div className="text-4xl mb-2">🏅</div>
+                  <h4 className="font-display font-bold text-sm text-white">First Blood</h4>
+                  <p className="text-[10px] text-text-muted mt-1 uppercase font-quick">Complete 1 Workout</p>
+                </div>
+                <div className={`p-4 rounded-2xl border flex flex-col items-center text-center transition-all ${getWeeklyStreak() >= 3 ? 'border-brand-cocoa bg-brand-cocoa/10 shadow-[0_0_15px_rgba(0,240,255,0.2)]' : 'border-border-pink/50 bg-bg-dark/40 opacity-50 grayscale'}`}>
+                  <div className="text-4xl mb-2">🔥</div>
+                  <h4 className="font-display font-bold text-sm text-white">Streak Master</h4>
+                  <p className="text-[10px] text-text-muted mt-1 uppercase font-quick">3-Day Streak</p>
+                </div>
+                <div className={`p-4 rounded-2xl border flex flex-col items-center text-center transition-all ${waterIntake >= 2000 ? 'border-[#00C2E5] bg-[#00C2E5]/10 shadow-[0_0_15px_rgba(0,194,229,0.2)]' : 'border-border-pink/50 bg-bg-dark/40 opacity-50 grayscale'}`}>
+                  <div className="text-4xl mb-2">💧</div>
+                  <h4 className="font-display font-bold text-sm text-white">Hydration Hero</h4>
+                  <p className="text-[10px] text-text-muted mt-1 uppercase font-quick">Drink 2000ml</p>
+                </div>
+                <div className={`p-4 rounded-2xl border flex flex-col items-center text-center transition-all ${history.length >= 10 ? 'border-[#FFD700] bg-[#FFD700]/10 shadow-[0_0_15px_rgba(255,215,0,0.2)]' : 'border-border-pink/50 bg-bg-dark/40 opacity-50 grayscale'}`}>
+                  <div className="text-4xl mb-2">👑</div>
+                  <h4 className="font-display font-bold text-sm text-white">Gym Royalty</h4>
+                  <p className="text-[10px] text-text-muted mt-1 uppercase font-quick">Complete 10 Workouts</p>
+                </div>
+              </div>
+            </div>
+
             {/* Recommended Workouts */}
             <div className="mb-12">
               <h2 className="text-2xl md:text-3xl font-display font-bold text-white mb-6 tracking-tight">
@@ -1234,7 +1275,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
 
             {/* Calculated BMI Display Card */}
             {user?.bmi && (
-              <div className="bg-gradient-to-br from-[#3D2320] via-[#2A1816] to-[#1C1211] rounded-3xl p-8 md:p-12 border border-brand-cocoa/40 shadow-2xl animate-fadeIn">
+              <div className="bg-chocolate-gradient rounded-3xl p-8 md:p-12 border border-brand-cocoa/40 shadow-2xl animate-fadeIn">
                 <div className="text-center">
                   <p className="font-quick text-xs font-bold text-brand-pink tracking-widest uppercase">YOUR BODY MASS INDEX</p>
                   <h1 className="text-6xl md:text-7xl font-display font-extrabold text-white my-3 tracking-tight">
@@ -1243,7 +1284,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
                   <p className="font-display text-2xl font-bold text-brand-pink mb-6">
                     {user.status}
                   </p>
-                  <div className="bg-[#160E0D] rounded-2xl p-5 border border-brand-cocoa/30 max-w-md mx-auto">
+                  <div className="bg-card-dark rounded-2xl p-5 border border-brand-cocoa/30 max-w-md mx-auto">
                     <p className="font-display font-bold text-white text-sm tracking-wider uppercase mb-1">Recommended Goal</p>
                     <p className="font-sans text-text-muted text-sm md:text-base leading-relaxed">{user.goal}</p>
                   </div>

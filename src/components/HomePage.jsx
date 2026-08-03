@@ -63,34 +63,34 @@ function HomePage({ user, showLogin, showRegister, goDashboard, logout }) {
   };
 
   return (
-    <div className="bg-bg-dark text-white min-h-screen">
-      {/* Huge Navbar */}
-      <nav className="flex justify-between items-center h-32 px-8 md:px-20 lg:px-32 bg-bg-dark/95 backdrop-blur-md sticky top-0 z-50 border-b border-border-pink/50">
-        <h1 className="flex items-center gap-4 text-3xl md:text-4xl font-display font-bold text-white tracking-tight cursor-pointer">
-          <BrandIcon />
-          <div className="flex flex-col">
-            <span className="bg-gradient-to-r from-white to-text-muted bg-clip-text text-transparent leading-none">Fitique</span>
-            <span className="text-[10px] text-brand-pink tracking-[0.22em] font-quick font-bold uppercase mt-1 leading-none">light weight baby</span>
-          </div>
-        </h1>
-        <div className="flex items-center gap-6 md:gap-10">
-          <a href="#about" className="text-base md:text-lg font-display font-semibold text-text-muted hover:text-brand-pink transition duration-200">
-            About
-          </a>
-          <a href="#contact" className="text-base md:text-lg font-display font-semibold text-text-muted hover:text-brand-pink transition duration-200">
-            Contact
-          </a>
+    <div className="page-shell text-white">
+      <nav className="sticky top-0 z-50 border-b border-white/10 bg-bg-dark/75 px-6 py-4 backdrop-blur-xl md:px-10 lg:px-16">
+        <div className="mx-auto flex max-w-[1440px] items-center justify-between">
+          <h1 className="flex cursor-pointer items-center gap-3 text-2xl font-display font-bold tracking-tight text-white md:text-3xl">
+            <BrandIcon />
+            <div className="flex flex-col">
+              <span className="bg-gradient-to-r from-white to-text-muted bg-clip-text text-transparent leading-none">Fitique</span>
+              <span className="mt-1 text-[10px] font-quick font-bold uppercase leading-none tracking-[0.22em] text-brand-pink">light weight baby</span>
+            </div>
+          </h1>
+          <div className="flex items-center gap-5 md:gap-8">
+            <a href="#about" className="nav-link text-sm font-display font-semibold md:text-base">
+              About
+            </a>
+            <a href="#contact" className="nav-link text-sm font-display font-semibold md:text-base">
+              Contact
+            </a>
           {user ? (
             <>
               <button
                 onClick={goDashboard}
-                className="text-base md:text-lg font-display font-semibold text-brand-pink hover:underline transition"
+                className="text-sm font-display font-semibold text-brand-pink transition hover:underline md:text-base"
               >
                 Dashboard
               </button>
               <button
                 onClick={logout}
-                className="bg-card-dark border-2 border-border-pink hover:bg-border-pink text-white font-display text-base md:text-lg px-8 py-3 rounded-full transition duration-300 shadow-md"
+                className="rounded-full border border-white/10 bg-white/5 px-6 py-2.5 font-display text-sm font-semibold text-white transition duration-300 hover:bg-white/10 md:text-base"
               >
                 Logout
               </button>
@@ -99,52 +99,57 @@ function HomePage({ user, showLogin, showRegister, goDashboard, logout }) {
             <>
               <button
                 onClick={showLogin}
-                className="text-base md:text-lg font-display font-semibold text-text-muted hover:text-brand-pink transition duration-200"
+                className="nav-link text-sm font-display font-semibold md:text-base"
               >
                 Login
               </button>
               <button
                 onClick={showRegister}
-                className="bg-brand-pink hover:bg-brand-pink-hover text-white font-display font-bold text-base md:text-lg px-8 py-3 rounded-full shadow-lg shadow-brand-pink/20 hover:shadow-brand-pink/40 hover:-translate-y-0.5 transition duration-300"
+                className="rounded-full bg-brand-pink px-6 py-2.5 font-display text-sm font-bold text-white shadow-lg shadow-brand-pink/20 transition duration-300 hover:-translate-y-0.5 hover:bg-brand-pink-hover md:text-base"
               >
                 Register
               </button>
             </>
           )}
         </div>
+        </div>
       </nav>
 
       {/* Huge Hero Section */}
-      <section className="max-w-[1440px] mx-auto flex flex-col lg:flex-row items-center justify-between py-24 md:py-32 lg:py-40 px-8 md:px-20 lg:px-32 gap-16 lg:gap-24">
+      <section className="mx-auto flex max-w-[1440px] flex-col items-center justify-between gap-16 px-6 py-20 md:px-10 md:py-28 lg:flex-row lg:px-16 lg:py-32">
         <div className="flex-[1.2] text-center lg:text-left">
-          <div className="inline-flex items-center gap-3 rounded-full bg-border-pink/40 border border-border-pink/80 px-6 py-2.5 mb-10 shadow-inner">
+          <div className="mb-8 inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-2 shadow-inner">
             <SparkIcon />
-            <span className="text-xs md:text-sm font-bold text-brand-pink tracking-widest uppercase font-quick">
+            <span className="font-quick text-xs font-bold uppercase tracking-[0.25em] text-brand-pink md:text-sm">
               Your fitness glow-up starts now
             </span>
           </div>
-          <h1 className="text-6xl md:text-7xl lg:text-8xl font-display font-extrabold text-white mb-8 leading-[1.05] tracking-tight">
+          <h1 className="mb-6 text-5xl font-display font-extrabold leading-[1.05] tracking-tight text-white md:text-6xl lg:text-7xl">
             Your Fitness <br />
-            <span className="text-brand-pink bg-gradient-to-r from-brand-pink to-[#FFA2C5] bg-clip-text text-transparent">Journey Starts Here</span>
+            <span className="bg-gradient-to-r from-brand-pink to-[#FFA2C5] bg-clip-text text-transparent">Journey Starts Here</span>
           </h1>
-          <p className="font-sans text-text-muted text-xl md:text-2xl mb-12 max-w-xl leading-relaxed mx-auto lg:mx-0">
-            Track your workouts, calories, and reach your full potential with our fitness planner. One percent better EVERY. SINGLE. DAY.
+          <p className="mx-auto mb-8 max-w-xl text-lg leading-relaxed text-text-muted md:text-xl lg:mx-0">
+            Track your workouts, calories, and momentum with a calm, focused planner designed for steady progress.
           </p>
+          <div className="mb-8 flex flex-wrap justify-center gap-3 lg:justify-start">
+            <span className="soft-pill">Daily planning</span>
+            <span className="soft-pill">Progress tracking</span>
+            <span className="soft-pill">Minimal focus</span>
+          </div>
           <button
             onClick={user ? goDashboard : showRegister}
-            className="glow-button font-display font-bold px-12 py-5 rounded-full text-lg md:text-xl shadow-xl shadow-brand-pink/20"
+            className="glow-button rounded-full px-10 py-4 font-display text-base font-bold shadow-xl shadow-brand-pink/20 md:text-lg"
           >
             {user ? "Go to Dashboard" : "Get Started Now"}
           </button>
         </div>
         
-        {/* Massive Image Container */}
-        <div className="flex-1 flex justify-center w-full lg:w-auto">
-          <div className="relative w-full max-w-2xl lg:max-w-3xl aspect-[4/3] rounded-[2.5rem] shadow-[0_25px_70px_rgba(255,74,139,0.22)] border-2 border-border-pink overflow-hidden group">
+        <div className="flex w-full flex-1 justify-center lg:w-auto">
+          <div className="glass-panel group relative aspect-[4/3] w-full max-w-2xl overflow-hidden rounded-[2rem] border border-white/10 lg:max-w-3xl">
             <img
               src="https://i.pinimg.com/736x/3c/56/b7/3c56b7bef8716d87e304c1eab3d3c23e.jpg"
               alt="Fitness motivation dumbbell artwork"
-              className="w-full h-full object-cover group-hover:scale-105 transition duration-700 ease-out"
+              className="h-full w-full object-cover transition duration-700 ease-out group-hover:scale-105"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-bg-dark via-transparent to-transparent opacity-85" />
           </div>
@@ -152,15 +157,16 @@ function HomePage({ user, showLogin, showRegister, goDashboard, logout }) {
       </section>
 
       {/* Massive About Section */}
-      <section id="about" className="px-8 md:px-20 lg:px-32 py-32 bg-card-dark/30 border-y border-border-pink/40">
-        <h2 className="text-5xl md:text-6xl font-display font-bold text-white text-center mb-6">
-          Why Fitique?
-        </h2>
-        <p className="text-center text-text-muted text-lg md:text-xl mb-24 max-w-3xl mx-auto leading-relaxed">
-          Unlock a comprehensive health suite designed to log your gains and visualize your path to victory.
-        </p>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-[1440px] mx-auto">
-          <div className="bg-card-dark rounded-[2.2rem] p-10 border border-border-pink/50 hover:border-brand-pink/50 hover:-translate-y-2 transition duration-300 flex flex-col items-start min-h-[20rem] shadow-lg">
+      <section id="about" className="border-y border-white/10 bg-black/20 px-6 py-24 md:px-10 lg:px-16">
+        <div className="mx-auto max-w-[1440px]">
+          <div className="mb-12 text-center">
+            <h2 className="section-title mb-4">Why Fitique?</h2>
+            <p className="section-subtitle mx-auto text-lg md:text-xl">
+              Unlock a refined wellness suite designed to keep your training grounded, clear, and motivating.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+            <div className="surface-card flex min-h-[20rem] flex-col items-start rounded-[2rem] p-8 transition duration-300 hover:-translate-y-2 hover:border-brand-pink/40">
             <div className="mb-8 flex h-16 w-16 items-center justify-center rounded-2xl bg-border-pink/30 border border-brand-pink/20">
               <ProgressIcon />
             </div>
@@ -169,36 +175,37 @@ function HomePage({ user, showLogin, showRegister, goDashboard, logout }) {
               Register an account to securely save and track your workout routines dynamically, anywhere, anytime.
             </p>
           </div>
-          <div className="bg-card-dark rounded-[2.2rem] p-10 border border-border-pink/50 hover:border-brand-pink/50 hover:-translate-y-2 transition duration-300 flex flex-col items-start min-h-[20rem] shadow-lg">
-            <div className="mb-8 flex h-16 w-16 items-center justify-center rounded-2xl bg-border-pink/30 border border-brand-pink/20">
-              <BmiIcon />
+            <div className="surface-card flex min-h-[20rem] flex-col items-start rounded-[2rem] p-8 transition duration-300 hover:-translate-y-2 hover:border-brand-pink/40">
+              <div className="mb-8 flex h-16 w-16 items-center justify-center rounded-2xl border border-brand-pink/20 bg-border-pink/20">
+                <BmiIcon />
+              </div>
+              <h3 className="mb-4 font-display text-2xl font-bold text-white">BMI Calculator</h3>
+              <p className="font-sans text-base leading-relaxed text-text-muted">
+                Keep tabs on weight status. Calculate body mass index in real-time, matching goals to your dynamic stats.
+              </p>
             </div>
-            <h3 className="font-display text-2xl font-bold text-white mb-4">BMI Calculator</h3>
-            <p className="font-sans text-text-muted leading-relaxed text-base">
-              Keep tabs on weight status. Calculate body mass index in real-time, matching goals to your dynamic stats.
-            </p>
-          </div>
-          <div className="bg-card-dark rounded-[2.2rem] p-10 border border-border-pink/50 hover:border-brand-pink/50 hover:-translate-y-2 transition duration-300 flex flex-col items-start min-h-[20rem] shadow-lg">
-            <div className="mb-8 flex h-16 w-16 items-center justify-center rounded-2xl bg-border-pink/30 border border-brand-pink/20">
-              <WorkoutIcon />
+            <div className="surface-card flex min-h-[20rem] flex-col items-start rounded-[2rem] p-8 transition duration-300 hover:-translate-y-2 hover:border-brand-pink/40">
+              <div className="mb-8 flex h-16 w-16 items-center justify-center rounded-2xl border border-brand-pink/20 bg-border-pink/20">
+                <WorkoutIcon />
+              </div>
+              <h3 className="mb-4 font-display text-2xl font-bold text-white">Workout Plans</h3>
+              <p className="font-sans text-base leading-relaxed text-text-muted">
+                Edit, delete, and add custom workout categories. Securely backend-sync your customized exercise directories.
+              </p>
             </div>
-            <h3 className="font-display text-2xl font-bold text-white mb-4">Workout Plans</h3>
-            <p className="font-sans text-text-muted leading-relaxed text-base">
-              Edit, delete, and add custom workout categories. Securely backend-sync your customized exercise directories.
-            </p>
           </div>
         </div>
       </section>
 
       {/* Massive Contact Section */}
-      <section id="contact" className="px-8 py-32 max-w-5xl mx-auto">
-        <h2 className="text-5xl md:text-6xl font-display font-bold text-white mb-6 text-center">
-          Contact Us
-        </h2>
-        <p className="text-center text-text-muted text-lg md:text-xl mb-16">
-          Want to say hello or ask a question? We’d love to hear from you.
-        </p>
-        <form onSubmit={handleSubmit} className="bg-card-dark rounded-[2.5rem] p-10 md:p-16 border border-border-pink/50 shadow-2xl shadow-black/60">
+      <section id="contact" className="mx-auto max-w-5xl px-6 py-24 md:px-10">
+        <div className="mb-10 text-center">
+          <h2 className="section-title mb-4">Contact Us</h2>
+          <p className="section-subtitle mx-auto text-lg md:text-xl">
+            Want to say hello or ask a question? We’d love to hear from you.
+          </p>
+        </div>
+        <form onSubmit={handleSubmit} className="glass-panel rounded-[2rem] border border-white/10 p-8 md:p-12">
           <div className="mb-8">
             <label className="block text-sm font-bold text-text-muted mb-3 tracking-widest font-quick uppercase">EMAIL ADDRESS</label>
             <input
@@ -238,8 +245,8 @@ function HomePage({ user, showLogin, showRegister, goDashboard, logout }) {
       </section>
 
       {/* Massive Footer */}
-      <footer className="bg-[#060405] border-t border-border-pink/55 py-24 px-8 md:px-20 lg:px-32">
-        <div className="max-w-[1440px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-16 mb-20">
+      <footer className="border-t border-white/10 bg-[#060405]/80 px-6 py-24 md:px-10 lg:px-16">
+        <div className="mx-auto mb-16 grid max-w-[1440px] grid-cols-1 gap-16 md:grid-cols-4">
           <div className="md:col-span-2">
             <h2 className="flex items-center gap-4 text-3xl md:text-4xl font-display font-bold text-white mb-8">
               <BrandIcon />

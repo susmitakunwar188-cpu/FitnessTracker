@@ -19,6 +19,40 @@ const getHeaders = () => {
   };
 };
 
+const getStoredData = (key, fallback = []) => {
+  if (typeof window === 'undefined') return fallback;
+  try {
+    const saved = window.localStorage.getItem(key);
+    return saved ? JSON.parse(saved) : fallback;
+  } catch (err) {
+    console.warn('Unable to read local dashboard data:', err);
+    return fallback;
+  }
+};
+
+const setStoredData = (key, value) => {
+  if (typeof window === 'undefined') return;
+  try {
+    window.localStorage.setItem(key, JSON.stringify(value));
+  } catch (err) {
+    console.warn('Unable to save local dashboard data:', err);
+  }
+};
+
+const requestWithLocalFallback = async (requestFn, storageKey, fallbackValue) => {
+  try {
+    const data = await requestFn();
+    setStoredData(storageKey, Array.isArray(data) ? data : fallbackValue);
+    return data;
+  } catch (err) {
+    const fallback = getStoredData(storageKey, fallbackValue);
+    if (fallback && fallback.length > 0) {
+      return fallback;
+    }
+    throw err;
+  }
+};
+
 export const api = {
   // Auth
   async login(email, password) {
@@ -87,12 +121,14 @@ export const api = {
 
   // Workouts
   async getWorkouts() {
-    const res = await fetch(`${API_BASE_URL}/workouts`, {
-      headers: getHeaders()
-    });
-    const data = await parseJsonResponse(res);
-    if (!res.ok) throw new Error(data?.error || data?.message || 'Failed to fetch workouts');
-    return data;
+    return requestWithLocalFallback(async () => {
+      const res = await fetch(`${API_BASE_URL}/workouts`, {
+        headers: getHeaders()
+      });
+      const data = await parseJsonResponse(res);
+      if (!res.ok) throw new Error(data?.error || data?.message || 'Failed to fetch workouts');
+      return data;
+    }, 'dashboard_workouts', []);
   },
 
   async createWorkout(name, exercises) {
@@ -128,12 +164,14 @@ export const api = {
   },
 
   async getWorkoutHistory() {
-    const res = await fetch(`${API_BASE_URL}/workouts/history`, {
-      headers: getHeaders()
-    });
-    const data = await parseJsonResponse(res);
-    if (!res.ok) throw new Error(data?.error || data?.message || 'Failed to fetch history');
-    return data;
+    return requestWithLocalFallback(async () => {
+      const res = await fetch(`${API_BASE_URL}/workouts/history`, {
+        headers: getHeaders()
+      });
+      const data = await parseJsonResponse(res);
+      if (!res.ok) throw new Error(data?.error || data?.message || 'Failed to fetch history');
+      return data;
+    }, 'dashboard_history', []);
   },
 
   async logWorkoutHistory(workoutName, duration, completedExercises) {

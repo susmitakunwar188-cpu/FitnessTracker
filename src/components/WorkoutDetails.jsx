@@ -237,8 +237,8 @@ function WorkoutDetails({ workout, goDashboard, user }) {
   };
 
   return (
-    <div className="min-h-screen bg-bg-dark flex items-center justify-center p-6 md:p-12 lg:p-16">
-      <div className="max-w-5xl w-full bg-gradient-to-br from-card-dark via-[#1D1312] to-[#251715] rounded-[2.5rem] shadow-[0_25px_65px_rgba(0,0,0,0.7)] border border-brand-cocoa/40 p-8 md:p-12">
+    <div className="page-shell flex items-center justify-center p-6 md:p-12 lg:p-16">
+      <div className="glass-panel-strong w-full max-w-5xl rounded-[2rem] border border-white/10 p-8 shadow-[0_25px_65px_rgba(0,0,0,0.7)] md:p-12">
         
         {/* Header */}
         <div className="flex items-center justify-between gap-4 mb-8 pb-6 border-b border-border-pink/30 flex-wrap">

@@ -6,18 +6,25 @@
   --font-display: 'Comfortaa', cursive;
   --font-quick: 'Quicksand', sans-serif;
 
-  /* Refined dusty rose + warm cocoa palette */
-  --color-brand-pink: #EF6F8F;
-  --color-brand-pink-hover: #D85473;
-  --color-brand-pink-soft: #FF93AB;
-  --color-brand-cocoa: #7A4C3D;
-  --color-brand-cocoa-hover: #613A2F;
-  --color-brand-cocoa-light: #B68D81;
-  --color-bg-dark: #0B0909;
-  --color-card-dark: #171012;
-  --color-card-dark-hover: #22171B;
-  --color-border-pink: #3C2630;
-  --color-text-muted: #B8A6AA;
+  --color-brand-pink: #FF2E93; /* Electric Magenta */
+  --color-brand-pink-hover: #E6006C;
+  --color-brand-pink-soft: #FF66B2;
+  --color-brand-cocoa: #00F0FF; /* Neon Cyan */
+  --color-brand-cocoa-hover: #00C2E5;
+  --color-brand-cocoa-light: #80F8FF;
+  --color-bg-dark: #05050A; /* Deeper midnight blue/black */
+  --color-card-dark: #0A0A14;
+  --color-card-dark-hover: #121222;
+  --color-border-pink: #241432;
+  --color-text-muted: #9BA1B0;
+}
+
+:root {
+  color-scheme: dark;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 * {
@@ -31,19 +38,16 @@ html {
 body {
   margin: 0;
   min-height: 100vh;
-  background-color: var(--color-bg-dark);
+  background-color: #05050A;
   background-image:
-    radial-gradient(circle at top left, rgba(239, 111, 143, 0.16), transparent 28%),
-    radial-gradient(circle at bottom right, rgba(122, 76, 61, 0.22), transparent 32%),
-    linear-gradient(135deg, rgba(11, 9, 9, 0.98) 0%, rgba(15, 12, 12, 0.94) 100%),
-    url('https://i.pinimg.com/1200x/4e/6f/a8/4e6fa8c1d410ae7d30d8c79b8728a56b.jpg');
+    radial-gradient(circle at top left, rgba(255, 46, 147, 0.12), transparent 28%),
+    radial-gradient(circle at bottom right, rgba(0, 240, 255, 0.12), transparent 30%),
+    linear-gradient(135deg, rgba(5, 5, 10, 0.98) 0%, rgba(10, 10, 20, 0.94) 100%);
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
-  color: #FFFFFF;
+  color: #F7F2EE;
   font-family: var(--font-sans);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 body::before {
@@ -51,9 +55,9 @@ body::before {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  background: linear-gradient(120deg, rgba(255, 255, 255, 0.04), transparent 35%, rgba(255, 255, 255, 0.025));
+  background: linear-gradient(120deg, rgba(255, 255, 255, 0.03), transparent 28%, rgba(255, 255, 255, 0.01));
   mix-blend-mode: screen;
-  opacity: 0.8;
+  opacity: 0.6;
 }
 
 #root {
@@ -61,34 +65,108 @@ body::before {
 }
 
 ::selection {
-  background: rgba(239, 111, 143, 0.35);
+  background: rgba(239, 111, 143, 0.34);
   color: #fff;
 }
 
-/* Premium button polish */
+.page-shell {
+  min-height: 100vh;
+  position: relative;
+  background: transparent;
+  color: #F8F4F2;
+}
+
+.glass-panel {
+  background: linear-gradient(135deg, rgba(15, 15, 25, 0.7) 0%, rgba(10, 10, 20, 0.6) 100%);
+  border: 1px solid rgba(255, 46, 147, 0.2);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+.glass-panel-strong {
+  background: linear-gradient(145deg, rgba(20, 20, 30, 0.8) 0%, rgba(15, 15, 25, 0.7) 100%);
+  border: 1px solid rgba(0, 240, 255, 0.25);
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+}
+
+.surface-card {
+  background: rgba(15, 15, 22, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition: border-color 0.3s ease, transform 0.3s ease;
+}
+.surface-card:hover {
+  border-color: rgba(255, 46, 147, 0.3);
+  transform: translateY(-2px);
+}
+
+.soft-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  border-radius: 999px;
+  border: 1px solid rgba(239, 111, 143, 0.2);
+  background: rgba(239, 111, 143, 0.12);
+  color: #F7C6D3;
+  padding: 0.65rem 0.95rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 3vw, 2.8rem);
+  font-weight: 700;
+  line-height: 1.1;
+  color: #FFFFFF;
+}
+
+.section-subtitle {
+  color: #B8A6AA;
+  font-size: 1rem;
+  line-height: 1.7;
+  max-width: 44rem;
+}
+
+.nav-link {
+  color: #CBB8BE;
+  transition: color 0.2s ease;
+}
+
+.nav-link:hover {
+  color: var(--color-brand-pink);
+}
+
 .glow-button {
   background: linear-gradient(135deg, var(--color-brand-pink) 0%, #D95A78 100%);
   color: #FFFFFF;
-  box-shadow: 0 10px 24px rgba(239, 111, 143, 0.28);
+  box-shadow: 0 12px 28px rgba(239, 111, 143, 0.26);
   transition: all 0.25s ease;
 }
 
 .glow-button:hover {
   background: linear-gradient(135deg, var(--color-brand-pink-hover) 0%, #C44D68 100%);
-  box-shadow: 0 16px 32px rgba(239, 111, 143, 0.4);
+  box-shadow: 0 16px 34px rgba(239, 111, 143, 0.34);
   transform: translateY(-2px);
 }
 
 .glow-button-cocoa {
   background: linear-gradient(135deg, var(--color-brand-cocoa) 0%, #6A4339 100%);
   color: #FFFFFF;
-  box-shadow: 0 10px 24px rgba(122, 76, 61, 0.26);
+  box-shadow: 0 12px 28px rgba(122, 76, 61, 0.24);
   transition: all 0.25s ease;
 }
 
 .glow-button-cocoa:hover {
   background: linear-gradient(135deg, var(--color-brand-cocoa-hover) 0%, #533126 100%);
-  box-shadow: 0 16px 32px rgba(122, 76, 61, 0.38);
+  box-shadow: 0 16px 34px rgba(122, 76, 61, 0.32);
   transform: translateY(-2px);
 }
 
@@ -104,31 +182,32 @@ body::before {
 }
 
 .glow-input::placeholder {
-  color: rgba(184, 166, 170, 0.75);
+  color: rgba(184, 166, 170, 0.78);
 }
 
-/* Custom scrollbars */
 ::-webkit-scrollbar {
   width: 8px;
 }
+
 ::-webkit-scrollbar-track {
-  background: rgba(11, 9, 9, 0.9);
+  background: rgba(11, 9, 9, 0.95);
 }
+
 ::-webkit-scrollbar-thumb {
   background: linear-gradient(180deg, rgba(239, 111, 143, 0.55), rgba(122, 76, 61, 0.55));
   border-radius: 999px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(180deg, rgba(239, 111, 143, 0.8), rgba(122, 76, 61, 0.8));
 }
 
-/* Premium utility gradients and surfaces */
 .bg-chocolate-gradient {
-  background: linear-gradient(135deg, #1C1211 0%, #2A1A18 50%, #150D0C 100%);
+  background: linear-gradient(135deg, #0A0A14 0%, #151522 50%, #05050A 100%);
 }
 
 .bg-sidebar-gradient {
-  background: linear-gradient(180deg, #1C1516 0%, #1A1110 55%, #130C0B 100%);
+  background: linear-gradient(180deg, #080812 0%, #06060E 55%, #030308 100%);
 }
 
 .border-cocoa-subtle {

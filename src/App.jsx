@@ -59,10 +59,12 @@ function App() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-bg-dark flex flex-col items-center justify-center">
-        <div className="w-16 h-16 border-4 border-t-[#FF4A8B] border-r-transparent border-b-[#FF4A8B] border-l-transparent rounded-full animate-spin mb-4"></div>
-        <p className="font-['Comfortaa'] text-lg text-[#A38C97] tracking-wider animate-pulse mb-1">Loading Fitique...</p>
-        <p className="font-quick text-[10px] text-brand-pink tracking-[0.25em] font-bold uppercase animate-pulse">light weight baby</p>
+      <div className="page-shell flex flex-col items-center justify-center px-6">
+        <div className="glass-panel rounded-[2rem] border border-white/10 px-10 py-10 text-center shadow-[0_24px_60px_rgba(0,0,0,0.35)]">
+          <div className="mx-auto mb-4 h-14 w-14 animate-spin rounded-full border-4 border-t-[#FF4A8B] border-r-transparent border-b-[#FF4A8B] border-l-transparent"></div>
+          <p className="mb-2 font-['Comfortaa'] text-lg tracking-wider text-[#F6E8ED]">Loading Fitique...</p>
+          <p className="font-quick text-[10px] font-bold uppercase tracking-[0.3em] text-brand-pink">light weight baby</p>
+        </div>
       </div>
     );
   }
