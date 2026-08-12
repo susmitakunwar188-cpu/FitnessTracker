@@ -151,10 +151,10 @@ router.get('/feed', async (req, res) => {
   try {
     if (getUseFallback()) {
       const data = await readFallbackData();
-      return res.json(data.feed.slice(-20).reverse());
+      return res.json(data.feed.slice(-50).reverse());
     }
 
-    const feed = await Feed.find().sort({ createdAt: -1 }).limit(20);
+    const feed = await Feed.find().sort({ createdAt: -1 }).limit(50);
     res.json(feed);
   } catch {
     res.status(500).json({ error: 'Server error fetching feed' });
@@ -164,37 +164,127 @@ router.get('/feed', async (req, res) => {
 // Post to Feed
 router.post('/feed', async (req, res) => {
   try {
-    const { userId, userName, action } = req.body;
-    
+    const { userId, userName, action, avatarUrl = '', type = 'social' } = req.body;
+
     if (getUseFallback()) {
       const data = await readFallbackData();
-      const newPost = { userId, userName, action, likes: 0, createdAt: new Date().toISOString() };
+      const newPost = {
+        _id: `feed-${Date.now()}`,
+        userId,
+        userName,
+        avatarUrl,
+        action,
+        type,
+        likes: 0,
+        likedBy: [],
+        comments: [],
+        createdAt: new Date().toISOString()
+      };
       data.feed.push(newPost);
       await writeFallbackData(data);
       return res.json(newPost);
     }
 
-    const newPost = await Feed.create({ userId, userName, action });
+    const newPost = await Feed.create({ userId, userName, avatarUrl, action, type });
     res.json(newPost);
   } catch {
     res.status(500).json({ error: 'Server error posting to feed' });
   }
 });
 
-// Like a post
+const findFeedPost = (data, id) => data.feed.find(p => p._id === id || p.id === id);
+
+// Like / Unlike a post
 router.post('/feed/:id/like', async (req, res) => {
   try {
     const { id } = req.params;
-    
+    const { userId } = req.body || {};
+
     if (getUseFallback()) {
-      // Simple mock for fallback (no real persistence for likes)
+      const data = await readFallbackData();
+      const post = findFeedPost(data, id);
+      if (!post) return res.status(404).json({ error: 'Post not found' });
+      if (!Array.isArray(post.likedBy)) post.likedBy = [];
+      const idx = post.likedBy.indexOf(userId);
+      let liked;
+      if (idx !== -1) {
+        post.likedBy.splice(idx, 1);
+        liked = false;
+      } else {
+        post.likedBy.push(userId);
+        liked = true;
+      }
+      post.likes = post.likedBy.length;
+      await writeFallbackData(data);
+      return res.json({ liked, likes: post.likes });
+    }
+
+    const post = await Feed.findById(id);
+    if (!post) return res.status(404).json({ error: 'Post not found' });
+    let liked;
+    if (post.likedBy.includes(userId)) {
+      post.likedBy.pull(userId);
+      liked = false;
+    } else {
+      post.likedBy.push(userId);
+      liked = true;
+    }
+    post.likes = post.likedBy.length;
+    await post.save();
+    res.json({ liked, likes: post.likes });
+  } catch {
+    res.status(500).json({ error: 'Server error liking post' });
+  }
+});
+
+// Comment on a post
+router.post('/feed/:id/comment', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { userName, text, avatarUrl = '' } = req.body;
+    if (!text || !text.trim()) return res.status(400).json({ error: 'Comment text is required' });
+
+    if (getUseFallback()) {
+      const data = await readFallbackData();
+      const post = findFeedPost(data, id);
+      if (!post) return res.status(404).json({ error: 'Post not found' });
+      if (!Array.isArray(post.comments)) post.comments = [];
+      const comment = { userName: userName || 'Guest', avatarUrl, text: text.trim(), createdAt: new Date().toISOString() };
+      post.comments.push(comment);
+      await writeFallbackData(data);
+      return res.json(comment);
+    }
+
+    const post = await Feed.findById(id);
+    if (!post) return res.status(404).json({ error: 'Post not found' });
+    post.comments.push({ userName: userName || 'Guest', avatarUrl, text: text.trim() });
+    await post.save();
+    res.json(post.comments[post.comments.length - 1]);
+  } catch {
+    res.status(500).json({ error: 'Server error commenting on post' });
+  }
+});
+
+// Delete a post (author only)
+router.delete('/feed/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { userId } = req.body || {};
+
+    if (getUseFallback()) {
+      const data = await readFallbackData();
+      const idx = data.feed.findIndex(p => (p._id === id || p.id === id) && p.userId === userId);
+      if (idx === -1) return res.status(404).json({ error: 'Post not found' });
+      data.feed.splice(idx, 1);
+      await writeFallbackData(data);
       return res.json({ success: true });
     }
 
-    await Feed.findByIdAndUpdate(id, { $inc: { likes: 1 } });
+    const post = await Feed.findOneAndDelete({ _id: id, userId });
+    if (!post) return res.status(404).json({ error: 'Post not found' });
     res.json({ success: true });
   } catch {
-    res.status(500).json({ error: 'Server error liking post' });
+    res.status(500).json({ error: 'Server error deleting post' });
   }
 });
 
