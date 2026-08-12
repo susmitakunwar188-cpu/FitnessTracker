@@ -171,7 +171,7 @@ export default function CommunityFeed({ user }) {
               key={q}
               onClick={() => handlePost(q)}
               disabled={posting}
-              className="text-[10px] rounded-lg border border-brand-cocoa/25 bg-brand-cocoa/5 px-2.5 py-1.5 font-semibold text-accent-cocoa-light transition hover:border-brand-cocoa hover:bg-brand-cocoa/15 disabled:opacity-50 cursor-pointer"
+              className="text-[11px] rounded-lg border border-brand-cocoa/25 bg-brand-cocoa/5 px-2.5 py-1.5 font-semibold text-accent-cocoa-light transition hover:border-brand-cocoa hover:bg-brand-cocoa/15 disabled:opacity-50 cursor-pointer"
             >
               {q}
             </button>
@@ -189,12 +189,12 @@ export default function CommunityFeed({ user }) {
             <div key={post._id || idx} className="p-4 rounded-2xl bg-bg-dark/60 border border-border-pink/40 flex flex-col gap-2.5">
               <div className="flex items-center justify-between gap-3">
                 <span className="flex items-center gap-2 font-bold text-brand-pink text-sm">
-                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-brand-pink/15 border border-brand-pink/25 text-[10px]">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-brand-pink/15 border border-brand-pink/25 text-[11px]">
                     {(post.userName || 'F')[0].toUpperCase()}
                   </span>
                   {post.userName}
                 </span>
-                <span className="text-[10px] text-text-muted font-mono shrink-0">
+                <span className="text-[11px] text-text-muted font-mono shrink-0">
                   {new Date(post.createdAt).toLocaleDateString()}
                 </span>
               </div>

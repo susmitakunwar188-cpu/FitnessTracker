@@ -74,7 +74,7 @@ function App() {
         <div className="glass-panel rounded-[2rem] border border-border-pink/40 px-10 py-10 text-center shadow-[0_24px_60px_rgba(0,0,0,0.35)]">
           <div className="mx-auto mb-4 h-14 w-14 animate-spin rounded-full border-4 border-t-brand-pink border-r-transparent border-b-brand-pink border-l-transparent"></div>
           <p className="mb-2 font-['Comfortaa'] text-lg tracking-wider text-text-primary">Loading Fitique...</p>
-          <p className="font-quick text-[10px] font-bold uppercase tracking-[0.3em] text-brand-pink">light weight baby</p>
+          <p className="font-quick text-[11px] font-bold uppercase tracking-[0.3em] text-brand-pink">light weight baby</p>
         </div>
       </div>
     );

@@ -297,7 +297,7 @@ function WorkoutDetails({ workout, goDashboard, user }) {
               <FlameIcon />
               <div className="leading-tight text-center">
                 <p className="font-display text-2xl font-extrabold text-white leading-none">{streakCount}</p>
-                <p className="text-[9px] font-bold uppercase tracking-widest text-white/85 mt-0.5">Day Streak</p>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-white/85 mt-0.5">Day Streak</p>
               </div>
             </div>
             <div>

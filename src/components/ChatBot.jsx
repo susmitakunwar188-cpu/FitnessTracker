@@ -35,7 +35,7 @@ const formatInline = (text) => {
       return <strong key={i} className="font-bold text-brand-pink">{part.slice(2, -2)}</strong>;
     }
     if (part.startsWith("`") && part.endsWith("`")) {
-      return <code key={i} className="rounded bg-white/10 px-1 py-0.5 font-mono text-[11px] text-accent-cocoa-light">{part.slice(1, -1)}</code>;
+      return <code key={i} className="rounded bg-white/10 px-1 py-0.5 font-mono text-[12px] text-accent-cocoa-light">{part.slice(1, -1)}</code>;
     }
     if (part.startsWith("*") && part.endsWith("*")) {
       return <em key={i} className="italic">{part.slice(1, -1)}</em>;
@@ -152,7 +152,7 @@ function ChatBot() {
             </div>
             <div className="min-w-0 flex-1">
               <h3 className="font-display text-base font-bold text-text-primary leading-none">Fitique AI</h3>
-              <p className="mt-1 flex items-center gap-1.5 text-[11px] font-semibold text-green-400">
+              <p className="mt-1 flex items-center gap-1.5 text-[12px] font-semibold text-green-400">
                 <span className="h-2 w-2 rounded-full bg-green-400"></span> Online · fitness coach
               </p>
             </div>

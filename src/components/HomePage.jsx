@@ -70,7 +70,7 @@ function HomePage({ user, showLogin, showRegister, goDashboard, logout }) {
             <BrandIcon />
             <div className="flex flex-col">
               <span className="bg-gradient-to-r from-text-primary to-text-muted bg-clip-text text-transparent leading-none">Fitique</span>
-              <span className="mt-1 text-[10px] font-quick font-bold uppercase leading-none tracking-[0.22em] text-brand-pink">light weight baby</span>
+              <span className="mt-1 text-[11px] font-quick font-bold uppercase leading-none tracking-[0.22em] text-brand-pink">light weight baby</span>
             </div>
           </h1>
           <div className="flex items-center gap-5 md:gap-8">
@@ -252,7 +252,7 @@ function HomePage({ user, showLogin, showRegister, goDashboard, logout }) {
               <BrandIcon />
               <div className="flex flex-col">
                 <span className="bg-gradient-to-r from-text-primary to-text-muted bg-clip-text text-transparent leading-none">Fitique</span>
-                <span className="text-[10px] text-brand-pink tracking-[0.22em] font-quick font-bold uppercase mt-1 leading-none">light weight baby</span>
+                <span className="text-[11px] text-brand-pink tracking-[0.22em] font-quick font-bold uppercase mt-1 leading-none">light weight baby</span>
               </div>
             </h2>
             <p className="font-sans text-text-muted text-lg max-w-md leading-relaxed mb-8">

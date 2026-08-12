@@ -428,7 +428,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeC
             <BrandIcon />
             <div className="flex flex-col">
               <span className="font-display text-2xl font-bold tracking-tight text-text-primary leading-none">Fitique</span>
-              <span className="text-[10px] text-brand-pink tracking-[0.22em] font-quick font-bold uppercase mt-1 leading-none">light weight baby</span>
+              <span className="text-[11px] text-brand-pink tracking-[0.22em] font-quick font-bold uppercase mt-1 leading-none">light weight baby</span>
             </div>
           </div>
         </div>
@@ -643,7 +643,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeC
                         {profileForm.avatarUrl ? (
                           <img src={profileForm.avatarUrl} alt="Preview" className="w-full h-full object-cover" />
                         ) : (
-                          <span className="text-[10px] text-text-muted">No Image</span>
+                          <span className="text-[11px] text-text-muted">No Image</span>
                         )}
                       </div>
                       <div className="flex-1 w-full">
@@ -666,7 +666,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeC
                           }}
                           className="w-full text-sm text-text-muted file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-brand-cocoa/20 file:text-accent-cocoa-light hover:file:bg-brand-cocoa/30 file:cursor-pointer"
                         />
-                        <p className="text-[10px] text-text-muted mt-1">Accepts JPG, PNG, GIF. Max size 2MB.</p>
+                        <p className="text-[11px] text-text-muted mt-1">Accepts JPG, PNG, GIF. Max size 2MB.</p>
                       </div>
                     </div>
                   </div>
@@ -855,7 +855,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeC
                     <FlameIcon className="h-6 w-6 text-text-primary" />
                     <div className="leading-tight text-center">
                       <p className="font-display text-2xl font-extrabold text-white leading-none">{Math.max(getWeeklyStreak(), dailyStreak)}</p>
-                      <p className="text-[9px] font-bold uppercase tracking-widest text-white/85 mt-0.5">Day Streak</p>
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-white/85 mt-0.5">Day Streak</p>
                     </div>
                   </div>
                 </div>
@@ -875,7 +875,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeC
                           : "bg-bg-dark/60 border-brand-cocoa/20 text-text-muted hover:text-text-primary hover:border-brand-cocoa/40"
                       }`}
                     >
-                      <span className="text-[10px] font-quick font-bold uppercase tracking-wider leading-none mb-1">{day}</span>
+                      <span className="text-[11px] font-quick font-bold uppercase tracking-wider leading-none mb-1">{day}</span>
                       <div className="w-1.5 h-1.5 rounded-full bg-text-primary" style={{ opacity: weeklyActivity[idx] ? 1 : 0 }} />
                     </button>
                   ))}
@@ -929,18 +929,18 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeC
                       
                       <div className="flex items-center gap-6 flex-wrap md:flex-nowrap justify-between md:justify-end">
                         <div className="text-right">
-                          <p className="font-quick text-[10px] font-bold text-text-muted tracking-widest uppercase">Duration</p>
+                          <p className="font-quick text-[11px] font-bold text-text-muted tracking-widest uppercase">Duration</p>
                           <p className="font-mono text-text-primary text-sm font-semibold mt-0.5">{formatHistoryDuration(record.duration)}</p>
                         </div>
                         
                         <div className="max-w-[200px] md:max-w-[280px]">
-                          <p className="font-quick text-[10px] font-bold text-text-muted tracking-widest uppercase mb-1">Completed Exercises</p>
+                          <p className="font-quick text-[11px] font-bold text-text-muted tracking-widest uppercase mb-1">Completed Exercises</p>
                           {record.completedExercises && record.completedExercises.length > 0 ? (
                             <div className="flex flex-wrap gap-1">
                               {record.completedExercises.map((ex, i) => (
                                 <span
                                   key={i}
-                                  className="text-[9px] font-quick font-bold bg-brand-cocoa/25 border border-brand-cocoa/30 text-brand-pink px-2 py-0.5 rounded-md truncate max-w-[80px]"
+                                  className="text-[10px] font-quick font-bold bg-brand-cocoa/25 border border-brand-cocoa/30 text-brand-pink px-2 py-0.5 rounded-md truncate max-w-[80px]"
                                   title={ex}
                                 >
                                   {ex}
@@ -948,7 +948,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeC
                               ))}
                             </div>
                           ) : (
-                            <span className="text-[10px] font-sans text-text-muted/60 italic">No exercises logged</span>
+                            <span className="text-[11px] font-sans text-text-muted/60 italic">No exercises logged</span>
                           )}
                         </div>
                       </div>
@@ -968,22 +968,22 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeC
                 <div className={`p-4 rounded-2xl border flex flex-col items-center text-center transition-all ${history.length >= 1 ? 'border-brand-pink bg-brand-pink/10' : 'border-border-pink/50 bg-bg-dark/40 opacity-50 grayscale'}`}>
                   <div className="text-4xl mb-2">🏅</div>
                   <h4 className="font-display font-bold text-sm text-text-primary">First Blood</h4>
-                  <p className="text-[10px] text-text-muted mt-1 uppercase font-quick">Complete 1 Workout</p>
+                  <p className="text-[11px] text-text-muted mt-1 uppercase font-quick">Complete 1 Workout</p>
                 </div>
                 <div className={`p-4 rounded-2xl border flex flex-col items-center text-center transition-all ${getWeeklyStreak() >= 3 ? 'border-brand-cocoa bg-brand-cocoa/10' : 'border-border-pink/50 bg-bg-dark/40 opacity-50 grayscale'}`}>
                   <div className="text-4xl mb-2">🔥</div>
                   <h4 className="font-display font-bold text-sm text-text-primary">Streak Master</h4>
-                  <p className="text-[10px] text-text-muted mt-1 uppercase font-quick">3-Day Streak</p>
+                  <p className="text-[11px] text-text-muted mt-1 uppercase font-quick">3-Day Streak</p>
                 </div>
                 <div className={`p-4 rounded-2xl border flex flex-col items-center text-center transition-all ${waterIntake >= 2000 ? 'border-[#00C2E5] bg-[#00C2E5]/10' : 'border-border-pink/50 bg-bg-dark/40 opacity-50 grayscale'}`}>
                   <div className="text-4xl mb-2">💧</div>
                   <h4 className="font-display font-bold text-sm text-text-primary">Hydration Hero</h4>
-                  <p className="text-[10px] text-text-muted mt-1 uppercase font-quick">Drink 2000ml</p>
+                  <p className="text-[11px] text-text-muted mt-1 uppercase font-quick">Drink 2000ml</p>
                 </div>
                 <div className={`p-4 rounded-2xl border flex flex-col items-center text-center transition-all ${history.length >= 10 ? 'border-[#FFD700] bg-[#FFD700]/10' : 'border-border-pink/50 bg-bg-dark/40 opacity-50 grayscale'}`}>
                   <div className="text-4xl mb-2">👑</div>
                   <h4 className="font-display font-bold text-sm text-text-primary">Gym Royalty</h4>
-                  <p className="text-[10px] text-text-muted mt-1 uppercase font-quick">Complete 10 Workouts</p>
+                  <p className="text-[11px] text-text-muted mt-1 uppercase font-quick">Complete 10 Workouts</p>
                 </div>
               </div>
             </div>

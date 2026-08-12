@@ -146,7 +146,7 @@ export default function RecoveryTracker({ user }) {
       <div className="mb-5 grid grid-cols-1 sm:grid-cols-3 gap-3">
         {data.recoveryScore > 0 ? (
           <div className="rounded-2xl border border-brand-pink/50 bg-bg-dark p-5 text-center">
-            <p className="mb-2 flex items-center justify-center gap-1.5 text-[10px] text-text-muted font-quick font-bold tracking-widest uppercase">
+            <p className="mb-2 flex items-center justify-center gap-1.5 text-[11px] text-text-muted font-quick font-bold tracking-widest uppercase">
               <GaugeIcon className="h-4 w-4 text-brand-pink" /> Readiness Score
             </p>
             <p className={`text-5xl font-display font-extrabold ${data.recoveryScore >= 80 ? 'text-green-400' : data.recoveryScore >= 60 ? 'text-yellow-400' : 'text-red-400'}`}>
@@ -155,20 +155,20 @@ export default function RecoveryTracker({ user }) {
           </div>
         ) : (
           <div className="rounded-2xl border border-border-pink/40 bg-bg-dark p-5 text-center">
-            <p className="mb-2 text-[10px] text-text-muted font-quick font-bold tracking-widest uppercase">Readiness</p>
+            <p className="mb-2 text-[11px] text-text-muted font-quick font-bold tracking-widest uppercase">Readiness</p>
             <p className="font-display text-5xl font-bold text-text-muted">--</p>
           </div>
         )}
 
         <div className="rounded-2xl border border-border-pink/40 bg-bg-dark p-5 text-center">
-          <p className="mb-2 flex items-center justify-center gap-1.5 text-[10px] text-text-muted font-quick font-bold tracking-widest uppercase">
+          <p className="mb-2 flex items-center justify-center gap-1.5 text-[11px] text-text-muted font-quick font-bold tracking-widest uppercase">
             <TrendIcon className="h-4 w-4 text-brand-pink" /> Weekly Average
           </p>
           <p className="font-display text-5xl font-extrabold text-accent-cocoa-light">{avgHours}<span className="text-lg text-text-muted">h</span></p>
         </div>
 
         <div className="rounded-2xl border border-brand-pink/40 bg-bg-dark p-5 text-center">
-          <p className="mb-2 flex items-center justify-center gap-1.5 text-[10px] text-text-muted font-quick font-bold tracking-widest uppercase">
+          <p className="mb-2 flex items-center justify-center gap-1.5 text-[11px] text-text-muted font-quick font-bold tracking-widest uppercase">
             <BedIcon className="h-4 w-4 text-brand-pink" /> Last Night
           </p>
           <p className="font-display text-5xl font-extrabold text-text-primary">
@@ -197,7 +197,7 @@ export default function RecoveryTracker({ user }) {
                 style={{ height: `${d.hours > 0 ? Math.min((d.hours / 10) * 100, 100) : 4}%` }}
                 title={`${d.label}: ${d.hours}h`}
               />
-              <span className={`text-[9px] font-bold uppercase ${d.date === today ? 'text-brand-pink' : 'text-text-muted'}`}>{d.label}</span>
+              <span className={`text-[10px] font-bold uppercase ${d.date === today ? 'text-brand-pink' : 'text-text-muted'}`}>{d.label}</span>
             </div>
           ))}
         </div>
@@ -206,7 +206,7 @@ export default function RecoveryTracker({ user }) {
       <div className="mb-5 flex items-start gap-2.5 rounded-2xl border border-brand-pink/25 bg-brand-pink/5 p-4">
         <InfoIcon className="mt-0.5 h-4 w-4 shrink-0 text-brand-pink" />
         <div>
-          <p className="mb-0.5 text-[10px] font-bold uppercase tracking-widest text-text-muted font-quick">Coach Tip</p>
+          <p className="mb-0.5 text-[11px] font-bold uppercase tracking-widest text-text-muted font-quick">Coach Tip</p>
           <p className="text-sm leading-relaxed text-text-primary">{tip}</p>
         </div>
       </div>

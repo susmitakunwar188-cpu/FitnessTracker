@@ -108,7 +108,7 @@ const MacroBar = ({ label, icon, value, goal, barClass }) => {
       <div className="h-2 w-full overflow-hidden rounded-full bg-bg-dark">
         <div className={`h-full rounded-full bg-gradient-to-r ${barClass} transition-all duration-500`} style={{ width: `${pct}%` }} />
       </div>
-      <p className="mt-1 text-right text-[10px] font-semibold text-text-muted/70">{pct}% of goal</p>
+      <p className="mt-1 text-right text-[11px] font-semibold text-text-muted/70">{pct}% of goal</p>
     </div>
   );
 };
@@ -276,27 +276,27 @@ export default function NutritionTracker({ user }) {
               <p className={`font-display text-4xl font-extrabold ${overGoal ? 'text-red-400' : remaining === 0 ? 'text-green-400' : 'text-text-primary'}`}>
                 {overGoal ? Math.abs(remaining) : remaining}
               </p>
-              <p className={`text-[10px] font-bold uppercase tracking-widest font-quick ${overGoal ? 'text-red-400/80' : 'text-text-muted'}`}>
+              <p className={`text-[11px] font-bold uppercase tracking-widest font-quick ${overGoal ? 'text-red-400/80' : 'text-text-muted'}`}>
                 {overGoal ? 'kcal over' : remaining === 0 ? 'goal met' : 'kcal left'}
               </p>
             </div>
           </div>
-          <p className="mt-2 text-[11px] font-semibold text-text-muted">{pct}% of {goals.calories} kcal goal</p>
+          <p className="mt-2 text-[12px] font-semibold text-text-muted">{pct}% of {goals.calories} kcal goal</p>
         </div>
         <div className="grid w-full flex-1 grid-cols-2 gap-3">
           <div className="flex flex-col items-center justify-center rounded-2xl border border-brand-pink/25 bg-brand-pink/10 p-5 text-center">
-            <p className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-text-muted font-quick">
+            <p className="flex items-center gap-1 text-[11px] font-bold uppercase tracking-widest text-text-muted font-quick">
               <TargetIcon className="h-3.5 w-3.5" /> Target
             </p>
             <p className="mt-1 font-display text-3xl font-bold text-text-primary">{goals.calories}</p>
-            <p className="text-[10px] font-semibold text-text-muted">kcal / day</p>
+            <p className="text-[11px] font-semibold text-text-muted">kcal / day</p>
           </div>
           <div className="flex flex-col items-center justify-center rounded-2xl border border-brand-cocoa/25 bg-brand-cocoa/10 p-5 text-center">
-            <p className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-text-muted font-quick">
+            <p className="flex items-center gap-1 text-[11px] font-bold uppercase tracking-widest text-text-muted font-quick">
               <FlameIcon className="h-3.5 w-3.5" /> Consumed
             </p>
             <p className="mt-1 font-display text-3xl font-bold text-accent-cocoa-light">{data.calories}</p>
-            <p className="text-[10px] font-semibold text-text-muted">kcal today</p>
+            <p className="text-[11px] font-semibold text-text-muted">kcal today</p>
           </div>
           <div className="col-span-2 flex items-center justify-center gap-2 rounded-2xl border border-border-pink/40 bg-bg-dark/60 p-4">
             <p className="text-xs font-semibold text-text-muted">
@@ -309,7 +309,7 @@ export default function NutritionTracker({ user }) {
           </div>
         </div>
       </div>
-      <p className="mb-5 text-[11px] text-text-muted/70">Daily goal is auto-estimated from your profile stats (age, weight, height) — defaults to 2000 kcal.</p>
+      <p className="mb-5 text-[12px] text-text-muted/70">Daily goal is auto-estimated from your profile stats (age, weight, height) — defaults to 2000 kcal.</p>
 
       <div className="mb-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         <MacroBar label="Calories" icon={<FlameIcon />} value={data.calories} goal={goals.calories} barClass="from-brand-pink to-brand-pink-hover" />
@@ -369,12 +369,12 @@ export default function NutritionTracker({ user }) {
       <div className="mb-5 overflow-hidden rounded-2xl border border-border-pink/40 bg-bg-dark/30">
         <table className="w-full border-collapse text-sm">
           <thead className="bg-bg-dark/90">
-            <tr className="text-[10px] font-bold uppercase tracking-widest text-text-muted font-quick">
+            <tr className="text-[11px] font-bold uppercase tracking-widest text-text-muted font-quick">
               <th className="px-4 py-3 text-left">Meal</th>
-              <th className="px-4 py-3 text-right">Calories<span className="ml-1 text-[9px] font-semibold normal-case text-text-muted/60">/ {goals.calories}</span></th>
-              <th className="px-4 py-3 text-right">Protein<span className="ml-1 text-[9px] font-semibold normal-case text-text-muted/60">/ {goals.protein}g</span></th>
-              <th className="px-4 py-3 text-right">Carbs<span className="ml-1 text-[9px] font-semibold normal-case text-text-muted/60">/ {goals.carbs}g</span></th>
-              <th className="px-4 py-3 text-right">Fat<span className="ml-1 text-[9px] font-semibold normal-case text-text-muted/60">/ {goals.fat}g</span></th>
+              <th className="px-4 py-3 text-right">Calories<span className="ml-1 text-[10px] font-semibold normal-case text-text-muted/60">/ {goals.calories}</span></th>
+              <th className="px-4 py-3 text-right">Protein<span className="ml-1 text-[10px] font-semibold normal-case text-text-muted/60">/ {goals.protein}g</span></th>
+              <th className="px-4 py-3 text-right">Carbs<span className="ml-1 text-[10px] font-semibold normal-case text-text-muted/60">/ {goals.carbs}g</span></th>
+              <th className="px-4 py-3 text-right">Fat<span className="ml-1 text-[10px] font-semibold normal-case text-text-muted/60">/ {goals.fat}g</span></th>
               <th className="px-4 py-3 text-right" />
             </tr>
           </thead>
@@ -406,7 +406,7 @@ export default function NutritionTracker({ user }) {
           {data.meals.length > 0 && (
             <tfoot>
               <tr className="border-t-2 border-brand-pink/50 bg-brand-pink/10 font-display font-bold text-text-primary">
-                <td className="px-4 py-3.5 uppercase tracking-widest text-[11px] font-quick text-text-muted">Totals</td>
+                <td className="px-4 py-3.5 uppercase tracking-widest text-[12px] font-quick text-text-muted">Totals</td>
                 <td className={`px-4 py-3.5 text-right font-mono text-base font-bold tabular-nums ${overGoal ? 'text-red-400' : 'text-green-400'}`}>{data.calories}</td>
                 <td className="px-4 py-3.5 text-right font-mono text-base text-green-400 tabular-nums">{data.protein}g</td>
                 <td className="px-4 py-3.5 text-right font-mono text-base text-amber-400 tabular-nums">{data.carbs}g</td>
@@ -418,7 +418,7 @@ export default function NutritionTracker({ user }) {
         </table>
       </div>
 
-      <p className="text-right text-[11px] font-semibold text-text-muted">
+      <p className="text-right text-[12px] font-semibold text-text-muted">
         {saveState === 'saving' && 'Saving...'}
         {saveState === 'saved' && <span className="text-green-400">Saved to your daily log.</span>}
         {saveState === 'error' && <span className="text-red-400">Failed to save — check your connection.</span>}
