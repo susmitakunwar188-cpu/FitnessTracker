@@ -7,6 +7,7 @@ import WorkoutDashboard from "./components/WorkoutDashboard";
 import WorkoutDetails from "./components/WorkoutDetails";
 import ChatBot from "./components/ChatBot";
 import ToastContainer from "./components/ToastContainer";
+import ConfirmDialog from "./components/ConfirmDialog";
 import { api } from "./utils/api";
 
 function App() {
@@ -78,6 +79,7 @@ function App() {
           <p className="font-quick text-[11px] font-bold uppercase tracking-[0.3em] text-brand-pink">light weight baby</p>
         </div>
         <ToastContainer />
+        <ConfirmDialog />
       </div>
     );
   }
@@ -133,6 +135,7 @@ function App() {
 
       <ChatBot />
       <ToastContainer />
+      <ConfirmDialog />
     </>
   );
 }
