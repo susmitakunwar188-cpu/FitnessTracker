@@ -267,13 +267,36 @@ export const api = {
     return data;
   },
 
-  async likePost(postId) {
+  async likePost(postId, userId) {
     const res = await fetch(`${API_BASE_URL}/features/feed/${postId}/like`, {
       method: 'POST',
-      headers: getHeaders()
+      headers: getHeaders(),
+      body: JSON.stringify({ userId })
     });
     const data = await parseJsonResponse(res);
     if (!res.ok) throw new Error(data?.error || data?.message || 'Failed to like post');
+    return data;
+  },
+
+  async commentPost(postId, commentData) {
+    const res = await fetch(`${API_BASE_URL}/features/feed/${postId}/comment`, {
+      method: 'POST',
+      headers: getHeaders(),
+      body: JSON.stringify(commentData)
+    });
+    const data = await parseJsonResponse(res);
+    if (!res.ok) throw new Error(data?.error || data?.message || 'Failed to comment on post');
+    return data;
+  },
+
+  async deletePost(postId, userId) {
+    const res = await fetch(`${API_BASE_URL}/features/feed/${postId}`, {
+      method: 'DELETE',
+      headers: getHeaders(),
+      body: JSON.stringify({ userId })
+    });
+    const data = await parseJsonResponse(res);
+    if (!res.ok) throw new Error(data?.error || data?.message || 'Failed to delete post');
     return data;
   },
 
