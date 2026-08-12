@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { api } from "../utils/api.js";
 import { awardWorkoutStreak, getStoredWorkoutStreak } from "../utils/streak";
 import { toast } from "../utils/toast";
+import { confirmDialog } from "../utils/confirm";
 
 const DumbbellIcon = () => (
   <svg viewBox="0 0 24 24" className="h-10 w-10 text-brand-pink" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -227,10 +228,12 @@ function WorkoutDetails({ workout, goDashboard, user }) {
       .map(ex => ex.name);
 
     if (completedExerciseNames.length === 0) {
-      const confirmFinish = window.confirm(
-        "You haven't checked off any exercises. Are you sure you want to complete this workout session?"
-      );
-      if (!confirmFinish) return;
+      const ok = await confirmDialog({
+        title: "Finish workout?",
+        message: "You haven't checked off any exercises. Are you sure you want to complete this workout session?",
+        confirmText: "Finish Workout"
+      });
+      if (!ok) return;
     }
 
     try {
