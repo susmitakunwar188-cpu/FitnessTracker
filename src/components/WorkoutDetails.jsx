@@ -264,7 +264,7 @@ function WorkoutDetails({ workout, goDashboard, user }) {
           </div>
         </div>
 
-        <div className="mb-8 overflow-hidden rounded-[2rem] border border-brand-cocoa/30 bg-[#1b1212] shadow-lg">
+        <div className="mb-8 overflow-hidden rounded-[2rem] border border-brand-cocoa/30 bg-bg-dark shadow-lg">
           <img
             src={getWorkoutVisual(workout)}
             alt={`${workoutName} workout preview`}
@@ -284,8 +284,8 @@ function WorkoutDetails({ workout, goDashboard, user }) {
           </div>
         )}
 
-        <div className="mb-8 rounded-2xl border border-brand-cocoa/30 bg-[#171011]/80 p-4 md:p-5 flex flex-wrap items-center justify-between gap-4">
-          <div>
+        <div className="mb-8 rounded-2xl border border-brand-cocoa/30 bg-card-dark/80 p-4 md:p-5 flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-center gap-5">
             <p className="text-xs font-semibold uppercase tracking-[0.3em] text-text-muted">Daily Streak</p>
             <p className="font-display text-2xl font-bold text-white">🔥 {streakCount} day streak</p>
           </div>
@@ -304,10 +304,10 @@ function WorkoutDetails({ workout, goDashboard, user }) {
               <div
                 key={idx}
                 onClick={() => toggleCompleted(idx)}
-                className={`p-5 rounded-2xl border transition duration-300 cursor-pointer flex items-center justify-between gap-4 select-none ${
+                className={`rounded-2xl border p-4 transition-all duration-300 cursor-pointer flex items-center justify-between gap-4 select-none ${
                   completedExercises[idx]
-                    ? "bg-[#181211]/30 border-brand-cocoa/20 shadow-inner"
-                    : "bg-[#1E1516]/80 border-border-pink/40 hover:border-brand-pink/25 shadow-md"
+                    ? "bg-bg-dark/30 border-brand-cocoa/20 shadow-inner"
+                    : "bg-card-dark/80 border-border-pink/40 hover:border-brand-pink/25 shadow-md"
                 }`}
               >
                 <div className="min-w-0 flex-1">
@@ -352,7 +352,7 @@ function WorkoutDetails({ workout, goDashboard, user }) {
             <h3 className="text-xs font-semibold text-text-muted tracking-widest uppercase font-quick mb-2">Workout Companion Timers</h3>
             
             {/* Stopwatch Widget */}
-            <div className="bg-[#181110]/90 rounded-3xl border border-brand-cocoa/40 p-6 shadow-xl flex flex-col justify-between">
+            <div className="bg-card-dark/90 rounded-3xl border border-brand-cocoa/40 p-6 shadow-xl flex flex-col justify-between">
               <div className="mb-4">
                 <p className="font-quick text-xs font-bold text-text-muted tracking-widest uppercase">Workout Time</p>
                 <div className="font-mono text-4xl md:text-5xl font-extrabold text-white mt-2 tracking-tight">
@@ -394,7 +394,7 @@ function WorkoutDetails({ workout, goDashboard, user }) {
             </div>
 
             {/* Rest Countdown Timer Widget */}
-            <div className="bg-[#181110]/90 rounded-3xl border border-brand-cocoa/40 p-6 shadow-xl flex flex-col justify-between">
+            <div className="bg-card-dark/90 rounded-3xl border border-brand-cocoa/40 p-6 shadow-xl flex flex-col justify-between">
               <div className="mb-5">
                 <p className="font-quick text-xs font-bold text-text-muted tracking-widest uppercase mb-2">Rest Interval Timer</p>
                 

@@ -1,0 +1,9 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# Netlify build environment (local dev uses the Vite proxy, so leave this empty locally)
+# VITE_API_URL = "https://your-backend.vercel.app"

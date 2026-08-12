@@ -126,9 +126,9 @@ function HomePage({ user, showLogin, showRegister, goDashboard, logout }) {
           </div>
           <h1 className="mb-6 text-5xl font-display font-extrabold leading-[1.05] tracking-tight text-white md:text-6xl lg:text-7xl">
             Your Fitness <br />
-            <span className="bg-gradient-to-r from-brand-pink to-[#FFA2C5] bg-clip-text text-transparent">Journey Starts Here</span>
+            <span className="bg-gradient-to-r from-brand-pink to-brand-cocoa bg-clip-text text-transparent">Journey Starts Here</span>
           </h1>
-          <p className="mx-auto mb-8 max-w-xl text-lg leading-relaxed text-text-muted md:text-xl lg:mx-0">
+          <p className="mx-auto mb-10 max-w-2xl font-sans text-lg leading-relaxed text-text-muted md:text-xl lg:mx-0">
             Track your workouts, calories, and momentum with a calm, focused planner designed for steady progress.
           </p>
           <div className="mb-8 flex flex-wrap justify-center gap-3 lg:justify-start">
@@ -245,8 +245,8 @@ function HomePage({ user, showLogin, showRegister, goDashboard, logout }) {
       </section>
 
       {/* Massive Footer */}
-      <footer className="border-t border-white/10 bg-[#060405]/80 px-6 py-24 md:px-10 lg:px-16">
-        <div className="mx-auto mb-16 grid max-w-[1440px] grid-cols-1 gap-16 md:grid-cols-4">
+      <footer className="border-t border-white/10 bg-bg-dark/80 px-6 py-24 md:px-10 lg:px-16">
+        <div className="mx-auto grid max-w-7xl grid-cols-1 gap-16 md:grid-cols-4">
           <div className="md:col-span-2">
             <h2 className="flex items-center gap-4 text-3xl md:text-4xl font-display font-bold text-white mb-8">
               <BrandIcon />

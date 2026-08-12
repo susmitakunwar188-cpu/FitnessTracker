@@ -3,13 +3,24 @@ import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import mongoose from 'mongoose';
+import dotenv from 'dotenv';
 import User from './models/User.js';
 import Workout from './models/Workout.js';
 import WorkoutHistory from './models/History.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: path.join(__dirname, '.env') });
+
 const DATA_FILE_PATH = path.join(__dirname, 'data', 'db.json');
-const FALLBACK_DATA_TEMPLATE = { users: [], workouts: [], history: [], badges: [] };
+const FALLBACK_DATA_TEMPLATE = { 
+  users: [], 
+  workouts: [], 
+  history: [], 
+  badges: [],
+  nutrition: [],
+  sleep: [],
+  feed: []
+};
 
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/fitique';
 
@@ -463,3 +474,7 @@ export const db = {
     return data.history.length < beforeLength;
   }
 };
+
+export const getUseFallback = () => !isMongoConnected();
+
+export { readFallbackData, writeFallbackData };

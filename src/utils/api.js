@@ -193,5 +193,90 @@ export const api = {
     const data = await parseJsonResponse(res);
     if (!res.ok) throw new Error(data?.error || data?.message || 'Failed to clear history');
     return data;
+  },
+
+  // Features: Nutrition
+  async getNutrition(userId, date) {
+    const res = await fetch(`${API_BASE_URL}/features/nutrition/${userId}?date=${date}`, {
+      headers: getHeaders()
+    });
+    const data = await parseJsonResponse(res);
+    if (!res.ok) throw new Error(data?.error || data?.message || 'Failed to fetch nutrition');
+    return data;
+  },
+
+  async updateNutrition(nutritionData) {
+    const res = await fetch(`${API_BASE_URL}/features/nutrition`, {
+      method: 'POST',
+      headers: getHeaders(),
+      body: JSON.stringify(nutritionData)
+    });
+    const data = await parseJsonResponse(res);
+    if (!res.ok) throw new Error(data?.error || data?.message || 'Failed to update nutrition');
+    return data;
+  },
+
+  // Features: Sleep
+  async getSleep(userId, date) {
+    const res = await fetch(`${API_BASE_URL}/features/sleep/${userId}?date=${date}`, {
+      headers: getHeaders()
+    });
+    const data = await parseJsonResponse(res);
+    if (!res.ok) throw new Error(data?.error || data?.message || 'Failed to fetch sleep data');
+    return data;
+  },
+
+  async updateSleep(sleepData) {
+    const res = await fetch(`${API_BASE_URL}/features/sleep`, {
+      method: 'POST',
+      headers: getHeaders(),
+      body: JSON.stringify(sleepData)
+    });
+    const data = await parseJsonResponse(res);
+    if (!res.ok) throw new Error(data?.error || data?.message || 'Failed to update sleep data');
+    return data;
+  },
+
+  // Features: Feed
+  async getFeed() {
+    const res = await fetch(`${API_BASE_URL}/features/feed`, {
+      headers: getHeaders()
+    });
+    const data = await parseJsonResponse(res);
+    if (!res.ok) throw new Error(data?.error || data?.message || 'Failed to fetch community feed');
+    return data;
+  },
+
+  async postFeed(feedData) {
+    const res = await fetch(`${API_BASE_URL}/features/feed`, {
+      method: 'POST',
+      headers: getHeaders(),
+      body: JSON.stringify(feedData)
+    });
+    const data = await parseJsonResponse(res);
+    if (!res.ok) throw new Error(data?.error || data?.message || 'Failed to post to feed');
+    return data;
+  },
+
+  async likePost(postId) {
+    const res = await fetch(`${API_BASE_URL}/features/feed/${postId}/like`, {
+      method: 'POST',
+      headers: getHeaders()
+    });
+    const data = await parseJsonResponse(res);
+    if (!res.ok) throw new Error(data?.error || data?.message || 'Failed to like post');
+    return data;
+  },
+
+  // Chatbot
+  async sendChat(message, history = []) {
+    const res = await fetch(`${API_BASE_URL}/chat`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message, history })
+    });
+    const data = await parseJsonResponse(res);
+    if (!res.ok) throw new Error(data?.error || data?.message || 'Failed to reach the assistant');
+    return data;
   }
 };

@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import { api } from "../utils/api";
 import { getStoredWorkoutStreak } from "../utils/streak";
+import NutritionTracker from "./NutritionTracker";
+import RecoveryTracker from "./RecoveryTracker";
+import CommunityFeed from "./CommunityFeed";
 
 const DumbbellIcon = ({ className = "h-8 w-8 text-brand-pink" }) => (
   <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -475,6 +478,42 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
             <ScaleIcon className="h-6 w-6" />
             <span>BMI Analytics</span>
           </button>
+
+          <button
+            onClick={() => setActiveTab("nutrition")}
+            className={`w-full flex items-center gap-5 px-6 py-4.5 rounded-2xl font-display text-base font-bold tracking-wide transition duration-200 cursor-pointer ${
+              activeTab === "nutrition"
+                ? "bg-gradient-to-r from-brand-pink/15 to-brand-cocoa/5 border-l-4 border-brand-pink text-brand-pink shadow-[inset_0_0_12px_rgba(226,109,133,0.08)]"
+                : "text-text-muted hover:bg-brand-cocoa/10 hover:text-white"
+            }`}
+          >
+            <TargetIcon />
+            <span>Nutrition & Macros</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab("recovery")}
+            className={`w-full flex items-center gap-5 px-6 py-4.5 rounded-2xl font-display text-base font-bold tracking-wide transition duration-200 cursor-pointer ${
+              activeTab === "recovery"
+                ? "bg-gradient-to-r from-brand-pink/15 to-brand-cocoa/5 border-l-4 border-brand-pink text-brand-pink shadow-[inset_0_0_12px_rgba(226,109,133,0.08)]"
+                : "text-text-muted hover:bg-brand-cocoa/10 hover:text-white"
+            }`}
+          >
+            <span className="text-xl">🌙</span>
+            <span>Sleep & Recovery</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab("community")}
+            className={`w-full flex items-center gap-5 px-6 py-4.5 rounded-2xl font-display text-base font-bold tracking-wide transition duration-200 cursor-pointer ${
+              activeTab === "community"
+                ? "bg-gradient-to-r from-brand-pink/15 to-brand-cocoa/5 border-l-4 border-brand-pink text-brand-pink shadow-[inset_0_0_12px_rgba(226,109,133,0.08)]"
+                : "text-text-muted hover:bg-brand-cocoa/10 hover:text-white"
+            }`}
+          >
+            <span className="text-xl">👥</span>
+            <span>Community Feed</span>
+          </button>
         </nav>
 
         {/* Logout bottom with larger font */}
@@ -644,7 +683,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
 
             {/* Stats Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-              <div className="bg-gradient-to-br from-card-dark to-[#251715]/40 rounded-3xl p-8 border border-brand-cocoa/30 hover:border-brand-pink/40 hover:-translate-y-1 transition duration-300 shadow-xl shadow-black/10">
+              <div className="bg-gradient-to-br from-card-dark to-bg-dark/40 rounded-3xl p-8 border border-brand-cocoa/30 hover:border-brand-pink/40 hover:-translate-y-1 transition duration-300 shadow-xl shadow-black/10">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-quick text-xs font-bold text-text-muted tracking-widest uppercase mb-1">Total Workouts</p>
@@ -658,7 +697,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
                 </div>
               </div>
 
-              <div className="bg-gradient-to-br from-card-dark to-[#251715]/40 rounded-3xl p-8 border border-brand-cocoa/30 hover:border-brand-pink/40 hover:-translate-y-1 transition duration-300 shadow-xl shadow-black/10">
+              <div className="bg-gradient-to-br from-card-dark to-bg-dark/40 rounded-3xl p-8 border border-brand-cocoa/30 hover:border-brand-pink/40 hover:-translate-y-1 transition duration-300 shadow-xl shadow-black/10">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-quick text-xs font-bold text-text-muted tracking-widest uppercase mb-1">Current BMI</p>
@@ -672,7 +711,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
                 </div>
               </div>
 
-              <div className="bg-gradient-to-br from-card-dark to-[#251715]/40 rounded-3xl p-8 border border-brand-cocoa/30 hover:border-brand-pink/40 hover:-translate-y-1 transition duration-300 shadow-xl shadow-black/10">
+              <div className="bg-gradient-to-br from-card-dark to-bg-dark/40 rounded-3xl p-8 border border-brand-cocoa/30 hover:border-brand-pink/40 hover:-translate-y-1 transition duration-300 shadow-xl shadow-black/10">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-quick text-xs font-bold text-text-muted tracking-widest uppercase mb-1">Weekly Goal</p>
@@ -690,7 +729,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
             {/* Hydration & Weekly Streaks Panel */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
               {/* Water Intake Tracker */}
-              <div className="bg-gradient-to-br from-card-dark to-[#251715]/40 rounded-3xl p-8 border border-brand-cocoa/30 shadow-xl shadow-black/10 animate-fadeIn">
+              <div className="bg-gradient-to-br from-card-dark to-bg-dark/40 rounded-3xl p-8 border border-brand-cocoa/30 shadow-xl shadow-black/10 animate-fadeIn">
                 <div className="flex justify-between items-start mb-6">
                   <div>
                     <h3 className="font-display text-xl font-bold text-white">Daily Hydration Log</h3>
@@ -740,7 +779,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
               </div>
 
               {/* Weekly Streak & Active Days */}
-              <div className="bg-gradient-to-br from-card-dark to-[#251715]/40 rounded-3xl p-8 border border-brand-cocoa/30 shadow-xl shadow-black/10 animate-fadeIn">
+              <div className="bg-gradient-to-br from-card-dark to-bg-dark/40 rounded-3xl p-8 border border-brand-cocoa/30 shadow-xl shadow-black/10 animate-fadeIn">
                 <div className="flex justify-between items-start mb-6">
                   <div>
                     <h3 className="font-display text-xl font-bold text-white">Active Training Days</h3>
@@ -779,7 +818,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
             </div>
 
             {/* Recent Activities Feed */}
-            <div className="bg-gradient-to-br from-card-dark to-[#251715]/40 rounded-3xl p-8 border border-brand-cocoa/30 shadow-xl shadow-black/10 mb-12 animate-fadeIn">
+            <div className="bg-gradient-to-br from-card-dark to-bg-dark/40 rounded-3xl p-8 border border-brand-cocoa/30 shadow-xl shadow-black/10 mb-12 animate-fadeIn">
               <div className="flex justify-between items-center mb-6 flex-wrap gap-4">
                 <div>
                   <h3 className="font-display text-xl font-bold text-white">Recent Completed Sessions</h3>
@@ -1196,7 +1235,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
               
               {/* Left Column: Calculator inputs */}
-              <div className="lg:col-span-7 bg-gradient-to-br from-card-dark to-[#251715]/65 backdrop-blur-md rounded-3xl p-8 md:p-10 border border-brand-cocoa/30 shadow-xl flex flex-col justify-between">
+              <div className="lg:col-span-7 bg-gradient-to-br from-card-dark to-bg-dark/65 backdrop-blur-md rounded-3xl p-8 md:p-10 border border-brand-cocoa/30 shadow-xl flex flex-col justify-between">
                 <div>
                   <h2 className="text-2xl md:text-3xl font-display font-bold text-white mb-8 tracking-tight">
                     BMI Calculator
@@ -1291,6 +1330,27 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
                 </div>
               </div>
             )}
+          </div>
+        )}
+
+        {/* TAB 4: NUTRITION */}
+        {activeTab === "nutrition" && (
+          <div className="animate-fadeIn max-w-4xl">
+            <NutritionTracker user={user} />
+          </div>
+        )}
+
+        {/* TAB 5: RECOVERY */}
+        {activeTab === "recovery" && (
+          <div className="animate-fadeIn max-w-4xl">
+            <RecoveryTracker user={user} />
+          </div>
+        )}
+
+        {/* TAB 6: COMMUNITY */}
+        {activeTab === "community" && (
+          <div className="animate-fadeIn max-w-4xl">
+            <CommunityFeed user={user} />
           </div>
         )}
       </main>

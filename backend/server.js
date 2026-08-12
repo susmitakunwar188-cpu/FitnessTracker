@@ -10,6 +10,8 @@ import express from 'express';
 import cors from 'cors';
 import authRouter from './routes/auth.js';
 import workoutsRouter from './routes/workouts.js';
+import featuresRouter from './routes/features.js';
+import chatRouter from './routes/chat.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -31,6 +33,8 @@ app.use((req, res, next) => {
 // Routes
 app.use('/api/auth', authRouter);
 app.use('/api/workouts', workoutsRouter);
+app.use('/api/features', featuresRouter);
+app.use('/api/chat', chatRouter);
 
 // Basic health check
 app.get('/health', (req, res) => {
@@ -39,14 +43,19 @@ app.get('/health', (req, res) => {
 
 // Global Error Handler to prevent server crashes
 app.use((err, req, res, next) => {
+  if (res.headersSent) {
+    return next(err);
+  }
   console.error('Unhandled Server Error:', err);
   res.status(500).json({ error: 'Internal Server Error', details: err.message });
 });
 
-// Start Server
-const server = app.listen(PORT, () => {
-  console.log(`Fitique Backend is running on port ${PORT}`);
-});
+// Start Server (skipped when running as a Vercel serverless function)
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`Fitique Backend is running on port ${PORT}`);
+  });
+}
 
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (err) => {
@@ -56,3 +65,5 @@ process.on('unhandledRejection', (err) => {
 process.on('uncaughtException', (err) => {
   console.error('Uncaught Exception:', err);
 });
+
+export default app;
