@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { toast } from "../utils/toast";
+import { confirmDialog } from "../utils/confirm";
 
 const BrandIcon = () => (
   <svg viewBox="0 0 24 24" className="h-9 w-9 text-brand-pink" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -63,6 +64,16 @@ function HomePage({ user, showLogin, showRegister, goDashboard, logout }) {
     }, 3000);
   };
 
+  const handleLogoutClick = async () => {
+    const ok = await confirmDialog({
+      title: "Log out?",
+      message: "Are you sure you want to log out of your account?",
+      confirmText: "Log Out"
+    });
+    if (!ok) return;
+    logout();
+  };
+
   return (
     <div className="page-shell text-text-primary">
       <nav className="sticky top-0 z-50 border-b border-border-pink bg-bg-dark/75 px-6 py-4 backdrop-blur-xl md:px-10 lg:px-16">
@@ -90,7 +101,7 @@ function HomePage({ user, showLogin, showRegister, goDashboard, logout }) {
                 Dashboard
               </button>
               <button
-                onClick={logout}
+                onClick={handleLogoutClick}
                 className="rounded-full border border-border-pink bg-card-dark/70 px-6 py-2.5 font-display text-sm font-semibold text-text-primary transition duration-300 hover:bg-card-dark md:text-base"
               >
                 Logout
