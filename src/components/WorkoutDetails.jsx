@@ -28,7 +28,7 @@ const ResetIcon = () => (
 );
 
 const FlameIcon = () => (
-  <svg viewBox="0 0 24 24" className="h-7 w-7 text-white" fill="currentColor" stroke="none">
+  <svg viewBox="0 0 24 24" className="h-7 w-7 text-text-primary" fill="currentColor" stroke="none">
     <path d="M12 23c4.42 0 8-3.58 8-8 0-5.5-5.5-8.5-7.5-12-1.5 4-4.5 5.5-6.5 8-2 2.5-3 4.5-3 7 0 3.87 3.13 7 9 7Z" />
     <path d="M14 23c-2.2-1.2-3-2.8-3-4.5 0-2 1.5-3.2 2.5-4.5.5 1.6 1.5 2.2 2.5 3.5.5.9 1 1.8 1 3 0 1.4-1 2.5-3 2.5Z" opacity="0.5" />
   </svg>
@@ -245,13 +245,13 @@ function WorkoutDetails({ workout, goDashboard, user }) {
 
   return (
     <div className="page-shell flex items-center justify-center p-6 md:p-12 lg:p-16">
-      <div className="glass-panel-strong w-full max-w-5xl rounded-[2rem] border border-white/10 p-8 shadow-[0_25px_65px_rgba(0,0,0,0.7)] md:p-12">
+      <div className="glass-panel-strong w-full max-w-5xl rounded-[2rem] border border-border-pink/40 p-8 shadow-[0_25px_65px_rgba(0,0,0,0.7)] md:p-12">
         
         {/* Header */}
         <div className="flex items-center justify-between gap-4 mb-8 pb-6 border-b border-border-pink/30 flex-wrap">
           <div className="flex items-center gap-4">
             <DumbbellIcon />
-            <h1 className="text-3xl md:text-4xl font-display font-bold text-white tracking-tight">
+            <h1 className="text-3xl md:text-4xl font-display font-bold text-text-primary tracking-tight">
               {workoutName}
             </h1>
           </div>
@@ -280,13 +280,13 @@ function WorkoutDetails({ workout, goDashboard, user }) {
         </div>
 
         {timerAlert && (
-          <div className="bg-brand-pink/20 border-2 border-brand-pink text-white px-6 py-4.5 rounded-2xl mb-8 font-display font-bold text-center tracking-wide animate-fadeIn">
+          <div className="bg-brand-pink/20 border-2 border-brand-pink text-text-primary px-6 py-4.5 rounded-2xl mb-8 font-display font-bold text-center tracking-wide animate-fadeIn">
             🔔 Rest Over! Time to start the next set! 💪
           </div>
         )}
 
         {streakMessage && (
-          <div className={`mb-8 rounded-2xl border px-6 py-4 text-center font-display font-bold shadow-lg ${streakMessage.includes("Congratulations") ? "border-brand-pink/40 bg-brand-pink/20 text-white" : "border-amber-500/40 bg-amber-500/15 text-amber-200"}`}>
+          <div className={`mb-8 rounded-2xl border px-6 py-4 text-center font-display font-bold shadow-lg ${streakMessage.includes("Congratulations") ? "border-brand-pink/40 bg-brand-pink/20 text-text-primary" : "border-amber-500/40 bg-amber-500/15 text-amber-600"}`}>
             {streakMessage}
           </div>
         )}
@@ -302,7 +302,7 @@ function WorkoutDetails({ workout, goDashboard, user }) {
             </div>
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.3em] text-text-muted">Current Streak</p>
-              <p className="font-display text-xl font-bold text-white">{streakCount} day streak</p>
+              <p className="font-display text-xl font-bold text-text-primary">{streakCount} day streak</p>
             </div>
           </div>
           <div className="text-sm text-text-muted font-sans">
@@ -331,14 +331,14 @@ function WorkoutDetails({ workout, goDashboard, user }) {
                     className={`text-lg md:text-xl font-display font-bold transition duration-200 truncate ${
                       completedExercises[idx]
                         ? "line-through text-text-muted/50"
-                        : "text-white"
+                        : "text-text-primary"
                     }`}
                   >
                     {exercise.name}
                   </h2>
                   <p
                     className={`font-sans text-xs md:text-sm transition duration-200 mt-0.5 ${
-                      completedExercises[idx] ? "text-text-muted/40" : "text-brand-cocoa-light font-semibold"
+                      completedExercises[idx] ? "text-text-muted/40" : "text-accent-cocoa-light font-semibold"
                     }`}
                   >
                     {exercise.sets} Sets × {exercise.reps} Reps
@@ -371,7 +371,7 @@ function WorkoutDetails({ workout, goDashboard, user }) {
             <div className="bg-card-dark/90 rounded-3xl border border-brand-cocoa/40 p-6 shadow-xl flex flex-col justify-between">
               <div className="mb-4">
                 <p className="font-quick text-xs font-bold text-text-muted tracking-widest uppercase">Workout Time</p>
-                <div className="font-mono text-4xl md:text-5xl font-extrabold text-white mt-2 tracking-tight">
+                <div className="font-mono text-4xl md:text-5xl font-extrabold text-text-primary mt-2 tracking-tight">
                   {formatTime(stopwatchTime)}
                 </div>
               </div>
@@ -401,7 +401,7 @@ function WorkoutDetails({ workout, goDashboard, user }) {
                     setIsStopwatchRunning(false);
                     setStopwatchTime(0);
                   }}
-                  className="bg-bg-dark hover:bg-card-dark text-text-muted hover:text-white border border-border-pink/80 p-3 rounded-xl transition cursor-pointer"
+                  className="bg-bg-dark hover:bg-card-dark text-text-muted hover:text-text-primary border border-border-pink/80 p-3 rounded-xl transition cursor-pointer"
                   title="Reset Stopwatch"
                 >
                   <ResetIcon />
@@ -423,7 +423,7 @@ function WorkoutDetails({ workout, goDashboard, user }) {
                       className={`text-xs font-display font-bold px-3.5 py-2 rounded-xl transition cursor-pointer border ${
                         initialCountdown === sec
                           ? "bg-brand-cocoa border-brand-cocoa text-white shadow-md shadow-brand-cocoa/25"
-                          : "bg-bg-dark/60 border-brand-cocoa/20 text-text-muted hover:text-white hover:border-brand-cocoa/40"
+                          : "bg-bg-dark/60 border-brand-cocoa/20 text-text-muted hover:text-text-primary hover:border-brand-cocoa/40"
                       }`}
                     >
                       {sec}s
@@ -476,7 +476,7 @@ function WorkoutDetails({ workout, goDashboard, user }) {
                     setIsCountdownRunning(false);
                     setCountdownTime(initialCountdown);
                   }}
-                  className="bg-bg-dark hover:bg-card-dark text-text-muted hover:text-white border border-border-pink/80 p-3 rounded-xl transition cursor-pointer"
+                  className="bg-bg-dark hover:bg-card-dark text-text-muted hover:text-text-primary border border-border-pink/80 p-3 rounded-xl transition cursor-pointer"
                   title="Reset Countdown"
                 >
                   <ResetIcon />

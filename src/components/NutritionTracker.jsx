@@ -103,7 +103,7 @@ const MacroBar = ({ label, icon, value, goal, barClass }) => {
           {icon}
           {label}
         </span>
-        <span className="font-mono text-xs font-semibold text-white">{value} / {goal}</span>
+        <span className="font-mono text-xs font-semibold text-text-primary">{value} / {goal}</span>
       </div>
       <div className="h-2 w-full overflow-hidden rounded-full bg-bg-dark">
         <div className={`h-full rounded-full bg-gradient-to-r ${barClass} transition-all duration-500`} style={{ width: `${pct}%` }} />
@@ -131,7 +131,7 @@ const GoalBanner = ({ remaining, goal }) => {
     };
   } else {
     config = {
-      style: 'border-brand-pink/30 bg-brand-pink/5 text-white',
+      style: 'border-brand-pink/30 bg-brand-pink/5 text-text-primary',
       icon: <InfoIcon className="h-5 w-5 shrink-0 text-brand-pink" />,
       title: "You haven't hit your macros yet!",
       subtitle: `${remaining} kcal left to reach your ${goal} kcal goal. Keep fueling.`
@@ -231,7 +231,7 @@ export default function NutritionTracker({ user }) {
     });
   };
 
-  if (loading) return <div className="text-white text-center py-8">Loading Nutrition...</div>;
+  if (loading) return <div className="text-text-primary text-center py-8">Loading Nutrition...</div>;
 
   return (
     <div className="bg-card-dark rounded-3xl p-6 border border-brand-cocoa/30 shadow-xl animate-fadeIn">
@@ -240,7 +240,7 @@ export default function NutritionTracker({ user }) {
           <NutritionIcon />
         </div>
         <div>
-          <h2 className="text-xl font-display font-bold text-white leading-none">Daily Nutrition</h2>
+          <h2 className="text-xl font-display font-bold text-text-primary leading-none">Daily Nutrition</h2>
           <p className="mt-1 text-xs text-text-muted">Track calories, macros, and meals for today</p>
         </div>
         <span className="ml-auto text-xs text-text-muted font-mono">{today}</span>
@@ -273,7 +273,7 @@ export default function NutritionTracker({ user }) {
               />
             </svg>
             <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <p className={`font-display text-4xl font-extrabold ${overGoal ? 'text-red-400' : remaining === 0 ? 'text-green-400' : 'text-white'}`}>
+              <p className={`font-display text-4xl font-extrabold ${overGoal ? 'text-red-400' : remaining === 0 ? 'text-green-400' : 'text-text-primary'}`}>
                 {overGoal ? Math.abs(remaining) : remaining}
               </p>
               <p className={`text-[10px] font-bold uppercase tracking-widest font-quick ${overGoal ? 'text-red-400/80' : 'text-text-muted'}`}>
@@ -288,14 +288,14 @@ export default function NutritionTracker({ user }) {
             <p className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-text-muted font-quick">
               <TargetIcon className="h-3.5 w-3.5" /> Target
             </p>
-            <p className="mt-1 font-display text-3xl font-bold text-white">{goals.calories}</p>
+            <p className="mt-1 font-display text-3xl font-bold text-text-primary">{goals.calories}</p>
             <p className="text-[10px] font-semibold text-text-muted">kcal / day</p>
           </div>
           <div className="flex flex-col items-center justify-center rounded-2xl border border-brand-cocoa/25 bg-brand-cocoa/10 p-5 text-center">
             <p className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-text-muted font-quick">
               <FlameIcon className="h-3.5 w-3.5" /> Consumed
             </p>
-            <p className="mt-1 font-display text-3xl font-bold text-brand-cocoa-light">{data.calories}</p>
+            <p className="mt-1 font-display text-3xl font-bold text-accent-cocoa-light">{data.calories}</p>
             <p className="text-[10px] font-semibold text-text-muted">kcal today</p>
           </div>
           <div className="col-span-2 flex items-center justify-center gap-2 rounded-2xl border border-border-pink/40 bg-bg-dark/60 p-4">
@@ -325,42 +325,42 @@ export default function NutritionTracker({ user }) {
             value={mealForm.name}
             onChange={e => setMealForm({ ...mealForm, name: e.target.value })}
             placeholder="Meal name"
-            className="glow-input col-span-2 border-2 border-border-pink rounded-xl p-2.5 bg-bg-dark text-white text-sm focus:border-brand-pink focus:outline-none sm:col-span-1"
+            className="glow-input col-span-2 border-2 border-border-pink rounded-xl p-2.5 bg-bg-dark text-text-primary text-sm focus:border-brand-pink focus:outline-none sm:col-span-1"
           />
           <input
             type="number"
             value={mealForm.calories}
             onChange={e => setMealForm({ ...mealForm, calories: e.target.value })}
             placeholder="kcal"
-            className="glow-input border-2 border-border-pink rounded-xl p-2.5 bg-bg-dark text-white text-sm focus:border-brand-pink focus:outline-none"
+            className="glow-input border-2 border-border-pink rounded-xl p-2.5 bg-bg-dark text-text-primary text-sm focus:border-brand-pink focus:outline-none"
           />
           <input
             type="number"
             value={mealForm.protein}
             onChange={e => setMealForm({ ...mealForm, protein: e.target.value })}
             placeholder="protein"
-            className="glow-input border-2 border-border-pink rounded-xl p-2.5 bg-bg-dark text-white text-sm focus:border-brand-pink focus:outline-none"
+            className="glow-input border-2 border-border-pink rounded-xl p-2.5 bg-bg-dark text-text-primary text-sm focus:border-brand-pink focus:outline-none"
           />
           <input
             type="number"
             value={mealForm.carbs}
             onChange={e => setMealForm({ ...mealForm, carbs: e.target.value })}
             placeholder="carbs"
-            className="glow-input border-2 border-border-pink rounded-xl p-2.5 bg-bg-dark text-white text-sm focus:border-brand-pink focus:outline-none"
+            className="glow-input border-2 border-border-pink rounded-xl p-2.5 bg-bg-dark text-text-primary text-sm focus:border-brand-pink focus:outline-none"
           />
           <input
             type="number"
             value={mealForm.fat}
             onChange={e => setMealForm({ ...mealForm, fat: e.target.value })}
             placeholder="fat"
-            className="glow-input border-2 border-border-pink rounded-xl p-2.5 bg-bg-dark text-white text-sm focus:border-brand-pink focus:outline-none"
+            className="glow-input border-2 border-border-pink rounded-xl p-2.5 bg-bg-dark text-text-primary text-sm focus:border-brand-pink focus:outline-none"
           />
         </div>
         <button
           type="button"
           onClick={addMeal}
           disabled={!mealForm.name.trim() || saving}
-          className="mt-2.5 flex items-center gap-1.5 rounded-xl bg-brand-pink px-4 py-2 text-xs font-display font-bold text-white transition hover:bg-brand-pink-hover disabled:cursor-not-allowed disabled:opacity-40 cursor-pointer"
+          className="mt-2.5 flex items-center gap-1.5 rounded-xl bg-brand-pink px-4 py-2 text-xs font-display font-bold text-text-primary transition hover:bg-brand-pink-hover disabled:cursor-not-allowed disabled:opacity-40 cursor-pointer"
         >
           <PlusIcon className="h-4 w-4" /> {saving ? 'Saving...' : 'Add Meal'}
         </button>
@@ -386,11 +386,11 @@ export default function NutritionTracker({ user }) {
             )}
             {data.meals.map((meal, idx) => (
               <tr key={idx} className={`border-t border-border-pink/20 ${idx % 2 === 1 ? 'bg-bg-dark/40' : 'bg-transparent'}`}>
-                <td className="px-4 py-3 font-display font-bold text-white">{meal.name}</td>
-                <td className="px-4 py-3 text-right font-mono font-semibold text-white tabular-nums">{meal.calories}</td>
+                <td className="px-4 py-3 font-display font-bold text-text-primary">{meal.name}</td>
+                <td className="px-4 py-3 text-right font-mono font-semibold text-text-primary tabular-nums">{meal.calories}</td>
                 <td className="px-4 py-3 text-right font-mono text-green-400 tabular-nums">{meal.protein}g</td>
                 <td className="px-4 py-3 text-right font-mono text-amber-400 tabular-nums">{meal.carbs}g</td>
-                <td className="px-4 py-3 text-right font-mono text-brand-cocoa-light tabular-nums">{meal.fat}g</td>
+                <td className="px-4 py-3 text-right font-mono text-accent-cocoa-light tabular-nums">{meal.fat}g</td>
                 <td className="px-4 py-3 text-right">
                   <button
                     onClick={() => removeMeal(idx)}
@@ -405,12 +405,12 @@ export default function NutritionTracker({ user }) {
           </tbody>
           {data.meals.length > 0 && (
             <tfoot>
-              <tr className="border-t-2 border-brand-pink/50 bg-brand-pink/10 font-display font-bold text-white">
+              <tr className="border-t-2 border-brand-pink/50 bg-brand-pink/10 font-display font-bold text-text-primary">
                 <td className="px-4 py-3.5 uppercase tracking-widest text-[11px] font-quick text-text-muted">Totals</td>
                 <td className={`px-4 py-3.5 text-right font-mono text-base font-bold tabular-nums ${overGoal ? 'text-red-400' : 'text-green-400'}`}>{data.calories}</td>
                 <td className="px-4 py-3.5 text-right font-mono text-base text-green-400 tabular-nums">{data.protein}g</td>
                 <td className="px-4 py-3.5 text-right font-mono text-base text-amber-400 tabular-nums">{data.carbs}g</td>
-                <td className="px-4 py-3.5 text-right font-mono text-base text-brand-cocoa-light tabular-nums">{data.fat}g</td>
+                <td className="px-4 py-3.5 text-right font-mono text-base text-accent-cocoa-light tabular-nums">{data.fat}g</td>
                 <td className="px-4 py-3.5" />
               </tr>
             </tfoot>

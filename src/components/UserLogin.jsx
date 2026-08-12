@@ -30,7 +30,7 @@ const KeyIcon = () => (
 );
 
 const GoogleIcon = () => (
-  <svg viewBox="0 0 24 24" className="h-5 w-5 text-white" fill="currentColor">
+  <svg viewBox="0 0 24 24" className="h-5 w-5 text-text-primary" fill="currentColor">
     <path d="M12.24 10.285V14.4h6.887c-.648 2.41-2.519 4.113-5.136 4.113-3.48 0-6.3-2.82-6.3-6.3s2.82-6.3 6.3-6.3c1.55 0 2.96.56 4.07 1.49l3.22-3.22C19.16 2.03 15.93 1 12.24 1 6.04 1 12.24 6.04 12.24 12.24s5.04 11.24 11.24 11.24c6.48 0 11.24-4.56 11.24-11.24 0-.76-.08-1.5-.22-2.22h-11.02z" />
   </svg>
 );
@@ -148,7 +148,7 @@ function UserLogin({ goHome, onLoginSuccess, showRegister }) {
 
   return (
     <div className="page-shell flex items-center justify-center p-6 md:p-12 lg:p-16">
-      <div className="glass-panel relative flex min-h-[660px] w-full max-w-5xl flex-col overflow-hidden rounded-[2rem] border border-white/10 lg:flex-row">
+      <div className="glass-panel relative flex min-h-[660px] w-full max-w-5xl flex-col overflow-hidden rounded-[2rem] border border-border-pink/40 lg:flex-row">
         
         {/* Floating Close Button at top-right corner to exit/go home */}
         <button
@@ -166,10 +166,10 @@ function UserLogin({ goHome, onLoginSuccess, showRegister }) {
             alt="Fitness motivation weights"
             className="absolute inset-0 h-full w-full object-cover opacity-80"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-bg-dark/85 via-bg-dark/30 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
           <div className="absolute bottom-10 left-10 right-10 z-10">
             <p className="font-display text-2xl font-bold text-white mb-2 drop-shadow-md">Forge Your Legacy</p>
-            <p className="font-sans text-brand-cocoa-light text-sm font-semibold">Join thousands of athletes track their daily progression.</p>
+            <p className="font-sans text-accent-cocoa-light text-sm font-semibold">Join thousands of athletes track their daily progression.</p>
           </div>
         </div>
 
@@ -202,7 +202,7 @@ function UserLogin({ goHome, onLoginSuccess, showRegister }) {
                   <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl border border-brand-cocoa/30 bg-brand-cocoa/20 shadow-inner">
                     <UserIcon />
                   </div>
-                  <h2 className="mb-3 text-3xl font-display font-bold tracking-tight text-white md:text-4xl">
+                  <h2 className="mb-3 text-3xl font-display font-bold tracking-tight text-text-primary md:text-4xl">
                     Welcome Back
                   </h2>
                   <p className="font-sans text-base text-text-muted">
@@ -223,7 +223,7 @@ function UserLogin({ goHome, onLoginSuccess, showRegister }) {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="name@example.com"
-                        className="glow-input font-sans border-2 border-border-pink rounded-xl p-4 pl-12 w-full bg-bg-dark text-white text-base transition focus:border-brand-pink focus:outline-none"
+                        className="glow-input font-sans border-2 border-border-pink rounded-xl p-4 pl-12 w-full bg-bg-dark text-text-primary text-base transition focus:border-brand-pink focus:outline-none"
                       />
                     </div>
                   </div>
@@ -254,7 +254,7 @@ function UserLogin({ goHome, onLoginSuccess, showRegister }) {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="Enter password"
-                        className="glow-input font-sans border-2 border-border-pink rounded-xl p-4 pl-12 w-full bg-bg-dark text-white text-base transition focus:border-brand-pink focus:outline-none"
+                        className="glow-input font-sans border-2 border-border-pink rounded-xl p-4 pl-12 w-full bg-bg-dark text-text-primary text-base transition focus:border-brand-pink focus:outline-none"
                       />
                     </div>
                   </div>
@@ -278,7 +278,7 @@ function UserLogin({ goHome, onLoginSuccess, showRegister }) {
                 <div className="mt-4.5">
                   <button
                     onClick={handleGoogleLogin}
-                    className="w-full bg-brand-cocoa/10 hover:bg-brand-cocoa/20 text-white border border-brand-cocoa/40 hover:border-brand-cocoa py-4 rounded-xl font-display text-sm font-semibold transition duration-200 flex items-center justify-center gap-3.5 shadow-md shadow-brand-cocoa/5 cursor-pointer"
+                    className="w-full bg-brand-cocoa/10 hover:bg-brand-cocoa/20 text-text-primary border border-brand-cocoa/40 hover:border-brand-cocoa py-4 rounded-xl font-display text-sm font-semibold transition duration-200 flex items-center justify-center gap-3.5 shadow-md shadow-brand-cocoa/5 cursor-pointer"
                   >
                     <GoogleIcon />
                     <span>Continue with Google</span>
@@ -291,7 +291,7 @@ function UserLogin({ goHome, onLoginSuccess, showRegister }) {
             {panel === "forgot" && (
               <div className="animate-fadeIn">
                 <div className="text-left mb-10">
-                  <h2 className="text-3xl font-display font-bold text-white mb-3 tracking-tight">
+                  <h2 className="text-3xl font-display font-bold text-text-primary mb-3 tracking-tight">
                     Reset Password
                   </h2>
                   <p className="font-sans text-text-muted text-base">
@@ -312,7 +312,7 @@ function UserLogin({ goHome, onLoginSuccess, showRegister }) {
                         value={resetEmail}
                         onChange={(e) => setResetEmail(e.target.value)}
                         placeholder="name@example.com"
-                        className="glow-input font-sans border-2 border-border-pink rounded-xl p-4 pl-12 w-full bg-bg-dark text-white text-base transition focus:border-brand-pink focus:outline-none"
+                        className="glow-input font-sans border-2 border-border-pink rounded-xl p-4 pl-12 w-full bg-bg-dark text-text-primary text-base transition focus:border-brand-pink focus:outline-none"
                       />
                     </div>
                   </div>
@@ -353,7 +353,7 @@ function UserLogin({ goHome, onLoginSuccess, showRegister }) {
             {panel === "reset" && (
               <div className="animate-fadeIn">
                 <div className="text-left mb-10">
-                  <h2 className="text-3xl font-display font-bold text-white mb-3 tracking-tight">
+                  <h2 className="text-3xl font-display font-bold text-text-primary mb-3 tracking-tight">
                     Enter Reset Details
                   </h2>
                   <p className="font-sans text-text-muted text-base">
@@ -374,7 +374,7 @@ function UserLogin({ goHome, onLoginSuccess, showRegister }) {
                         value={resetEmail}
                         onChange={(e) => setResetEmail(e.target.value)}
                         placeholder="name@example.com"
-                        className="glow-input font-sans border-2 border-border-pink rounded-xl p-4 pl-12 w-full bg-bg-dark text-white text-base transition focus:border-brand-pink focus:outline-none"
+                        className="glow-input font-sans border-2 border-border-pink rounded-xl p-4 pl-12 w-full bg-bg-dark text-text-primary text-base transition focus:border-brand-pink focus:outline-none"
                       />
                     </div>
                   </div>
@@ -392,7 +392,7 @@ function UserLogin({ goHome, onLoginSuccess, showRegister }) {
                         value={resetToken}
                         onChange={(e) => setResetToken(e.target.value)}
                         placeholder="Enter 6-digit code"
-                        className="glow-input font-sans border-2 border-border-pink rounded-xl p-4 pl-12 w-full bg-bg-dark text-white text-base transition focus:border-brand-pink focus:outline-none tracking-widest font-bold text-center"
+                        className="glow-input font-sans border-2 border-border-pink rounded-xl p-4 pl-12 w-full bg-bg-dark text-text-primary text-base transition focus:border-brand-pink focus:outline-none tracking-widest font-bold text-center"
                       />
                     </div>
                   </div>
@@ -409,7 +409,7 @@ function UserLogin({ goHome, onLoginSuccess, showRegister }) {
                         value={newPassword}
                         onChange={(e) => setNewPassword(e.target.value)}
                         placeholder="Min. 6 chars with letters & numbers"
-                        className="glow-input font-sans border-2 border-border-pink rounded-xl p-4 pl-12 w-full bg-bg-dark text-white text-base transition focus:border-brand-pink focus:outline-none"
+                        className="glow-input font-sans border-2 border-border-pink rounded-xl p-4 pl-12 w-full bg-bg-dark text-text-primary text-base transition focus:border-brand-pink focus:outline-none"
                       />
                     </div>
                   </div>

@@ -129,14 +129,14 @@ export default function CommunityFeed({ user }) {
             <UsersIcon />
           </div>
           <div>
-            <h2 className="text-xl font-display font-bold text-white leading-none">Community Feed</h2>
+            <h2 className="text-xl font-display font-bold text-text-primary leading-none">Community Feed</h2>
             <p className="mt-1 text-xs text-text-muted">Latest workouts from the squad</p>
           </div>
         </div>
         <button
           onClick={handleSyncWearable}
           disabled={syncing}
-          className="flex items-center gap-1.5 text-xs bg-bg-dark hover:bg-card-dark border border-brand-cocoa text-brand-cocoa px-3.5 py-2 rounded-xl transition cursor-pointer disabled:opacity-50"
+          className="flex items-center gap-1.5 text-xs bg-bg-dark hover:bg-card-dark border border-brand-cocoa text-accent-cocoa px-3.5 py-2 rounded-xl transition cursor-pointer disabled:opacity-50"
         >
           <SyncIcon className="h-4 w-4" />
           {syncing ? 'Syncing...' : 'Sync Wearable'}
@@ -145,7 +145,7 @@ export default function CommunityFeed({ user }) {
 
       <div className="mb-4 rounded-2xl border border-brand-cocoa/25 bg-bg-dark/60 p-3.5">
         <div className="flex items-center gap-2">
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-pink text-sm font-display font-bold text-white">
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-pink text-sm font-display font-bold text-text-primary">
             {initial}
           </span>
           <input
@@ -155,12 +155,12 @@ export default function CommunityFeed({ user }) {
               if (e.key === 'Enter') handlePost();
             }}
             placeholder="Share your latest win..."
-            className="flex-1 bg-transparent text-sm text-white placeholder:text-text-muted/70 focus:outline-none"
+            className="flex-1 bg-transparent text-sm text-text-primary placeholder:text-text-muted/70 focus:outline-none"
           />
           <button
             onClick={() => handlePost()}
             disabled={posting || !draft.trim()}
-            className="flex shrink-0 items-center gap-1.5 rounded-xl bg-brand-pink px-3.5 py-2 text-xs font-display font-bold text-white transition hover:bg-brand-pink-hover disabled:cursor-not-allowed disabled:opacity-40 cursor-pointer"
+            className="flex shrink-0 items-center gap-1.5 rounded-xl bg-brand-pink px-3.5 py-2 text-xs font-display font-bold text-text-primary transition hover:bg-brand-pink-hover disabled:cursor-not-allowed disabled:opacity-40 cursor-pointer"
           >
             <PenIcon className="h-4 w-4" /> Post
           </button>
@@ -171,7 +171,7 @@ export default function CommunityFeed({ user }) {
               key={q}
               onClick={() => handlePost(q)}
               disabled={posting}
-              className="text-[10px] rounded-lg border border-brand-cocoa/25 bg-brand-cocoa/5 px-2.5 py-1.5 font-semibold text-brand-cocoa-light transition hover:border-brand-cocoa hover:bg-brand-cocoa/15 disabled:opacity-50 cursor-pointer"
+              className="text-[10px] rounded-lg border border-brand-cocoa/25 bg-brand-cocoa/5 px-2.5 py-1.5 font-semibold text-accent-cocoa-light transition hover:border-brand-cocoa hover:bg-brand-cocoa/15 disabled:opacity-50 cursor-pointer"
             >
               {q}
             </button>
@@ -198,8 +198,8 @@ export default function CommunityFeed({ user }) {
                   {new Date(post.createdAt).toLocaleDateString()}
                 </span>
               </div>
-              <p className="flex items-start gap-2 text-white text-sm">
-                <RunIcon className="mt-0.5 h-4 w-4 shrink-0 text-brand-cocoa-light" />
+              <p className="flex items-start gap-2 text-text-primary text-sm">
+                <RunIcon className="mt-0.5 h-4 w-4 shrink-0 text-accent-cocoa-light" />
                 {post.action}
               </p>
               <div className="flex justify-end">

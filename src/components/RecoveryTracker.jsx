@@ -129,7 +129,7 @@ export default function RecoveryTracker({ user }) {
     }
   };
 
-  if (loading) return <div className="text-white text-center py-8">Loading Recovery...</div>;
+  if (loading) return <div className="text-text-primary text-center py-8">Loading Recovery...</div>;
 
   return (
     <div className="bg-card-dark rounded-3xl p-6 border border-brand-cocoa/30 shadow-xl animate-fadeIn">
@@ -138,7 +138,7 @@ export default function RecoveryTracker({ user }) {
           <MoonIcon />
         </div>
         <div>
-          <h2 className="text-xl font-display font-bold text-white leading-none">Sleep & Recovery</h2>
+          <h2 className="text-xl font-display font-bold text-text-primary leading-none">Sleep & Recovery</h2>
           <p className="mt-1 text-xs text-text-muted">Log your rest and track your readiness</p>
         </div>
       </div>
@@ -164,14 +164,14 @@ export default function RecoveryTracker({ user }) {
           <p className="mb-2 flex items-center justify-center gap-1.5 text-[10px] text-text-muted font-quick font-bold tracking-widest uppercase">
             <TrendIcon className="h-4 w-4 text-brand-pink" /> Weekly Average
           </p>
-          <p className="font-display text-5xl font-extrabold text-brand-cocoa-light">{avgHours}<span className="text-lg text-text-muted">h</span></p>
+          <p className="font-display text-5xl font-extrabold text-accent-cocoa-light">{avgHours}<span className="text-lg text-text-muted">h</span></p>
         </div>
 
         <div className="rounded-2xl border border-brand-pink/40 bg-bg-dark p-5 text-center">
           <p className="mb-2 flex items-center justify-center gap-1.5 text-[10px] text-text-muted font-quick font-bold tracking-widest uppercase">
             <BedIcon className="h-4 w-4 text-brand-pink" /> Last Night
           </p>
-          <p className="font-display text-5xl font-extrabold text-white">
+          <p className="font-display text-5xl font-extrabold text-text-primary">
             {data.durationHours > 0 ? data.durationHours : '--'}
             {data.durationHours > 0 && <span className="text-lg text-text-muted">h</span>}
           </p>
@@ -207,7 +207,7 @@ export default function RecoveryTracker({ user }) {
         <InfoIcon className="mt-0.5 h-4 w-4 shrink-0 text-brand-pink" />
         <div>
           <p className="mb-0.5 text-[10px] font-bold uppercase tracking-widest text-text-muted font-quick">Coach Tip</p>
-          <p className="text-sm leading-relaxed text-white">{tip}</p>
+          <p className="text-sm leading-relaxed text-text-primary">{tip}</p>
         </div>
       </div>
 
@@ -222,7 +222,7 @@ export default function RecoveryTracker({ user }) {
               step="0.5"
               value={data.durationHours}
               onChange={e => setData({ ...data, durationHours: Number(e.target.value) })}
-              className="glow-input font-sans border-2 border-border-pink rounded-xl p-3.5 w-full bg-bg-dark text-white focus:border-brand-pink focus:outline-none"
+              className="glow-input font-sans border-2 border-border-pink rounded-xl p-3.5 w-full bg-bg-dark text-text-primary focus:border-brand-pink focus:outline-none"
             />
           </div>
           <div>
@@ -232,7 +232,7 @@ export default function RecoveryTracker({ user }) {
             <select
               value={data.quality}
               onChange={e => setData({ ...data, quality: e.target.value })}
-              className="glow-input font-sans border-2 border-border-pink rounded-xl p-3.5 w-full bg-bg-dark text-white focus:border-brand-pink focus:outline-none"
+              className="glow-input font-sans border-2 border-border-pink rounded-xl p-3.5 w-full bg-bg-dark text-text-primary focus:border-brand-pink focus:outline-none"
             >
               <option value="Poor">Poor</option>
               <option value="Fair">Fair</option>

@@ -16,9 +16,9 @@ function Welcome({ next, user }) {
         <div className="absolute bottom-[-20%] left-[-20%] w-[60vw] h-[60vw] rounded-full bg-brand-cocoa/5 blur-[150px]" />
       </div>
 
-      <div className="glass-panel-strong z-10 w-full max-w-2xl rounded-[2rem] border border-white/10 p-10 text-center shadow-[0_25px_60px_rgba(0,0,0,0.7)] animate-fadeIn md:p-20">
+      <div className="glass-panel-strong z-10 w-full max-w-2xl rounded-[2rem] border border-border-pink/40 p-10 text-center shadow-[0_25px_60px_rgba(0,0,0,0.7)] animate-fadeIn md:p-20">
         <WelcomeIcon />
-        <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-6 tracking-tight">
+        <h1 className="text-4xl md:text-5xl font-display font-bold text-text-primary mb-6 tracking-tight">
           Welcome, <span className="text-brand-pink capitalize">{userDisplayName}</span>!
         </h1>
         <p className="font-sans text-text-muted text-base md:text-lg mb-12 max-w-md mx-auto leading-relaxed">
