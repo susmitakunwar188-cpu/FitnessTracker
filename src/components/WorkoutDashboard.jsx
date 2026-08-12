@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { api } from "../utils/api";
 import { getStoredWorkoutStreak } from "../utils/streak";
 import { toast } from "../utils/toast";
+import { confirmDialog } from "../utils/confirm";
 import NutritionTracker from "./NutritionTracker";
 import RecoveryTracker from "./RecoveryTracker";
 import CommunityFeed from "./CommunityFeed";
@@ -231,11 +232,16 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeC
   }, []);
 
   const handleClearHistory = async () => {
-    const confirmClear = window.confirm("Are you sure you want to clear your completed workout history? This cannot be undone.");
-    if (!confirmClear) return;
+    const ok = await confirmDialog({
+      title: "Clear workout history?",
+      message: "Are you sure you want to clear your completed workout history? This cannot be undone.",
+      confirmText: "Clear History"
+    });
+    if (!ok) return;
     try {
       await api.clearWorkoutHistory();
       setHistory([]);
+      toast.success("Workout history cleared.");
     } catch (err) {
       toast.error(err.message || "Failed to clear history.");
     }
@@ -295,11 +301,17 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeC
 
   // Delete Workout
   const handleDeleteWorkout = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this workout?")) return;
+    const ok = await confirmDialog({
+      title: "Delete workout?",
+      message: "Are you sure you want to delete this workout? This cannot be undone.",
+      confirmText: "Delete"
+    });
+    if (!ok) return;
     try {
       await api.deleteWorkout(id);
       setWorkouts(workouts.filter((w) => w.id !== id));
       setMenuOpen(null);
+      toast.success("Workout deleted.");
     } catch (err) {
       toast.error(err.message || "Failed to delete workout.");
     }
@@ -387,7 +399,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeC
   };
 
   const handleSaveProfile = async (e) => {
-    e.preventDefault();
+    e?.preventDefault?.();
     try {
       const updatedUser = await api.updateProfile({
         age: user?.age || "",
@@ -401,8 +413,13 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeC
         bio: profileForm.bio.trim()
       });
       setUser(updatedUser);
+      setProfileForm({
+        username: updatedUser.username || user?.email?.split("@")[0] || "Athlete",
+        avatarUrl: updatedUser.avatarUrl || "",
+        bio: updatedUser.bio || ""
+      });
       setProfileMessage("Profile updated successfully.");
-      setActiveTab("overview");
+      toast.success("Profile updated successfully.");
     } catch (err) {
       toast.error(err.message || "Failed to update profile.");
     }
@@ -434,6 +451,16 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeC
   };
 
   const nutritionTargets = getNutritionTargets();
+
+  const handleLogoutClick = async () => {
+    const ok = await confirmDialog({
+      title: "Log out?",
+      message: "Are you sure you want to log out of your account?",
+      confirmText: "Log Out"
+    });
+    if (!ok) return;
+    logout();
+  };
 
   const userDisplayName = user?.username || (user?.email ? user.email.split("@")[0] : "Athlete");
   const profilePlaceholder = "https://i.pinimg.com/1200x/4e/6f/a8/4e6fa8c1d410ae7d30d8c79b8728a56b.jpg";
@@ -613,7 +640,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeC
         {/* Logout bottom with larger font */}
         <div className="p-6 border-t border-border-pink/30">
           <button
-            onClick={logout}
+            onClick={handleLogoutClick}
             className="w-full flex items-center gap-5 px-6 py-4 rounded-xl text-red-400 hover:bg-red-500/10 font-display text-base font-bold transition duration-200 cursor-pointer"
           >
             <LogoutIcon />
@@ -721,7 +748,8 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeC
 
                 <div className="mt-8 flex flex-wrap gap-3">
                   <button
-                    type="submit"
+                    type="button"
+                    onClick={() => handleSaveProfile()}
                     className="rounded-xl bg-brand-pink px-8 py-3.5 font-display font-bold text-white transition hover:bg-brand-pink-hover cursor-pointer"
                   >
                     Save Changes
