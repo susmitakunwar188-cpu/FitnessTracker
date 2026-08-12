@@ -367,6 +367,13 @@
       "action": "Completed a full-body workout",
       "likes": 0,
       "createdAt": "2026-08-12T07:09:32.873Z"
+    },
+    {
+      "userId": "1783918145411",
+      "userName": "sunamadeemail30",
+      "action": "Synced a 5K Run from Apple Watch",
+      "likes": 0,
+      "createdAt": "2026-08-12T07:31:59.413Z"
     }
   ]
 }
