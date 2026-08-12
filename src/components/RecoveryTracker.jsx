@@ -39,6 +39,97 @@ const InfoIcon = ({ className = "h-4 w-4 text-brand-pink" }) => (
   </svg>
 );
 
+const SleepLineChart = ({ days, today }) => {
+  const W = 340;
+  const H = 130;
+  const PAD_X = 12;
+  const PAD_TOP = 12;
+  const PAD_BOTTOM = 20;
+  const Y_MAX = 12;
+  const plotH = H - PAD_TOP - PAD_BOTTOM;
+  const step = (W - PAD_X * 2) / (days.length - 1);
+  const x = (i) => PAD_X + i * step;
+  const y = (hours) => PAD_TOP + plotH - (Math.min(hours, Y_MAX) / Y_MAX) * plotH;
+
+  const points = days.map((d, i) => ({ d, x: x(i), y: y(d.hours) }));
+
+  let linePath = '';
+  points.forEach((p, i) => {
+    const has = p.d.hours > 0;
+    if (has) {
+      linePath += (i > 0 && points[i - 1].d.hours > 0 ? ' L ' : ' M ') + `${p.x} ${p.y}`;
+    }
+  });
+
+  const runs = [];
+  let current = null;
+  points.forEach((p, i) => {
+    if (p.d.hours > 0) {
+      if (!current) current = { start: i };
+      current.end = i;
+    } else if (current) {
+      runs.push(current);
+      current = null;
+    }
+  });
+  if (current) runs.push(current);
+
+  const base = PAD_TOP + plotH;
+  const areaPath = runs.map((r) => {
+    const pts = points.slice(r.start, r.end + 1);
+    const top = pts.map((p, i) => (i === 0 ? `M ${p.x} ${p.y}` : `L ${p.x} ${p.y}`)).join(' ');
+    return `${top} L ${pts[pts.length - 1].x} ${base} L ${pts[0].x} ${base} Z`;
+  }).join(' ');
+
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} className="w-full">
+      <defs>
+        <linearGradient id="sleepArea" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#ff2e93" stopOpacity="0.28" />
+          <stop offset="100%" stopColor="#ff2e93" stopOpacity="0" />
+        </linearGradient>
+      </defs>
+      <line x1={PAD_X} y1={y(8)} x2={W - PAD_X} y2={y(8)} stroke="var(--text-muted)" strokeOpacity="0.3" strokeDasharray="4 4" strokeWidth="1" />
+      <text x={PAD_X - 4} y={y(8) + 3} textAnchor="end" fontSize="8" fill="var(--text-muted)">8h</text>
+      <path d={areaPath} fill="url(#sleepArea)" />
+      <path d={linePath} fill="none" stroke="#ff2e93" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+      {points.map((p) => {
+        const logged = p.d.hours > 0;
+        const isToday = p.d.date === today;
+        return (
+          <g key={p.d.date}>
+            <circle
+              cx={p.x}
+              cy={p.y}
+              r={isToday ? 4 : 3}
+              fill={logged ? '#ff2e93' : 'none'}
+              stroke={logged ? (isToday ? '#ff2e93' : '#ff2e93') : 'var(--text-muted)'}
+              strokeWidth="1.5"
+            >
+              <title>{`${p.d.label}: ${p.d.hours}h`}</title>
+            </circle>
+            {logged && (
+              <text x={p.x} y={p.y - 7} textAnchor="middle" fontSize="8.5" fontWeight="700" fill={isToday ? '#ff2e93' : 'var(--text-muted)'}>
+                {p.d.hours}
+              </text>
+            )}
+            <text
+              x={p.x}
+              y={H - 6}
+              textAnchor="middle"
+              fontSize="9"
+              fontWeight={isToday ? '800' : '600'}
+              fill={isToday ? '#ff2e93' : 'var(--text-muted)'}
+            >
+              {p.d.label}
+            </text>
+          </g>
+        );
+      })}
+    </svg>
+  );
+};
+
 const getWeekKey = (userId) => `sleep_week_${userId || 'guest'}`;
 
 const loadWeek = (userId) => {
@@ -186,21 +277,8 @@ export default function RecoveryTracker({ user }) {
           </p>
           <p className="text-xs font-semibold text-text-muted">Target: 7-9h</p>
         </div>
-        <div className="flex h-32 items-end gap-2">
-          {weekDays.map((d) => (
-            <div key={d.date} className={`flex h-full flex-1 flex-col items-center justify-end gap-1.5 rounded-lg ${d.date === today ? 'bg-brand-pink/5' : ''}`}>
-              <div
-                className={`w-full rounded-t-lg transition-all duration-500 ${
-                  d.hours >= 7 && d.hours <= 9
-                    ? 'bg-gradient-to-t from-green-500/80 to-green-400/80'
-                    : 'bg-gradient-to-t from-brand-cocoa/70 to-brand-pink/80'
-                }`}
-                style={{ height: `${d.hours > 0 ? Math.min((d.hours / 10) * 100, 100) : 4}%` }}
-                title={`${d.label}: ${d.hours}h`}
-              />
-              <span className={`text-[10px] font-bold uppercase ${d.date === today ? 'text-brand-pink' : 'text-text-muted'}`}>{d.label}</span>
-            </div>
-          ))}
+        <div className="flex h-32 items-center rounded-lg bg-bg-dark/40 px-3 py-2">
+          <SleepLineChart days={weekDays} today={today} />
         </div>
       </div>
 
