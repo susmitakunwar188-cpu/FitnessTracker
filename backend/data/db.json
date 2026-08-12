@@ -337,5 +337,36 @@
         }
       ]
     }
+  ],
+  "history": [],
+  "badges": [],
+  "nutrition": [
+    {
+      "userId": "1783918145411",
+      "date": "2026-08-12",
+      "calories": 320,
+      "protein": 28,
+      "carbs": 30,
+      "fat": 17,
+      "meals": [
+        {
+          "name": "Protein Muesli",
+          "calories": 320,
+          "protein": 28,
+          "carbs": 30,
+          "fat": 17
+        }
+      ]
+    }
+  ],
+  "sleep": [],
+  "feed": [
+    {
+      "userId": "1783918145411",
+      "userName": "sunamadeemail30",
+      "action": "Completed a full-body workout",
+      "likes": 0,
+      "createdAt": "2026-08-12T07:09:32.873Z"
+    }
   ]
 }

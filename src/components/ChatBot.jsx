@@ -28,6 +28,72 @@ const SUGGESTIONS = [
   "How should I start a cutting diet?"
 ];
 
+const formatInline = (text) => {
+  const parts = text.split(/(\*\*[^*]+\*\*|\*[^*]+\*|`[^`]+`)/g);
+  return parts.map((part, i) => {
+    if (part.startsWith("**") && part.endsWith("**")) {
+      return <strong key={i} className="font-bold text-brand-pink">{part.slice(2, -2)}</strong>;
+    }
+    if (part.startsWith("`") && part.endsWith("`")) {
+      return <code key={i} className="rounded bg-white/10 px-1 py-0.5 font-mono text-[11px] text-brand-cocoa-light">{part.slice(1, -1)}</code>;
+    }
+    if (part.startsWith("*") && part.endsWith("*")) {
+      return <em key={i} className="italic">{part.slice(1, -1)}</em>;
+    }
+    return part;
+  });
+};
+
+const renderMessage = (content) => {
+  const lines = content.split("\n");
+  const blocks = [];
+  let list = [];
+
+  const flushList = (key) => {
+    if (list.length > 0) {
+      blocks.push(
+        <ul key={key} className="mb-1.5 space-y-1 pl-1">
+          {list.map((item, li) => (
+            <li key={li} className="flex items-start gap-1.5">
+              <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-pink"></span>
+              <span className="flex-1">{formatInline(item)}</span>
+            </li>
+          ))}
+        </ul>
+      );
+      list = [];
+    }
+  };
+
+  lines.forEach((line, idx) => {
+    const heading = line.match(/^(#{1,3})\s+(.*)/);
+    if (heading) {
+      flushList(`ul-${idx}`);
+      blocks.push(
+        <p key={idx} className="mb-1 mt-2 font-display font-bold text-white">
+          {formatInline(heading[2])}
+        </p>
+      );
+      return;
+    }
+    const bullet = line.match(/^[-*]\s+(.*)/);
+    if (bullet) {
+      list.push(bullet[1]);
+      return;
+    }
+    if (line.trim() === "") {
+      flushList(`ul-${idx}`);
+      return;
+    }
+    flushList(`ul-${idx}`);
+    blocks.push(
+      <p key={idx} className="mb-1">{formatInline(line)}</p>
+    );
+  });
+  flushList("ul-end");
+  return blocks;
+};
+
 function ChatBot() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([]);
@@ -71,23 +137,17 @@ function ChatBot() {
       <button
         onClick={() => setOpen(!open)}
         aria-label="Open Fitique AI chat"
-        className="fixed bottom-6 right-6 z-[100] flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-brand-pink to-brand-cocoa text-white shadow-[0_12px_30px_rgba(255,46,147,0.45)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(255,46,147,0.6)] cursor-pointer"
+        className="fixed bottom-6 right-6 z-[100] flex h-16 w-16 items-center justify-center rounded-full bg-brand-pink text-white shadow-lg transition duration-300 hover:bg-brand-pink-hover cursor-pointer"
       >
         {open ? <CloseIcon className="h-7 w-7" /> : <ChatIcon className="h-7 w-7" />}
-        {!open && (
-          <span className="absolute -top-1 -right-1 flex h-4 w-4">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-cocoa opacity-60"></span>
-            <span className="relative inline-flex h-4 w-4 rounded-full bg-brand-cocoa"></span>
-          </span>
-        )}
       </button>
 
       {/* Chat window */}
       {open && (
-        <div className="fixed bottom-24 right-6 z-[100] flex h-[560px] max-h-[calc(100vh-8rem)] w-[380px] max-w-[calc(100vw-3rem)] flex-col overflow-hidden rounded-[1.75rem] border border-brand-pink/30 bg-card-dark/95 shadow-[0_30px_80px_rgba(0,0,0,0.7)] backdrop-blur-2xl animate-fadeIn">
+          <div className="fixed bottom-24 right-6 z-[100] flex h-[560px] max-h-[calc(100vh-8rem)] w-[380px] max-w-[calc(100vw-3rem)] flex-col overflow-hidden rounded-[1.75rem] border border-brand-pink/25 bg-card-dark/95 shadow-[0_30px_80px_rgba(0,0,0,0.7)] backdrop-blur-2xl animate-fadeIn">
           {/* Header */}
           <div className="flex items-center gap-3 border-b border-border-pink/40 bg-sidebar-gradient px-5 py-4">
-            <div className="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-brand-pink to-brand-cocoa text-white shadow-lg shadow-brand-pink/30">
+            <div className="flex h-11 w-11 items-center justify-center rounded-full bg-brand-pink text-white">
               <ChatIcon className="h-6 w-6" />
             </div>
             <div className="min-w-0 flex-1">
@@ -133,13 +193,13 @@ function ChatBot() {
                 className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}
               >
                 <div
-                  className={`max-w-[85%] whitespace-pre-wrap rounded-2xl px-4 py-3 text-sm leading-relaxed ${
+                  className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
                     m.role === "user"
-                      ? "rounded-br-md bg-gradient-to-br from-brand-pink to-brand-pink-hover text-white shadow-lg shadow-brand-pink/20"
+                      ? "rounded-br-md whitespace-pre-wrap bg-brand-pink text-white"
                       : "rounded-bl-md border border-border-pink/40 bg-bg-dark/70 text-white"
                   }`}
                 >
-                  {m.content}
+                  {m.role === "user" ? m.content : renderMessage(m.content)}
                 </div>
               </div>
             ))}
@@ -174,7 +234,7 @@ function ChatBot() {
               <button
                 type="submit"
                 disabled={loading || !input.trim()}
-                className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand-pink to-brand-cocoa text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40 cursor-pointer"
+                className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-pink text-white transition hover:bg-brand-pink-hover disabled:cursor-not-allowed disabled:opacity-40 cursor-pointer"
                 aria-label="Send message"
               >
                 <SendIcon />

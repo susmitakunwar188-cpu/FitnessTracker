@@ -3,7 +3,7 @@ import { api } from "../utils/api.js";
 import { awardWorkoutStreak, getStoredWorkoutStreak } from "../utils/streak";
 
 const DumbbellIcon = () => (
-  <svg viewBox="0 0 24 24" className="h-10 w-10 text-brand-pink filter drop-shadow-[0_0_8px_rgba(255,74,139,0.4)] animate-pulse" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+  <svg viewBox="0 0 24 24" className="h-10 w-10 text-brand-pink" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
     <path d="M6.5 6.5h11M6.5 17.5h11M12 6.5v11M3 10v4M21 10v4M6.5 5v14M17.5 5v14" />
   </svg>
 );
@@ -24,6 +24,13 @@ const PauseIcon = () => (
 const ResetIcon = () => (
   <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
     <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" />
+  </svg>
+);
+
+const FlameIcon = () => (
+  <svg viewBox="0 0 24 24" className="h-7 w-7 text-white" fill="currentColor" stroke="none">
+    <path d="M12 23c4.42 0 8-3.58 8-8 0-5.5-5.5-8.5-7.5-12-1.5 4-4.5 5.5-6.5 8-2 2.5-3 4.5-3 7 0 3.87 3.13 7 9 7Z" />
+    <path d="M14 23c-2.2-1.2-3-2.8-3-4.5 0-2 1.5-3.2 2.5-4.5.5 1.6 1.5 2.2 2.5 3.5.5.9 1 1.8 1 3 0 1.4-1 2.5-3 2.5Z" opacity="0.5" />
   </svg>
 );
 
@@ -273,7 +280,7 @@ function WorkoutDetails({ workout, goDashboard, user }) {
         </div>
 
         {timerAlert && (
-          <div className="bg-brand-pink/20 border-2 border-brand-pink text-white px-6 py-4.5 rounded-2xl mb-8 font-display font-bold text-center tracking-wide shadow-lg shadow-brand-pink/20 animate-pulse animate-fadeIn">
+          <div className="bg-brand-pink/20 border-2 border-brand-pink text-white px-6 py-4.5 rounded-2xl mb-8 font-display font-bold text-center tracking-wide animate-fadeIn">
             🔔 Rest Over! Time to start the next set! 💪
           </div>
         )}
@@ -284,10 +291,19 @@ function WorkoutDetails({ workout, goDashboard, user }) {
           </div>
         )}
 
-        <div className="mb-8 rounded-2xl border border-brand-cocoa/30 bg-card-dark/80 p-4 md:p-5 flex flex-wrap items-center justify-between gap-4">
+        <div className="mb-8 rounded-2xl border border-brand-pink/30 bg-card-dark/80 p-4 md:p-5 flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-5">
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-text-muted">Daily Streak</p>
-            <p className="font-display text-2xl font-bold text-white">🔥 {streakCount} day streak</p>
+            <div className="flex items-center gap-2.5 rounded-2xl bg-gradient-to-br from-brand-pink to-brand-cocoa px-4 py-2.5 shadow-md border border-brand-pink/50">
+              <FlameIcon />
+              <div className="leading-tight text-center">
+                <p className="font-display text-2xl font-extrabold text-white leading-none">{streakCount}</p>
+                <p className="text-[9px] font-bold uppercase tracking-widest text-white/85 mt-0.5">Day Streak</p>
+              </div>
+            </div>
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-text-muted">Current Streak</p>
+              <p className="font-display text-xl font-bold text-white">{streakCount} day streak</p>
+            </div>
           </div>
           <div className="text-sm text-text-muted font-sans">
             Complete every exercise and today’s day will light up automatically.

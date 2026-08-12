@@ -18,6 +18,13 @@ const ScaleIcon = ({ className = "h-8 w-8 text-brand-pink" }) => (
   </svg>
 );
 
+const FlameIcon = ({ className = "h-5 w-5" }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="currentColor" stroke="none">
+    <path d="M12 23c4.42 0 8-3.58 8-8 0-5.5-5.5-8.5-7.5-12-1.5 4-4.5 5.5-6.5 8-2 2.5-3 4.5-3 7 0 3.87 3.13 7 9 7Z" />
+    <path d="M14 23c-2.2-1.2-3-2.8-3-4.5 0-2 1.5-3.2 2.5-4.5.5 1.6 1.5 2.2 2.5 3.5.5.9 1 1.8 1 3 0 1.4-1 2.5-3 2.5Z" opacity="0.5" />
+  </svg>
+);
+
 const TargetIcon = () => (
   <svg viewBox="0 0 24 24" className="h-8 w-8 text-brand-pink" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
     <circle cx="12" cy="12" r="10" />
@@ -44,6 +51,21 @@ const GridIcon = ({ className = "h-6 w-6" }) => (
     <rect x="14" y="3" width="7" height="7" />
     <rect x="14" y="14" width="7" height="7" />
     <rect x="3" y="14" width="7" height="7" />
+  </svg>
+);
+
+const MoonIcon = ({ className = "h-6 w-6" }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+  </svg>
+);
+
+const UsersIcon = ({ className = "h-6 w-6" }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+    <circle cx="9" cy="7" r="4" />
+    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
   </svg>
 );
 
@@ -408,7 +430,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
         <div className="p-8 border-b border-border-pink/30">
           <div className="flex items-center gap-4">
             <div className="relative shrink-0">
-              <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-brand-pink/70 shadow-lg shadow-brand-pink/20 bg-bg-dark/70">
+              <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-brand-pink/70 bg-bg-dark/70">
                 <img
                   src={user?.avatarUrl || profilePlaceholder}
                   alt="Profile Avatar"
@@ -447,7 +469,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
             onClick={() => setActiveTab("overview")}
             className={`w-full flex items-center gap-5 px-6 py-4.5 rounded-2xl font-display text-base font-bold tracking-wide transition duration-200 cursor-pointer ${
               activeTab === "overview"
-                ? "bg-gradient-to-r from-brand-pink/15 to-brand-cocoa/5 border-l-4 border-brand-pink text-brand-pink shadow-[inset_0_0_12px_rgba(226,109,133,0.08)]"
+                ? "bg-brand-pink/10 border-l-4 border-brand-pink text-brand-pink"
                 : "text-text-muted hover:bg-brand-cocoa/10 hover:text-white"
             }`}
           >
@@ -459,7 +481,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
             onClick={() => setActiveTab("workouts")}
             className={`w-full flex items-center gap-5 px-6 py-4.5 rounded-2xl font-display text-base font-bold tracking-wide transition duration-200 cursor-pointer ${
               activeTab === "workouts"
-                ? "bg-gradient-to-r from-brand-pink/15 to-brand-cocoa/5 border-l-4 border-brand-pink text-brand-pink shadow-[inset_0_0_12px_rgba(226,109,133,0.08)]"
+                ? "bg-brand-pink/10 border-l-4 border-brand-pink text-brand-pink"
                 : "text-text-muted hover:bg-brand-cocoa/10 hover:text-white"
             }`}
           >
@@ -471,7 +493,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
             onClick={() => setActiveTab("bmi")}
             className={`w-full flex items-center gap-5 px-6 py-4.5 rounded-2xl font-display text-base font-bold tracking-wide transition duration-200 cursor-pointer ${
               activeTab === "bmi"
-                ? "bg-gradient-to-r from-brand-pink/15 to-brand-cocoa/5 border-l-4 border-brand-pink text-brand-pink shadow-[inset_0_0_12px_rgba(226,109,133,0.08)]"
+                ? "bg-brand-pink/10 border-l-4 border-brand-pink text-brand-pink"
                 : "text-text-muted hover:bg-brand-cocoa/10 hover:text-white"
             }`}
           >
@@ -483,7 +505,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
             onClick={() => setActiveTab("nutrition")}
             className={`w-full flex items-center gap-5 px-6 py-4.5 rounded-2xl font-display text-base font-bold tracking-wide transition duration-200 cursor-pointer ${
               activeTab === "nutrition"
-                ? "bg-gradient-to-r from-brand-pink/15 to-brand-cocoa/5 border-l-4 border-brand-pink text-brand-pink shadow-[inset_0_0_12px_rgba(226,109,133,0.08)]"
+                ? "bg-brand-pink/10 border-l-4 border-brand-pink text-brand-pink"
                 : "text-text-muted hover:bg-brand-cocoa/10 hover:text-white"
             }`}
           >
@@ -495,11 +517,11 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
             onClick={() => setActiveTab("recovery")}
             className={`w-full flex items-center gap-5 px-6 py-4.5 rounded-2xl font-display text-base font-bold tracking-wide transition duration-200 cursor-pointer ${
               activeTab === "recovery"
-                ? "bg-gradient-to-r from-brand-pink/15 to-brand-cocoa/5 border-l-4 border-brand-pink text-brand-pink shadow-[inset_0_0_12px_rgba(226,109,133,0.08)]"
+                ? "bg-brand-pink/10 border-l-4 border-brand-pink text-brand-pink"
                 : "text-text-muted hover:bg-brand-cocoa/10 hover:text-white"
             }`}
           >
-            <span className="text-xl">🌙</span>
+            <MoonIcon />
             <span>Sleep & Recovery</span>
           </button>
 
@@ -507,11 +529,11 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
             onClick={() => setActiveTab("community")}
             className={`w-full flex items-center gap-5 px-6 py-4.5 rounded-2xl font-display text-base font-bold tracking-wide transition duration-200 cursor-pointer ${
               activeTab === "community"
-                ? "bg-gradient-to-r from-brand-pink/15 to-brand-cocoa/5 border-l-4 border-brand-pink text-brand-pink shadow-[inset_0_0_12px_rgba(226,109,133,0.08)]"
+                ? "bg-brand-pink/10 border-l-4 border-brand-pink text-brand-pink"
                 : "text-text-muted hover:bg-brand-cocoa/10 hover:text-white"
             }`}
           >
-            <span className="text-xl">👥</span>
+            <UsersIcon />
             <span>Community Feed</span>
           </button>
         </nav>
@@ -610,7 +632,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
                       <label className="block text-xs font-semibold uppercase tracking-[0.25em] text-text-muted">
                         Bio
                       </label>
-                      <span className={`text-xs font-bold ${profileForm.bio.length >= 140 ? 'text-brand-pink animate-pulse' : 'text-text-muted'}`}>
+                      <span className={`text-xs font-bold ${profileForm.bio.length >= 140 ? 'text-brand-pink' : 'text-text-muted'}`}>
                         {profileForm.bio.length}/150
                       </span>
                     </div>
@@ -683,7 +705,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
 
             {/* Stats Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-              <div className="bg-gradient-to-br from-card-dark to-bg-dark/40 rounded-3xl p-8 border border-brand-cocoa/30 hover:border-brand-pink/40 hover:-translate-y-1 transition duration-300 shadow-xl shadow-black/10">
+              <div className="bg-card-dark rounded-3xl p-8 border border-brand-cocoa/30 hover:border-brand-pink/40 hover:-translate-y-1 transition duration-300 shadow-xl shadow-black/10">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-quick text-xs font-bold text-text-muted tracking-widest uppercase mb-1">Total Workouts</p>
@@ -697,7 +719,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
                 </div>
               </div>
 
-              <div className="bg-gradient-to-br from-card-dark to-bg-dark/40 rounded-3xl p-8 border border-brand-cocoa/30 hover:border-brand-pink/40 hover:-translate-y-1 transition duration-300 shadow-xl shadow-black/10">
+              <div className="bg-card-dark rounded-3xl p-8 border border-brand-cocoa/30 hover:border-brand-pink/40 hover:-translate-y-1 transition duration-300 shadow-xl shadow-black/10">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-quick text-xs font-bold text-text-muted tracking-widest uppercase mb-1">Current BMI</p>
@@ -711,7 +733,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
                 </div>
               </div>
 
-              <div className="bg-gradient-to-br from-card-dark to-bg-dark/40 rounded-3xl p-8 border border-brand-cocoa/30 hover:border-brand-pink/40 hover:-translate-y-1 transition duration-300 shadow-xl shadow-black/10">
+              <div className="bg-card-dark rounded-3xl p-8 border border-brand-cocoa/30 hover:border-brand-pink/40 hover:-translate-y-1 transition duration-300 shadow-xl shadow-black/10">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-quick text-xs font-bold text-text-muted tracking-widest uppercase mb-1">Weekly Goal</p>
@@ -729,7 +751,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
             {/* Hydration & Weekly Streaks Panel */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
               {/* Water Intake Tracker */}
-              <div className="bg-gradient-to-br from-card-dark to-bg-dark/40 rounded-3xl p-8 border border-brand-cocoa/30 shadow-xl shadow-black/10 animate-fadeIn">
+              <div className="bg-card-dark rounded-3xl p-8 border border-brand-cocoa/30 shadow-xl shadow-black/10 animate-fadeIn">
                 <div className="flex justify-between items-start mb-6">
                   <div>
                     <h3 className="font-display text-xl font-bold text-white">Daily Hydration Log</h3>
@@ -779,14 +801,18 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
               </div>
 
               {/* Weekly Streak & Active Days */}
-              <div className="bg-gradient-to-br from-card-dark to-bg-dark/40 rounded-3xl p-8 border border-brand-cocoa/30 shadow-xl shadow-black/10 animate-fadeIn">
+              <div className="bg-card-dark rounded-3xl p-8 border border-brand-cocoa/30 shadow-xl shadow-black/10 animate-fadeIn">
                 <div className="flex justify-between items-start mb-6">
                   <div>
                     <h3 className="font-display text-xl font-bold text-white">Active Training Days</h3>
                     <p className="font-sans text-text-muted text-sm mt-1">Check off days you completed a workout session</p>
                   </div>
-                  <div className="flex items-center gap-1.5 text-xs font-bold text-white bg-brand-pink/25 px-3.5 py-2 rounded-xl border border-brand-pink/35 animate-pulse">
-                    <span>🔥 {Math.max(getWeeklyStreak(), dailyStreak)} Day Streak</span>
+                  <div className="flex items-center gap-2.5 rounded-2xl bg-gradient-to-br from-brand-pink to-brand-cocoa px-4 py-2.5 shadow-md border border-brand-pink/50">
+                    <FlameIcon className="h-6 w-6 text-white" />
+                    <div className="leading-tight text-center">
+                      <p className="font-display text-2xl font-extrabold text-white leading-none">{Math.max(getWeeklyStreak(), dailyStreak)}</p>
+                      <p className="text-[9px] font-bold uppercase tracking-widest text-white/85 mt-0.5">Day Streak</p>
+                    </div>
                   </div>
                 </div>
 
@@ -801,7 +827,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
                       }}
                       className={`w-10 h-12 rounded-2xl flex flex-col items-center justify-center border transition-all duration-300 cursor-pointer ${
                         weeklyActivity[idx]
-                          ? "bg-brand-pink border-brand-pink text-white scale-105 shadow-md shadow-brand-pink/25"
+                          ? "bg-brand-pink border-brand-pink text-white scale-105"
                           : "bg-bg-dark/60 border-brand-cocoa/20 text-text-muted hover:text-white hover:border-brand-cocoa/40"
                       }`}
                     >
@@ -818,7 +844,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
             </div>
 
             {/* Recent Activities Feed */}
-            <div className="bg-gradient-to-br from-card-dark to-bg-dark/40 rounded-3xl p-8 border border-brand-cocoa/30 shadow-xl shadow-black/10 mb-12 animate-fadeIn">
+            <div className="bg-card-dark rounded-3xl p-8 border border-brand-cocoa/30 shadow-xl shadow-black/10 mb-12 animate-fadeIn">
               <div className="flex justify-between items-center mb-6 flex-wrap gap-4">
                 <div>
                   <h3 className="font-display text-xl font-bold text-white">Recent Completed Sessions</h3>
@@ -889,28 +915,28 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
             </div>
 
             {/* Achievements & Badges */}
-            <div className="bg-gradient-to-br from-card-dark to-[#05050A]/40 rounded-3xl p-8 border border-brand-pink/30 shadow-xl shadow-black/10 mb-12 animate-fadeIn">
+            <div className="bg-card-dark rounded-3xl p-8 border border-brand-pink/30 shadow-xl shadow-black/10 mb-12 animate-fadeIn">
               <div className="mb-6">
                 <h3 className="font-display text-xl font-bold text-white">Achievements & Badges</h3>
                 <p className="font-sans text-text-muted text-sm mt-1">Unlock badges by reaching new fitness milestones</p>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
-                <div className={`p-4 rounded-2xl border flex flex-col items-center text-center transition-all ${history.length >= 1 ? 'border-brand-pink bg-brand-pink/10 shadow-[0_0_15px_rgba(255,46,147,0.2)]' : 'border-border-pink/50 bg-bg-dark/40 opacity-50 grayscale'}`}>
+                <div className={`p-4 rounded-2xl border flex flex-col items-center text-center transition-all ${history.length >= 1 ? 'border-brand-pink bg-brand-pink/10' : 'border-border-pink/50 bg-bg-dark/40 opacity-50 grayscale'}`}>
                   <div className="text-4xl mb-2">🏅</div>
                   <h4 className="font-display font-bold text-sm text-white">First Blood</h4>
                   <p className="text-[10px] text-text-muted mt-1 uppercase font-quick">Complete 1 Workout</p>
                 </div>
-                <div className={`p-4 rounded-2xl border flex flex-col items-center text-center transition-all ${getWeeklyStreak() >= 3 ? 'border-brand-cocoa bg-brand-cocoa/10 shadow-[0_0_15px_rgba(0,240,255,0.2)]' : 'border-border-pink/50 bg-bg-dark/40 opacity-50 grayscale'}`}>
+                <div className={`p-4 rounded-2xl border flex flex-col items-center text-center transition-all ${getWeeklyStreak() >= 3 ? 'border-brand-cocoa bg-brand-cocoa/10' : 'border-border-pink/50 bg-bg-dark/40 opacity-50 grayscale'}`}>
                   <div className="text-4xl mb-2">🔥</div>
                   <h4 className="font-display font-bold text-sm text-white">Streak Master</h4>
                   <p className="text-[10px] text-text-muted mt-1 uppercase font-quick">3-Day Streak</p>
                 </div>
-                <div className={`p-4 rounded-2xl border flex flex-col items-center text-center transition-all ${waterIntake >= 2000 ? 'border-[#00C2E5] bg-[#00C2E5]/10 shadow-[0_0_15px_rgba(0,194,229,0.2)]' : 'border-border-pink/50 bg-bg-dark/40 opacity-50 grayscale'}`}>
+                <div className={`p-4 rounded-2xl border flex flex-col items-center text-center transition-all ${waterIntake >= 2000 ? 'border-[#00C2E5] bg-[#00C2E5]/10' : 'border-border-pink/50 bg-bg-dark/40 opacity-50 grayscale'}`}>
                   <div className="text-4xl mb-2">💧</div>
                   <h4 className="font-display font-bold text-sm text-white">Hydration Hero</h4>
                   <p className="text-[10px] text-text-muted mt-1 uppercase font-quick">Drink 2000ml</p>
                 </div>
-                <div className={`p-4 rounded-2xl border flex flex-col items-center text-center transition-all ${history.length >= 10 ? 'border-[#FFD700] bg-[#FFD700]/10 shadow-[0_0_15px_rgba(255,215,0,0.2)]' : 'border-border-pink/50 bg-bg-dark/40 opacity-50 grayscale'}`}>
+                <div className={`p-4 rounded-2xl border flex flex-col items-center text-center transition-all ${history.length >= 10 ? 'border-[#FFD700] bg-[#FFD700]/10' : 'border-border-pink/50 bg-bg-dark/40 opacity-50 grayscale'}`}>
                   <div className="text-4xl mb-2">👑</div>
                   <h4 className="font-display font-bold text-sm text-white">Gym Royalty</h4>
                   <p className="text-[10px] text-text-muted mt-1 uppercase font-quick">Complete 10 Workouts</p>
@@ -1149,7 +1175,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
             ) : workouts.length === 0 ? (
               <div className="text-center py-16 bg-card-dark rounded-3xl border border-brand-cocoa/30">
                 <div className="mb-4">
-                  <DumbbellIcon className="h-16 w-16 text-text-muted mx-auto filter drop-shadow-[0_0_8px_rgba(226,109,133,0.2)] animate-pulse" />
+                  <DumbbellIcon className="h-16 w-16 text-text-muted mx-auto" />
                 </div>
                 <p className="font-display font-bold text-lg text-white mb-2">No workouts logged yet</p>
                 <p className="font-sans text-text-muted text-sm max-w-sm mx-auto mb-6">
@@ -1235,7 +1261,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
               
               {/* Left Column: Calculator inputs */}
-              <div className="lg:col-span-7 bg-gradient-to-br from-card-dark to-bg-dark/65 backdrop-blur-md rounded-3xl p-8 md:p-10 border border-brand-cocoa/30 shadow-xl flex flex-col justify-between">
+              <div className="lg:col-span-7 bg-card-dark backdrop-blur-md rounded-3xl p-8 md:p-10 border border-brand-cocoa/30 shadow-xl flex flex-col justify-between">
                 <div>
                   <h2 className="text-2xl md:text-3xl font-display font-bold text-white mb-8 tracking-tight">
                     BMI Calculator
@@ -1335,21 +1361,21 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout }) {
 
         {/* TAB 4: NUTRITION */}
         {activeTab === "nutrition" && (
-          <div className="animate-fadeIn max-w-4xl">
+          <div className="animate-fadeIn w-full">
             <NutritionTracker user={user} />
           </div>
         )}
 
         {/* TAB 5: RECOVERY */}
         {activeTab === "recovery" && (
-          <div className="animate-fadeIn max-w-4xl">
+          <div className="animate-fadeIn w-full">
             <RecoveryTracker user={user} />
           </div>
         )}
 
         {/* TAB 6: COMMUNITY */}
         {activeTab === "community" && (
-          <div className="animate-fadeIn max-w-4xl">
+          <div className="animate-fadeIn w-full">
             <CommunityFeed user={user} />
           </div>
         )}

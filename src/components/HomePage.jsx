@@ -105,7 +105,7 @@ function HomePage({ user, showLogin, showRegister, goDashboard, logout }) {
               </button>
               <button
                 onClick={showRegister}
-                className="rounded-full bg-brand-pink px-6 py-2.5 font-display text-sm font-bold text-white shadow-lg shadow-brand-pink/20 transition duration-300 hover:-translate-y-0.5 hover:bg-brand-pink-hover md:text-base"
+                className="rounded-full bg-brand-pink px-6 py-2.5 font-display text-sm font-bold text-white shadow-md transition duration-300 hover:bg-brand-pink-hover md:text-base"
               >
                 Register
               </button>
@@ -138,7 +138,7 @@ function HomePage({ user, showLogin, showRegister, goDashboard, logout }) {
           </div>
           <button
             onClick={user ? goDashboard : showRegister}
-            className="glow-button rounded-full px-10 py-4 font-display text-base font-bold shadow-xl shadow-brand-pink/20 md:text-lg"
+            className="glow-button rounded-full px-10 py-4 font-display text-base font-bold md:text-lg"
           >
             {user ? "Go to Dashboard" : "Get Started Now"}
           </button>
@@ -231,12 +231,12 @@ function HomePage({ user, showLogin, showRegister, goDashboard, logout }) {
           <div className="flex flex-col md:flex-row items-center gap-8">
             <button
               type="submit"
-              className="glow-button font-display font-bold px-10 py-4.5 rounded-full text-lg w-full md:w-auto shadow-lg"
+              className="glow-button font-display font-bold px-10 py-4.5 rounded-full text-lg w-full md:w-auto"
             >
               Send Inquiry
             </button>
             {message && (
-              <p className="text-brand-pink font-sans font-bold text-xl text-center md:text-left tracking-wide animate-pulse">
+              <p className="text-brand-pink font-sans font-bold text-xl text-center md:text-left tracking-wide">
                 {message}
               </p>
             )}

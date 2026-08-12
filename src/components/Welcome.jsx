@@ -1,5 +1,5 @@
 const WelcomeIcon = () => (
-  <svg viewBox="0 0 24 24" className="h-16 w-16 text-brand-pink mx-auto mb-8 filter drop-shadow-[0_0_8px_rgba(255,74,139,0.4)] animate-pulse" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg viewBox="0 0 24 24" className="h-16 w-16 text-brand-pink mx-auto mb-8" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
   </svg>
 );
@@ -27,7 +27,7 @@ function Welcome({ next, user }) {
         </p>
         <button
           onClick={next}
-          className="glow-button font-display font-bold px-12 py-5 rounded-full text-base md:text-lg shadow-lg shadow-brand-pink/20 hover:shadow-brand-pink/45 transition duration-300 cursor-pointer"
+          className="glow-button font-display font-bold px-12 py-5 rounded-full text-base md:text-lg cursor-pointer"
         >
           Start Workout Dashboard →
         </button>
