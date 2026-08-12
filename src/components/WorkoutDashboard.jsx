@@ -408,6 +408,33 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeC
     }
   };
 
+  const getNutritionTargets = () => {
+    if (!weight || !height || !age) {
+      return { calories: 0, protein: 0, multiplier: 1.375 };
+    }
+
+    const parsedWeight = Number(weight);
+    const parsedHeight = Number(height);
+    const parsedAge = Number(age);
+
+    const bmr = 10 * parsedWeight + 6.25 * parsedHeight - 5 * parsedAge + 5;
+    const multiplier = 1.375;
+    let calories = Math.round(bmr * multiplier);
+    let protein = Math.round(parsedWeight * 1.8);
+
+    if (user?.status === "Underweight" || user?.goal?.toLowerCase().includes("gain")) {
+      calories += 250;
+      protein = Math.round(parsedWeight * 2.1);
+    } else if (user?.status === "Overweight" || user?.status === "Obese" || user?.goal?.toLowerCase().includes("lose")) {
+      calories -= 250;
+      protein = Math.round(parsedWeight * 1.8);
+    }
+
+    return { calories: Math.max(calories, 1200), protein: Math.max(protein, 60), multiplier };
+  };
+
+  const nutritionTargets = getNutritionTargets();
+
   const userDisplayName = user?.username || (user?.email ? user.email.split("@")[0] : "Athlete");
   const profilePlaceholder = "https://i.pinimg.com/1200x/4e/6f/a8/4e6fa8c1d410ae7d30d8c79b8728a56b.jpg";
 
@@ -506,7 +533,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeC
             }`}
           >
             <ScaleIcon className="h-6 w-6" />
-            <span>BMI Analytics</span>
+            <span>BMI &amp; Nutrition Analytics</span>
           </button>
 
           <button
@@ -1297,9 +1324,9 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeC
             {/* Header */}
             <div className="mb-10">
               <h1 className="text-4xl md:text-5xl font-display font-extrabold text-text-primary tracking-tight">
-                BMI Analytics
+                BMI &amp; Nutrition Analytics
               </h1>
-              <p className="font-sans text-text-muted text-base mt-2">Track weight goals and check body mass indexes</p>
+              <p className="font-sans text-text-muted text-base mt-2">Track body mass index, calorie targets, and protein goals in one place</p>
             </div>
 
             {/* Split Grid to eliminate empty wide margins */}
@@ -1401,6 +1428,48 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeC
                 </div>
               </div>
             )}
+
+            <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <div className="bg-card-dark backdrop-blur-md rounded-3xl p-8 border border-brand-cocoa/30 shadow-sm">
+                <div className="flex items-center justify-between gap-3 mb-6">
+                  <div>
+                    <p className="font-quick text-xs font-bold uppercase tracking-widest text-text-muted">Calorie calculator</p>
+                    <h3 className="text-2xl font-display font-bold text-text-primary mt-2">Daily energy target</h3>
+                  </div>
+                </div>
+
+                <div className="rounded-2xl border border-brand-pink/20 bg-bg-dark/60 p-5">
+                  <p className="font-quick text-[11px] uppercase tracking-widest text-text-muted">Estimated calories</p>
+                  <div className="mt-3 flex items-end gap-2">
+                    <span className="font-display text-4xl font-extrabold text-text-primary">{nutritionTargets.calories || 0}</span>
+                    <span className="pb-1 text-sm font-semibold text-text-muted">kcal/day</span>
+                  </div>
+                  <p className="mt-3 text-sm text-text-muted">
+                    Based on your current weight, height, and age using the standard BMR formula.
+                  </p>
+                </div>
+              </div>
+
+              <div className="bg-card-dark backdrop-blur-md rounded-3xl p-8 border border-brand-cocoa/30 shadow-sm">
+                <div className="flex items-center justify-between gap-3 mb-6">
+                  <div>
+                    <p className="font-quick text-xs font-bold uppercase tracking-widest text-text-muted">Protein calculator</p>
+                    <h3 className="text-2xl font-display font-bold text-text-primary mt-2">Daily protein target</h3>
+                  </div>
+                </div>
+
+                <div className="rounded-2xl border border-brand-pink/20 bg-bg-dark/60 p-5">
+                  <p className="font-quick text-[11px] uppercase tracking-widest text-text-muted">Recommended protein</p>
+                  <div className="mt-3 flex items-end gap-2">
+                    <span className="font-display text-4xl font-extrabold text-text-primary">{nutritionTargets.protein || 0}</span>
+                    <span className="pb-1 text-sm font-semibold text-text-muted">g/day</span>
+                  </div>
+                  <p className="mt-3 text-sm text-text-muted">
+                    Standard target: about 1.8 g per kg body weight, adjusted for fat loss or gain goal.
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         )}
 
