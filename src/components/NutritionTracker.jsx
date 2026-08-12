@@ -94,6 +94,17 @@ const getGoals = (user) => {
   return { calories, protein, carbs, fat };
 };
 
+const getMealTone = (name) => {
+  const n = (name || '').toLowerCase();
+  if (n.includes('breakfast') || n.includes('oat') || n.includes('egg')) return 'bg-amber-400';
+  if (n.includes('lunch') || n.includes('chicken') || n.includes('salad')) return 'bg-green-400';
+  if (n.includes('dinner') || n.includes('fish') || n.includes('rice')) return 'bg-brand-pink';
+  if (n.includes('snack') || n.includes('shake') || n.includes('fruit') || n.includes('yogurt')) return 'bg-accent-cocoa-light';
+  return 'bg-text-muted/50';
+};
+
+const pctOf = (value, goal) => (goal > 0 ? Math.min(Math.round((value / goal) * 100), 100) : 0);
+
 const MacroBar = ({ label, icon, value, goal, barClass }) => {
   const pct = goal > 0 ? Math.min(Math.round((value / goal) * 100), 100) : 0;
   return (
@@ -366,32 +377,42 @@ export default function NutritionTracker({ user }) {
         </button>
       </div>
 
-      <div className="mb-5 overflow-hidden rounded-2xl border border-border-pink/40 bg-bg-dark/30">
-        <table className="w-full border-collapse text-sm">
-          <thead className="bg-bg-dark/90">
+      <div className="mb-5 max-h-[24rem] overflow-x-hidden overflow-y-auto rounded-2xl border border-border-pink/40 bg-bg-dark/30">
+        <table className="w-full border-separate border-spacing-0 text-sm">
+          <thead>
             <tr className="text-[11px] font-bold uppercase tracking-widest text-text-muted font-quick">
-              <th className="px-4 py-3 text-left">Meal</th>
-              <th className="px-4 py-3 text-right">Calories<span className="ml-1 text-[10px] font-semibold normal-case text-text-muted/60">/ {goals.calories}</span></th>
-              <th className="px-4 py-3 text-right">Protein<span className="ml-1 text-[10px] font-semibold normal-case text-text-muted/60">/ {goals.protein}g</span></th>
-              <th className="px-4 py-3 text-right">Carbs<span className="ml-1 text-[10px] font-semibold normal-case text-text-muted/60">/ {goals.carbs}g</span></th>
-              <th className="px-4 py-3 text-right">Fat<span className="ml-1 text-[10px] font-semibold normal-case text-text-muted/60">/ {goals.fat}g</span></th>
-              <th className="px-4 py-3 text-right" />
+              <th className="sticky top-0 z-10 border-b border-border-pink/30 bg-bg-dark px-4 py-3 text-left">Meal</th>
+              <th className="sticky top-0 z-10 border-b border-border-pink/30 bg-bg-dark px-4 py-3 text-right">Calories<span className="ml-1 text-[10px] font-semibold normal-case text-text-muted/60">/ {goals.calories}</span></th>
+              <th className="sticky top-0 z-10 border-b border-border-pink/30 bg-bg-dark px-4 py-3 text-right">Protein<span className="ml-1 text-[10px] font-semibold normal-case text-text-muted/60">/ {goals.protein}g</span></th>
+              <th className="sticky top-0 z-10 border-b border-border-pink/30 bg-bg-dark px-4 py-3 text-right">Carbs<span className="ml-1 text-[10px] font-semibold normal-case text-text-muted/60">/ {goals.carbs}g</span></th>
+              <th className="sticky top-0 z-10 border-b border-border-pink/30 bg-bg-dark px-4 py-3 text-right">Fat<span className="ml-1 text-[10px] font-semibold normal-case text-text-muted/60">/ {goals.fat}g</span></th>
+              <th className="sticky top-0 z-10 border-b border-border-pink/30 bg-bg-dark px-4 py-3 text-right" />
             </tr>
           </thead>
           <tbody>
             {data.meals.length === 0 && (
               <tr>
-                <td colSpan="6" className="px-4 py-6 text-center text-xs text-text-muted">No meals logged yet today. Add your breakfast, lunch, or dinner above.</td>
+                <td colSpan="6" className="px-4 py-10 text-center">
+                  <div className="flex flex-col items-center gap-2.5">
+                    <NutritionIcon className="h-8 w-8 text-text-muted/50" />
+                    <p className="text-xs text-text-muted">No meals logged yet today. Add your breakfast, lunch, or dinner above.</p>
+                  </div>
+                </td>
               </tr>
             )}
             {data.meals.map((meal, idx) => (
-              <tr key={idx} className={`border-t border-border-pink/20 ${idx % 2 === 1 ? 'bg-bg-dark/40' : 'bg-transparent'}`}>
-                <td className="px-4 py-3 font-display font-bold text-text-primary">{meal.name}</td>
-                <td className="px-4 py-3 text-right font-mono font-semibold text-text-primary tabular-nums">{meal.calories}</td>
-                <td className="px-4 py-3 text-right font-mono text-green-400 tabular-nums">{meal.protein}g</td>
-                <td className="px-4 py-3 text-right font-mono text-amber-400 tabular-nums">{meal.carbs}g</td>
-                <td className="px-4 py-3 text-right font-mono text-accent-cocoa-light tabular-nums">{meal.fat}g</td>
-                <td className="px-4 py-3 text-right">
+              <tr key={idx} className="transition hover:bg-bg-dark/50">
+                <td className="border-b border-border-pink/10 px-4 py-3">
+                  <span className="flex items-center gap-2">
+                    <span className={`h-2 w-2 shrink-0 rounded-full ${getMealTone(meal.name)}`} title={meal.name} />
+                    <span className="font-display font-bold text-text-primary">{meal.name}</span>
+                  </span>
+                </td>
+                <td className="border-b border-border-pink/10 px-4 py-3 text-right font-mono font-semibold text-text-primary tabular-nums">{meal.calories}</td>
+                <td className="border-b border-border-pink/10 px-4 py-3 text-right font-mono text-green-400 tabular-nums">{meal.protein}g</td>
+                <td className="border-b border-border-pink/10 px-4 py-3 text-right font-mono text-amber-400 tabular-nums">{meal.carbs}g</td>
+                <td className="border-b border-border-pink/10 px-4 py-3 text-right font-mono text-accent-cocoa-light tabular-nums">{meal.fat}g</td>
+                <td className="border-b border-border-pink/10 px-4 py-3 text-right">
                   <button
                     onClick={() => removeMeal(idx)}
                     className="rounded-lg p-1.5 text-red-400 transition hover:bg-red-500/10 hover:text-red-300 cursor-pointer"
@@ -405,13 +426,33 @@ export default function NutritionTracker({ user }) {
           </tbody>
           {data.meals.length > 0 && (
             <tfoot>
-              <tr className="border-t-2 border-brand-pink/50 bg-brand-pink/10 font-display font-bold text-text-primary">
-                <td className="px-4 py-3.5 uppercase tracking-widest text-[12px] font-quick text-text-muted">Totals</td>
-                <td className={`px-4 py-3.5 text-right font-mono text-base font-bold tabular-nums ${overGoal ? 'text-red-400' : 'text-green-400'}`}>{data.calories}</td>
-                <td className="px-4 py-3.5 text-right font-mono text-base text-green-400 tabular-nums">{data.protein}g</td>
-                <td className="px-4 py-3.5 text-right font-mono text-base text-amber-400 tabular-nums">{data.carbs}g</td>
-                <td className="px-4 py-3.5 text-right font-mono text-base text-accent-cocoa-light tabular-nums">{data.fat}g</td>
-                <td className="px-4 py-3.5" />
+              <tr className="font-display font-bold text-text-primary">
+                <td className="sticky bottom-0 border-t-2 border-brand-pink/50 bg-brand-pink/10 px-4 py-3.5 uppercase tracking-widest text-[12px] font-quick text-text-muted">Totals</td>
+                <td className="sticky bottom-0 border-t-2 border-brand-pink/50 bg-brand-pink/10 px-4 py-3.5 text-right">
+                  <p className={`font-mono text-base font-bold tabular-nums ${overGoal ? 'text-red-400' : 'text-green-400'}`}>{data.calories}</p>
+                  <div className="ml-auto mt-1 h-1 w-14 overflow-hidden rounded-full bg-bg-dark">
+                    <div className={`h-full rounded-full ${overGoal ? 'bg-red-400' : 'bg-green-400'}`} style={{ width: `${pctOf(data.calories, goals.calories)}%` }} />
+                  </div>
+                </td>
+                <td className="sticky bottom-0 border-t-2 border-brand-pink/50 bg-brand-pink/10 px-4 py-3.5 text-right">
+                  <p className="font-mono text-base text-green-400 tabular-nums">{data.protein}g</p>
+                  <div className="ml-auto mt-1 h-1 w-14 overflow-hidden rounded-full bg-bg-dark">
+                    <div className="h-full rounded-full bg-green-400" style={{ width: `${pctOf(data.protein, goals.protein)}%` }} />
+                  </div>
+                </td>
+                <td className="sticky bottom-0 border-t-2 border-brand-pink/50 bg-brand-pink/10 px-4 py-3.5 text-right">
+                  <p className="font-mono text-base text-amber-400 tabular-nums">{data.carbs}g</p>
+                  <div className="ml-auto mt-1 h-1 w-14 overflow-hidden rounded-full bg-bg-dark">
+                    <div className="h-full rounded-full bg-amber-400" style={{ width: `${pctOf(data.carbs, goals.carbs)}%` }} />
+                  </div>
+                </td>
+                <td className="sticky bottom-0 border-t-2 border-brand-pink/50 bg-brand-pink/10 px-4 py-3.5 text-right">
+                  <p className="font-mono text-base text-accent-cocoa-light tabular-nums">{data.fat}g</p>
+                  <div className="ml-auto mt-1 h-1 w-14 overflow-hidden rounded-full bg-bg-dark">
+                    <div className="h-full rounded-full bg-accent-cocoa-light" style={{ width: `${pctOf(data.fat, goals.fat)}%` }} />
+                  </div>
+                </td>
+                <td className="sticky bottom-0 border-t-2 border-brand-pink/50 bg-brand-pink/10 px-4 py-3.5" />
               </tr>
             </tfoot>
           )}
