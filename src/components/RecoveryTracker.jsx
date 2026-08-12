@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { api } from '../utils/api';
+import { toast } from '../utils/toast';
 
 const MoonIcon = ({ className = "h-6 w-6 text-brand-pink" }) => (
   <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -120,10 +121,10 @@ export default function RecoveryTracker({ user }) {
       } catch (err) {
         console.error(err);
       }
-      alert('Sleep data logged!');
+      toast.success('Sleep data logged!');
     } catch (err) {
       console.error(err);
-      alert('Error saving sleep data');
+      toast.error('Error saving sleep data');
     } finally {
       setSaving(false);
     }

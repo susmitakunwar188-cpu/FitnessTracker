@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { api } from "../utils/api";
 import { getStoredWorkoutStreak } from "../utils/streak";
+import { toast } from "../utils/toast";
 import NutritionTracker from "./NutritionTracker";
 import RecoveryTracker from "./RecoveryTracker";
 import CommunityFeed from "./CommunityFeed";
@@ -236,7 +237,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeC
       await api.clearWorkoutHistory();
       setHistory([]);
     } catch (err) {
-      alert(err.message || "Failed to clear history.");
+      toast.error(err.message || "Failed to clear history.");
     }
   };
 
@@ -277,7 +278,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeC
   const handleAddWorkout = async (e) => {
     e.preventDefault();
     if (!newWorkoutName.trim()) {
-      alert("Please enter a workout name.");
+      toast.error("Please enter a workout name.");
       return;
     }
 
@@ -288,7 +289,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeC
       setAddingWorkout(false);
       setActiveTab("workouts");
     } catch (err) {
-      alert(err.message || "Failed to create workout.");
+      toast.error(err.message || "Failed to create workout.");
     }
   };
 
@@ -300,7 +301,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeC
       setWorkouts(workouts.filter((w) => w.id !== id));
       setMenuOpen(null);
     } catch (err) {
-      alert(err.message || "Failed to delete workout.");
+      toast.error(err.message || "Failed to delete workout.");
     }
   };
 
@@ -317,7 +318,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeC
 
   const saveEdit = async () => {
     if (!editingName.trim()) {
-      alert("Workout name cannot be empty");
+      toast.error("Workout name cannot be empty");
       return;
     }
     const cleanedExercises = editingExercises
@@ -335,7 +336,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeC
       setEditingName("");
       setEditingExercises([]);
     } catch (err) {
-      alert(err.message || "Failed to save edit.");
+      toast.error(err.message || "Failed to save edit.");
     }
   };
 
@@ -348,7 +349,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeC
   // BMI calculation & save
   const calculateBMI = async () => {
     if (!weight || !height) {
-      alert("Please enter weight and height.");
+      toast.error("Please enter weight and height.");
       return;
     }
     const heightInMeters = height / 100;
@@ -381,7 +382,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeC
       });
       setUser(updatedUser);
     } catch (err) {
-      alert(err.message || "Failed to save BMI profile data to server.");
+      toast.error(err.message || "Failed to save BMI profile data to server.");
     }
   };
 
@@ -403,7 +404,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeC
       setProfileMessage("Profile updated successfully.");
       setActiveTab("overview");
     } catch (err) {
-      alert(err.message || "Failed to update profile.");
+      toast.error(err.message || "Failed to update profile.");
     }
   };
 
@@ -654,7 +655,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeC
                             const file = e.target.files[0];
                             if (file) {
                               if (file.size > 2 * 1024 * 1024) {
-                                alert("Image is too large. Please upload an image smaller than 2MB.");
+                                toast.error("Image is too large. Please upload an image smaller than 2MB.");
                                 return;
                               }
                               const reader = new FileReader();

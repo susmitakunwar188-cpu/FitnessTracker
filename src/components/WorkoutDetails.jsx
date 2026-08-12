@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { api } from "../utils/api.js";
 import { awardWorkoutStreak, getStoredWorkoutStreak } from "../utils/streak";
+import { toast } from "../utils/toast";
 
 const DumbbellIcon = () => (
   <svg viewBox="0 0 24 24" className="h-10 w-10 text-brand-pink" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -204,7 +205,7 @@ function WorkoutDetails({ workout, goDashboard, user }) {
         setStreakCount(result.streak);
         setStreakMessage(result.message);
         syncDailyActivity(true);
-        window.alert(result.message);
+        toast.success(result.message);
       } else {
         setStreakMessage("Keep going — your streak will be marked once every exercise is checked off.");
         syncDailyActivity(false);
@@ -235,11 +236,11 @@ function WorkoutDetails({ workout, goDashboard, user }) {
     try {
       await api.logWorkoutHistory(workoutName, stopwatchTime, completedExerciseNames);
       setIsStopwatchRunning(false);
-      window.alert("🎉 Awesome job! Your workout session has been logged in your history!");
+      toast.success("🎉 Awesome job! Your workout session has been logged in your history!");
       goDashboard();
     } catch (err) {
       console.error(err);
-      window.alert(err.message || "Failed to log workout completion.");
+      toast.error(err.message || "Failed to log workout completion.");
     }
   };
 

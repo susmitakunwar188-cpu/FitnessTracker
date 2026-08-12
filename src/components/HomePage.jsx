@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { toast } from "../utils/toast";
 
 const BrandIcon = () => (
   <svg viewBox="0 0 24 24" className="h-9 w-9 text-brand-pink" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -51,7 +52,7 @@ function HomePage({ user, showLogin, showRegister, goDashboard, logout }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!email || !inquiry) {
-      alert("Please fill in both email and inquiry.");
+      toast.error("Please fill in both email and inquiry.");
       return;
     }
     setMessage("Inquiry submitted successfully!");

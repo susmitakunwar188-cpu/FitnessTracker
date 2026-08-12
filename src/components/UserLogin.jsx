@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { api } from "../utils/api";
+import { toast } from "../utils/toast";
 
 const MailIcon = () => (
   <svg viewBox="0 0 24 24" className="h-5 w-5 text-brand-pink" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -143,7 +144,7 @@ function UserLogin({ goHome, onLoginSuccess, showRegister }) {
   };
 
   const handleGoogleLogin = () => {
-    alert("Continue with Google is currently a demo option.");
+    toast.info("Continue with Google is currently a demo option.");
   };
 
   return (

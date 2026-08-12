@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { api } from '../utils/api';
+import { toast } from '../utils/toast';
 
 const UsersIcon = ({ className = "h-6 w-6 text-brand-pink" }) => (
   <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -88,7 +89,7 @@ export default function CommunityFeed({ user }) {
       setDraft('');
     } catch (err) {
       console.error(err);
-      alert('Error posting to feed');
+      toast.error('Error posting to feed');
     } finally {
       setPosting(false);
     }
@@ -106,7 +107,7 @@ export default function CommunityFeed({ user }) {
       setFeed([newPost, ...feed]);
     } catch (err) {
       console.error(err);
-      alert('Error syncing wearable');
+      toast.error('Error syncing wearable');
     } finally {
       setSyncing(false);
     }
