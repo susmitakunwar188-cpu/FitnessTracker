@@ -6,6 +6,13 @@ import { getUseFallback, readFallbackData, writeFallbackData } from '../db.js';
 
 const router = express.Router();
 
+const getQualityFromHours = (hours) => {
+  if (hours < 6) return 'Poor';
+  if (hours < 7) return 'Fair';
+  if (hours <= 9) return 'Good';
+  return 'Excellent';
+};
+
 // Get Nutrition for a user
 router.get('/nutrition/:userId', async (req, res) => {
   try {
@@ -58,6 +65,29 @@ router.post('/nutrition', async (req, res) => {
   }
 });
 
+// Get Sleep week (last 7 days)
+router.get('/sleep/:userId/week', async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const days = [];
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(Date.now() - i * 86400000);
+      days.push(d.toISOString().split('T')[0]);
+    }
+
+    if (getUseFallback()) {
+      const data = await readFallbackData();
+      const entries = data.sleep.filter(s => s.userId === userId && days.includes(s.date));
+      return res.json(entries);
+    }
+
+    const entries = await Sleep.find({ userId, date: { $in: days } });
+    res.json(entries);
+  } catch {
+    res.status(500).json({ error: 'Server error fetching sleep week' });
+  }
+});
+
 // Get Sleep data
 router.get('/sleep/:userId', async (req, res) => {
   try {
@@ -67,12 +97,12 @@ router.get('/sleep/:userId', async (req, res) => {
     if (getUseFallback()) {
       const data = await readFallbackData();
       const userSleep = data.sleep.find(s => s.userId === userId && s.date === date);
-      return res.json(userSleep || { durationHours: 0, quality: 'Good', recoveryScore: 0 });
+      return res.json(userSleep || { durationHours: 0, quality: 'Good', recoveryScore: 0, bedtime: '', wakeTime: '' });
     }
 
     let userSleep = await Sleep.findOne({ userId, date });
     if (!userSleep) {
-      userSleep = { durationHours: 0, quality: 'Good', recoveryScore: 0 };
+      userSleep = { durationHours: 0, quality: 'Good', recoveryScore: 0, bedtime: '', wakeTime: '' };
     }
     res.json(userSleep);
   } catch {
@@ -83,22 +113,23 @@ router.get('/sleep/:userId', async (req, res) => {
 // Update Sleep
 router.post('/sleep', async (req, res) => {
   try {
-    const { userId, date, durationHours, quality } = req.body;
-    
+    const { userId, date, durationHours, quality, bedtime = '', wakeTime = '' } = req.body;
+    const effectiveQuality = quality || getQualityFromHours(durationHours);
+
     // Calculate recovery score based on duration and quality
     let baseScore = Math.min((durationHours / 8) * 100, 100);
-    if (quality === 'Poor') baseScore *= 0.6;
-    if (quality === 'Fair') baseScore *= 0.8;
-    if (quality === 'Excellent') baseScore = Math.min(baseScore * 1.1, 100);
+    if (effectiveQuality === 'Poor') baseScore *= 0.6;
+    if (effectiveQuality === 'Fair') baseScore *= 0.8;
+    if (effectiveQuality === 'Excellent') baseScore = Math.min(baseScore * 1.1, 100);
     const recoveryScore = Math.round(baseScore);
 
     if (getUseFallback()) {
       const data = await readFallbackData();
       const existingIdx = data.sleep.findIndex(s => s.userId === userId && s.date === date);
       if (existingIdx !== -1) {
-        data.sleep[existingIdx] = { ...data.sleep[existingIdx], durationHours, quality, recoveryScore };
+        data.sleep[existingIdx] = { ...data.sleep[existingIdx], durationHours, quality: effectiveQuality, recoveryScore, bedtime, wakeTime };
       } else {
-        data.sleep.push({ userId, date, durationHours, quality, recoveryScore });
+        data.sleep.push({ userId, date, durationHours, quality: effectiveQuality, recoveryScore, bedtime, wakeTime });
       }
       await writeFallbackData(data);
       return res.json({ recoveryScore });
@@ -106,7 +137,7 @@ router.post('/sleep', async (req, res) => {
 
     await Sleep.findOneAndUpdate(
       { userId, date },
-      { durationHours, quality, recoveryScore },
+      { durationHours, quality: effectiveQuality, recoveryScore, bedtime, wakeTime },
       { upsert: true }
     );
     res.json({ recoveryScore });
