@@ -29,7 +29,7 @@ const ResetIcon = () => (
 );
 
 const FlameIcon = () => (
-  <svg viewBox="0 0 24 24" className="h-7 w-7 text-text-primary" fill="currentColor" stroke="none">
+  <svg viewBox="0 0 24 24" className="h-7 w-7 text-brand-pink" fill="currentColor" stroke="none">
     <path d="M12 23c4.42 0 8-3.58 8-8 0-5.5-5.5-8.5-7.5-12-1.5 4-4.5 5.5-6.5 8-2 2.5-3 4.5-3 7 0 3.87 3.13 7 9 7Z" />
     <path d="M14 23c-2.2-1.2-3-2.8-3-4.5 0-2 1.5-3.2 2.5-4.5.5 1.6 1.5 2.2 2.5 3.5.5.9 1 1.8 1 3 0 1.4-1 2.5-3 2.5Z" opacity="0.5" />
   </svg>
@@ -294,11 +294,11 @@ function WorkoutDetails({ workout, goDashboard, user }) {
 
         <div className="mb-8 rounded-2xl border border-brand-pink/30 bg-card-dark/80 p-4 md:p-5 flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-5">
-            <div className="flex items-center gap-2.5 rounded-2xl bg-gradient-to-br from-brand-pink to-brand-cocoa px-4 py-2.5 shadow-md border border-brand-pink/50">
+            <div className="flex items-center gap-2.5 rounded-full border border-border-pink/40 bg-bg-dark/60 px-4 py-2.5">
               <FlameIcon />
               <div className="leading-tight text-center">
-                <p className="font-display text-2xl font-extrabold text-white leading-none">{streakCount}</p>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-white/85 mt-0.5">Day Streak</p>
+                <p className="font-display text-2xl font-extrabold text-brand-pink leading-none">{streakCount}</p>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-text-muted mt-0.5">Day Streak</p>
               </div>
             </div>
             <div>

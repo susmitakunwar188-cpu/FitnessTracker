@@ -852,11 +852,11 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeC
                     <h3 className="font-display text-xl font-bold text-text-primary">Active Training Days</h3>
                     <p className="font-sans text-text-muted text-sm mt-1">Check off days you completed a workout session</p>
                   </div>
-                  <div className="flex items-center gap-2.5 rounded-2xl bg-gradient-to-br from-brand-pink to-brand-cocoa px-4 py-2.5 shadow-md border border-brand-pink/50">
-                    <FlameIcon className="h-6 w-6 text-text-primary" />
+                  <div className="flex items-center gap-2.5 rounded-full border border-border-pink/40 bg-bg-dark/60 px-4 py-2.5">
+                    <FlameIcon className="h-6 w-6 text-brand-pink" />
                     <div className="leading-tight text-center">
-                      <p className="font-display text-2xl font-extrabold text-white leading-none">{Math.max(getWeeklyStreak(), dailyStreak)}</p>
-                      <p className="text-[10px] font-bold uppercase tracking-widest text-white/85 mt-0.5">Day Streak</p>
+                      <p className="font-display text-2xl font-extrabold text-brand-pink leading-none">{Math.max(getWeeklyStreak(), dailyStreak)}</p>
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-text-muted mt-0.5">Day Streak</p>
                     </div>
                   </div>
                 </div>
