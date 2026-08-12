@@ -10,6 +10,8 @@ const sleepSchema = new mongoose.Schema({
     required: true
   },
   durationHours: { type: Number, required: true },
+  bedtime: { type: String, default: '' }, // HH:MM 24h
+  wakeTime: { type: String, default: '' }, // HH:MM 24h
   quality: { type: String, enum: ['Poor', 'Fair', 'Good', 'Excellent'], default: 'Good' },
   recoveryScore: { type: Number, default: 0 } // 0-100
 });
