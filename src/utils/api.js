@@ -226,6 +226,15 @@ export const api = {
     return data;
   },
 
+  async getSleepWeek(userId) {
+    const res = await fetch(`${API_BASE_URL}/features/sleep/${userId}/week`, {
+      headers: getHeaders()
+    });
+    const data = await parseJsonResponse(res);
+    if (!res.ok) throw new Error(data?.error || data?.message || 'Failed to fetch sleep week');
+    return data;
+  },
+
   async updateSleep(sleepData) {
     const res = await fetch(`${API_BASE_URL}/features/sleep`, {
       method: 'POST',
