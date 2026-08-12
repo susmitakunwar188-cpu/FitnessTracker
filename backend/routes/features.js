@@ -164,7 +164,7 @@ router.get('/feed', async (req, res) => {
 // Post to Feed
 router.post('/feed', async (req, res) => {
   try {
-    const { userId, userName, action, avatarUrl = '', type = 'social' } = req.body;
+    const { userId, userName, action = '', avatarUrl = '', imageUrl = '', type = 'social' } = req.body;
 
     if (getUseFallback()) {
       const data = await readFallbackData();
@@ -174,6 +174,7 @@ router.post('/feed', async (req, res) => {
         userName,
         avatarUrl,
         action,
+        imageUrl,
         type,
         likes: 0,
         likedBy: [],
@@ -185,7 +186,7 @@ router.post('/feed', async (req, res) => {
       return res.json(newPost);
     }
 
-    const newPost = await Feed.create({ userId, userName, avatarUrl, action, type });
+    const newPost = await Feed.create({ userId, userName, avatarUrl, action, imageUrl, type });
     res.json(newPost);
   } catch {
     res.status(500).json({ error: 'Server error posting to feed' });

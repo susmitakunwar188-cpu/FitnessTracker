@@ -14,7 +14,8 @@ const feedSchema = new mongoose.Schema({
   },
   userName: { type: String, required: true },
   avatarUrl: { type: String, default: '' },
-  action: { type: String, required: true }, // e.g. "Completed Leg Day Burner"
+  action: { type: String, default: '' }, // e.g. "Completed Leg Day Burner"
+  imageUrl: { type: String, default: '' },
   type: {
     type: String,
     enum: ['workout', 'run', 'nutrition', 'goal', 'social'],

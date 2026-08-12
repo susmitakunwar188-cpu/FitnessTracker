@@ -1350,149 +1350,158 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeC
         {activeTab === "bmi" && (
           <div className="animate-fadeIn">
             {/* Header */}
-            <div className="mb-10">
-              <h1 className="text-4xl md:text-5xl font-display font-extrabold text-text-primary tracking-tight">
-                BMI &amp; Nutrition Analytics
-              </h1>
-              <p className="font-sans text-text-muted text-base mt-2">Track body mass index, calorie targets, and protein goals in one place</p>
+            <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
+              <div>
+                <h1 className="text-3xl md:text-4xl font-display font-extrabold text-text-primary tracking-tight">
+                  BMI &amp; Nutrition Analytics
+                </h1>
+                <p className="font-sans text-text-muted text-sm mt-1.5">Track body mass index, calorie targets, and protein goals in one place</p>
+              </div>
+              {user?.bmi && (
+                <div className="flex items-center gap-3 rounded-2xl border border-brand-pink/25 bg-card-dark/90 px-4 py-2.5">
+                  <span className="font-display text-3xl font-extrabold text-brand-pink">{user.bmi}</span>
+                  <div>
+                    <p className="font-quick text-[10px] font-bold uppercase tracking-widest text-text-muted">Current BMI</p>
+                    <p className="font-display text-sm font-bold text-text-primary leading-tight">{user.status}</p>
+                  </div>
+                </div>
+              )}
             </div>
 
-            {/* Split Grid to eliminate empty wide margins */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
-              
+            {/* Calculator + Standards reference */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6">
               {/* Left Column: Calculator inputs */}
-              <div className="lg:col-span-7 bg-card-dark backdrop-blur-md rounded-3xl p-8 md:p-10 border border-brand-cocoa/30 shadow-sm flex flex-col justify-between">
+              <div className="lg:col-span-7 bg-card-dark backdrop-blur-md rounded-3xl p-6 border border-brand-cocoa/30 shadow-sm flex flex-col justify-between">
                 <div>
-                  <h2 className="text-2xl md:text-3xl font-display font-bold text-text-primary mb-8 tracking-tight">
+                  <h2 className="text-xl md:text-2xl font-display font-bold text-text-primary mb-5 tracking-tight">
                     BMI Calculator
                   </h2>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-5">
                     <div>
-                      <label className="block text-xs font-bold text-text-muted mb-2.5 uppercase font-quick tracking-wider">Age</label>
+                      <label className="block text-xs font-bold text-text-muted mb-2 uppercase font-quick tracking-wider">Age</label>
                       <input
                         type="number"
                         placeholder="Years"
                         value={age}
                         onChange={(e) => setAge(e.target.value)}
-                        className="glow-input font-sans border-2 border-border-pink rounded-xl p-4 w-full bg-bg-dark text-text-primary text-base focus:border-brand-pink focus:outline-none"
+                        className="glow-input font-sans border-2 border-border-pink rounded-xl p-3 w-full bg-bg-dark text-text-primary text-sm focus:border-brand-pink focus:outline-none"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-bold text-text-muted mb-2.5 uppercase font-quick tracking-wider">Weight (kg)</label>
+                      <label className="block text-xs font-bold text-text-muted mb-2 uppercase font-quick tracking-wider">Weight (kg)</label>
                       <input
                         type="number"
                         placeholder="kg"
                         value={weight}
                         onChange={(e) => setWeight(e.target.value)}
-                        className="glow-input font-sans border-2 border-border-pink rounded-xl p-4 w-full bg-bg-dark text-text-primary text-base focus:border-brand-pink focus:outline-none"
+                        className="glow-input font-sans border-2 border-border-pink rounded-xl p-3 w-full bg-bg-dark text-text-primary text-sm focus:border-brand-pink focus:outline-none"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-bold text-text-muted mb-2.5 uppercase font-quick tracking-wider">Height (cm)</label>
+                      <label className="block text-xs font-bold text-text-muted mb-2 uppercase font-quick tracking-wider">Height (cm)</label>
                       <input
                         type="number"
                         placeholder="cm"
                         value={height}
                         onChange={(e) => setHeight(e.target.value)}
-                        className="glow-input font-sans border-2 border-border-pink rounded-xl p-4 w-full bg-bg-dark text-text-primary text-base focus:border-brand-pink focus:outline-none"
+                        className="glow-input font-sans border-2 border-border-pink rounded-xl p-3 w-full bg-bg-dark text-text-primary text-sm focus:border-brand-pink focus:outline-none"
                       />
                     </div>
                   </div>
                 </div>
                 <button
                   onClick={calculateBMI}
-                  className="glow-button font-display font-bold px-8 py-4 rounded-xl text-base w-full sm:w-auto cursor-pointer"
+                  className="glow-button font-display font-bold px-6 py-3 rounded-xl text-sm w-full sm:w-auto cursor-pointer"
                 >
                   Calculate & Save BMI
                 </button>
               </div>
 
               {/* Right Column: Standard Guidelines reference table */}
-              <div className="lg:col-span-5 bg-card-dark/95 backdrop-blur-md rounded-3xl p-8 border border-brand-cocoa/25 shadow-sm flex flex-col justify-between">
-                <div>
-                  <h3 className="text-xl font-display font-bold text-text-primary mb-4">BMI Standards Reference</h3>
-                  <p className="font-sans text-text-muted text-sm mb-6 leading-relaxed">
-                    Body Mass Index (BMI) is a simplified measurement using height and weight to assess weight categories.
-                  </p>
-                  
-                  <div className="space-y-3.5">
-                    <div className="flex justify-between items-center p-3.5 rounded-xl bg-bg-dark/40 border border-brand-cocoa/20">
-                      <span className="font-sans text-sm text-text-primary">Underweight</span>
-                      <span className="font-display font-bold text-brand-pink text-sm">&lt; 18.5</span>
-                    </div>
-                    <div className="flex justify-between items-center p-3.5 rounded-xl bg-bg-dark/40 border border-brand-cocoa/20">
-                      <span className="font-sans text-sm text-text-primary">Normal Weight</span>
-                      <span className="font-display font-bold text-green-400 text-sm">18.5 – 24.9</span>
-                    </div>
-                    <div className="flex justify-between items-center p-3.5 rounded-xl bg-bg-dark/40 border border-brand-cocoa/20">
-                      <span className="font-sans text-sm text-text-primary">Overweight</span>
-                      <span className="font-display font-bold text-orange-400 text-sm">25.0 – 29.9</span>
-                    </div>
-                    <div className="flex justify-between items-center p-3.5 rounded-xl bg-bg-dark/40 border border-brand-cocoa/20">
-                      <span className="font-sans text-sm text-text-primary">Obese</span>
-                      <span className="font-display font-bold text-red-400 text-sm">&ge; 30.0</span>
-                    </div>
+              <div className="lg:col-span-5 bg-card-dark/95 backdrop-blur-md rounded-3xl p-6 border border-brand-cocoa/25 shadow-sm">
+                <h3 className="text-lg font-display font-bold text-text-primary mb-2">BMI Standards Reference</h3>
+                <p className="font-sans text-text-muted text-xs mb-4 leading-relaxed">
+                  Body Mass Index (BMI) is a simplified measurement using height and weight to assess weight categories.
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-2.5">
+                  <div className="flex justify-between items-center px-3.5 py-2.5 rounded-xl bg-bg-dark/40 border border-brand-cocoa/20">
+                    <span className="font-sans text-sm text-text-primary">Underweight</span>
+                    <span className="font-display font-bold text-brand-pink text-sm">&lt; 18.5</span>
+                  </div>
+                  <div className="flex justify-between items-center px-3.5 py-2.5 rounded-xl bg-bg-dark/40 border border-brand-cocoa/20">
+                    <span className="font-sans text-sm text-text-primary">Normal Weight</span>
+                    <span className="font-display font-bold text-green-400 text-sm">18.5 – 24.9</span>
+                  </div>
+                  <div className="flex justify-between items-center px-3.5 py-2.5 rounded-xl bg-bg-dark/40 border border-brand-cocoa/20">
+                    <span className="font-sans text-sm text-text-primary">Overweight</span>
+                    <span className="font-display font-bold text-orange-400 text-sm">25.0 – 29.9</span>
+                  </div>
+                  <div className="flex justify-between items-center px-3.5 py-2.5 rounded-xl bg-bg-dark/40 border border-brand-cocoa/20">
+                    <span className="font-sans text-sm text-text-primary">Obese</span>
+                    <span className="font-display font-bold text-red-400 text-sm">&ge; 30.0</span>
                   </div>
                 </div>
               </div>
-
             </div>
 
             {/* Calculated BMI Display Card */}
             {user?.bmi && (
-              <div className="bg-chocolate-gradient rounded-3xl p-8 md:p-12 border border-brand-cocoa/40 shadow-sm animate-fadeIn">
-                <div className="text-center">
-                  <p className="font-quick text-xs font-bold text-brand-pink tracking-widest uppercase">YOUR BODY MASS INDEX</p>
-                  <h1 className="text-6xl md:text-7xl font-display font-extrabold text-text-primary my-3 tracking-tight">
-                    {user.bmi}
-                  </h1>
-                  <p className="font-display text-2xl font-bold text-brand-pink mb-6">
-                    {user.status}
-                  </p>
-                  <div className="bg-card-dark rounded-2xl p-5 border border-brand-cocoa/30 max-w-md mx-auto">
-                    <p className="font-display font-bold text-text-primary text-sm tracking-wider uppercase mb-1">Recommended Goal</p>
-                    <p className="font-sans text-text-muted text-sm md:text-base leading-relaxed">{user.goal}</p>
+              <div className="bg-chocolate-gradient rounded-3xl px-6 py-5 border border-brand-cocoa/40 shadow-sm animate-fadeIn mb-6">
+                <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4 text-center">
+                  <div>
+                    <p className="font-quick text-[10px] font-bold text-brand-pink tracking-widest uppercase">Your Body Mass Index</p>
+                    <h1 className="font-display text-6xl font-extrabold text-text-primary tracking-tight">{user.bmi}</h1>
+                  </div>
+                  <div className="h-14 w-px bg-brand-cocoa/30 hidden sm:block" />
+                  <div>
+                    <p className="font-quick text-[10px] font-bold text-text-muted tracking-widest uppercase">Status</p>
+                    <p className="font-display text-2xl font-bold text-brand-pink">{user.status}</p>
+                  </div>
+                  <div className="h-14 w-px bg-brand-cocoa/30 hidden sm:block" />
+                  <div className="bg-card-dark rounded-xl px-5 py-3 border border-brand-cocoa/30 max-w-xs">
+                    <p className="font-display font-bold text-text-primary text-xs tracking-wider uppercase mb-0.5">Recommended Goal</p>
+                    <p className="font-sans text-text-muted text-sm leading-relaxed">{user.goal}</p>
                   </div>
                 </div>
               </div>
             )}
 
-            <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-8">
-              <div className="bg-card-dark backdrop-blur-md rounded-3xl p-8 border border-brand-cocoa/30 shadow-sm">
-                <div className="flex items-center justify-between gap-3 mb-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="bg-card-dark backdrop-blur-md rounded-3xl p-6 border border-brand-cocoa/30 shadow-sm">
+                <div className="flex items-center justify-between gap-3 mb-4">
                   <div>
                     <p className="font-quick text-xs font-bold uppercase tracking-widest text-text-muted">Calorie calculator</p>
-                    <h3 className="text-2xl font-display font-bold text-text-primary mt-2">Daily energy target</h3>
+                    <h3 className="text-xl font-display font-bold text-text-primary mt-1.5">Daily energy target</h3>
                   </div>
                 </div>
 
                 <div className="rounded-2xl border border-brand-pink/20 bg-bg-dark/60 p-5">
                   <p className="font-quick text-[11px] uppercase tracking-widest text-text-muted">Estimated calories</p>
-                  <div className="mt-3 flex items-end gap-2">
+                  <div className="mt-2.5 flex items-end gap-2">
                     <span className="font-display text-4xl font-extrabold text-text-primary">{nutritionTargets.calories || 0}</span>
                     <span className="pb-1 text-sm font-semibold text-text-muted">kcal/day</span>
                   </div>
-                  <p className="mt-3 text-sm text-text-muted">
+                  <p className="mt-2.5 text-sm text-text-muted">
                     Based on your current weight, height, and age using the standard BMR formula.
                   </p>
                 </div>
               </div>
 
-              <div className="bg-card-dark backdrop-blur-md rounded-3xl p-8 border border-brand-cocoa/30 shadow-sm">
-                <div className="flex items-center justify-between gap-3 mb-6">
+              <div className="bg-card-dark backdrop-blur-md rounded-3xl p-6 border border-brand-cocoa/30 shadow-sm">
+                <div className="flex items-center justify-between gap-3 mb-4">
                   <div>
                     <p className="font-quick text-xs font-bold uppercase tracking-widest text-text-muted">Protein calculator</p>
-                    <h3 className="text-2xl font-display font-bold text-text-primary mt-2">Daily protein target</h3>
+                    <h3 className="text-xl font-display font-bold text-text-primary mt-1.5">Daily protein target</h3>
                   </div>
                 </div>
 
                 <div className="rounded-2xl border border-brand-pink/20 bg-bg-dark/60 p-5">
                   <p className="font-quick text-[11px] uppercase tracking-widest text-text-muted">Recommended protein</p>
-                  <div className="mt-3 flex items-end gap-2">
+                  <div className="mt-2.5 flex items-end gap-2">
                     <span className="font-display text-4xl font-extrabold text-text-primary">{nutritionTargets.protein || 0}</span>
                     <span className="pb-1 text-sm font-semibold text-text-muted">g/day</span>
                   </div>
-                  <p className="mt-3 text-sm text-text-muted">
+                  <p className="mt-2.5 text-sm text-text-muted">
                     Standard target: about 1.8 g per kg body weight, adjusted for fat loss or gain goal.
                   </p>
                 </div>
