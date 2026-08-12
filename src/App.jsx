@@ -14,6 +14,16 @@ function App() {
   const [user, setUser] = useState(null);
   const [activeWorkout, setActiveWorkout] = useState(null);
   const [loading, setLoading] = useState(!!localStorage.getItem("token"));
+  const [theme, setTheme] = useState(() => localStorage.getItem("fitique-theme") || "dark");
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("light", theme === "light");
+    localStorage.setItem("fitique-theme", theme);
+  }, [theme]);
+
+  const handleThemeChange = (nextTheme) => {
+    setTheme(nextTheme === "light" ? "light" : "dark");
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -103,6 +113,8 @@ function App() {
           user={user}
           setUser={setUser}
           logout={handleLogout}
+          theme={theme}
+          onThemeChange={handleThemeChange}
           startWorkout={(workout) => {
             setActiveWorkout(workout);
             setPage("details");

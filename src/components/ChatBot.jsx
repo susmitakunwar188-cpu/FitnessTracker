@@ -35,7 +35,7 @@ const formatInline = (text) => {
       return <strong key={i} className="font-bold text-brand-pink">{part.slice(2, -2)}</strong>;
     }
     if (part.startsWith("`") && part.endsWith("`")) {
-      return <code key={i} className="rounded bg-white/10 px-1 py-0.5 font-mono text-[11px] text-brand-cocoa-light">{part.slice(1, -1)}</code>;
+      return <code key={i} className="rounded bg-white/10 px-1 py-0.5 font-mono text-[11px] text-accent-cocoa-light">{part.slice(1, -1)}</code>;
     }
     if (part.startsWith("*") && part.endsWith("*")) {
       return <em key={i} className="italic">{part.slice(1, -1)}</em>;
@@ -70,7 +70,7 @@ const renderMessage = (content) => {
     if (heading) {
       flushList(`ul-${idx}`);
       blocks.push(
-        <p key={idx} className="mb-1 mt-2 font-display font-bold text-white">
+        <p key={idx} className="mb-1 mt-2 font-display font-bold text-text-primary">
           {formatInline(heading[2])}
         </p>
       );
@@ -151,14 +151,14 @@ function ChatBot() {
               <ChatIcon className="h-6 w-6" />
             </div>
             <div className="min-w-0 flex-1">
-              <h3 className="font-display text-base font-bold text-white leading-none">Fitique AI</h3>
+              <h3 className="font-display text-base font-bold text-text-primary leading-none">Fitique AI</h3>
               <p className="mt-1 flex items-center gap-1.5 text-[11px] font-semibold text-green-400">
                 <span className="h-2 w-2 rounded-full bg-green-400"></span> Online · fitness coach
               </p>
             </div>
             <button
               onClick={() => setOpen(false)}
-              className="rounded-xl p-2 text-text-muted transition hover:bg-white/5 hover:text-white cursor-pointer"
+              className="rounded-xl p-2 text-text-muted transition hover:bg-white/10 hover:text-text-primary cursor-pointer"
               aria-label="Close chat"
             >
               <CloseIcon className="h-5 w-5" />
@@ -169,7 +169,7 @@ function ChatBot() {
           <div ref={bodyRef} className="flex-1 space-y-4 overflow-y-auto px-4 py-5 custom-scrollbar">
             {messages.length === 0 && (
               <div className="text-center">
-                <p className="mb-1 font-display text-sm font-bold text-white">Hey! I'm Fitique AI 💪</p>
+                <p className="mb-1 font-display text-sm font-bold text-text-primary">Hey! I'm Fitique AI 💪</p>
                 <p className="mb-5 text-xs leading-relaxed text-text-muted">
                   Ask me anything about workouts, nutrition, or recovery.
                 </p>
@@ -178,7 +178,7 @@ function ChatBot() {
                     <button
                       key={s}
                       onClick={() => sendMessage(s)}
-                      className="w-full rounded-xl border border-brand-cocoa/30 bg-brand-cocoa/10 px-4 py-2.5 text-left text-xs font-semibold text-brand-cocoa-light transition hover:border-brand-cocoa hover:bg-brand-cocoa/20 cursor-pointer"
+                      className="w-full rounded-xl border border-brand-cocoa/30 bg-brand-cocoa/10 px-4 py-2.5 text-left text-xs font-semibold text-accent-cocoa-light transition hover:border-brand-cocoa hover:bg-brand-cocoa/20 cursor-pointer"
                     >
                       {s}
                     </button>
@@ -196,7 +196,7 @@ function ChatBot() {
                   className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
                     m.role === "user"
                       ? "rounded-br-md whitespace-pre-wrap bg-brand-pink text-white"
-                      : "rounded-bl-md border border-border-pink/40 bg-bg-dark/70 text-white"
+                      : "rounded-bl-md border border-border-pink/40 bg-bg-dark/70 text-text-primary"
                   }`}
                 >
                   {m.role === "user" ? m.content : renderMessage(m.content)}
@@ -229,7 +229,7 @@ function ChatBot() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Ask about workouts, nutrition..."
-                className="flex-1 bg-transparent px-3 py-2 text-sm text-white placeholder:text-text-muted/70 focus:outline-none"
+                className="flex-1 bg-transparent px-3 py-2 text-sm text-text-primary placeholder:text-text-muted/70 focus:outline-none"
               />
               <button
                 type="submit"
