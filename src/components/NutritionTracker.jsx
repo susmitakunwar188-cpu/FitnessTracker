@@ -75,20 +75,92 @@ const InfoIcon = ({ className = "h-5 w-5" }) => (
   </svg>
 );
 
-const getGoals = (user) => {
+const getDerivedProfileGoal = (user) => {
+  const weight = Number(user?.weight) || 0;
+  const height = Number(user?.height) || 0;
+  const savedStatus = String(user?.status || '').toLowerCase();
+  const savedGoal = String(user?.goal || '').toLowerCase();
+
+  if (savedGoal) return savedGoal;
+
+  if (weight > 0 && height > 0) {
+    const heightInMeters = height / 100;
+    const bmi = weight / (heightInMeters * heightInMeters);
+
+    if (bmi < 18.5) return 'gain healthy weight';
+    if (bmi < 25) return 'maintain healthy weight';
+    if (bmi < 30) return 'lose weight';
+    return 'lose weight';
+  }
+
+  if (savedStatus.includes('under')) return 'gain healthy weight';
+  if (savedStatus.includes('over') || savedStatus.includes('obese')) return 'lose weight';
+  return 'maintain healthy weight';
+};
+
+const ACTIVITY_LEVELS = [
+  { label: 'Sedentary', value: 1.2, hint: 'Little or no exercise' },
+  { label: 'Light', value: 1.375, hint: 'Exercise 1–3 days/week' },
+  { label: 'Moderate', value: 1.55, hint: 'Exercise 3–5 days/week' },
+  { label: 'Very Active', value: 1.725, hint: 'Exercise 6–7 days/week' },
+  { label: 'Extra Active', value: 1.9, hint: 'Training + physical job' }
+];
+
+const getActivityKey = (userId) => `nutrition_activity_${userId || 'guest'}`;
+
+const loadActivity = (userId) => {
+  if (typeof window === 'undefined') return null;
+  try {
+    const saved = window.localStorage.getItem(getActivityKey(userId));
+    if (saved !== null) {
+      const val = Number(saved);
+      if (val > 0) return val;
+    }
+  } catch {
+    return null;
+  }
+  return null;
+};
+
+const getGoals = (user, activityFactor = 1.375) => {
   const w = Number(user?.weight) || 0;
   const h = Number(user?.height) || 0;
   const age = Number(user?.age) || 0;
+  const status = String(user?.status || '').toLowerCase();
+  const goalText = getDerivedProfileGoal(user);
+
   let calories = 2000;
   let protein = 120;
+
   if (w > 0 && h > 0 && age > 0) {
+    const heightInMeters = h / 100;
+    const bmi = w / (heightInMeters * heightInMeters);
     const bmr = 10 * w + 6.25 * h - 5 * age + 5;
-    calories = Math.round(bmr * 1.375);
-    protein = Math.round(w * 1.8);
+    calories = Math.round(bmr * activityFactor);
+
+    if (goalText.includes('gain') || status.includes('under') || bmi < 18.5) {
+      calories += 300;
+      protein = Math.round(w * 2.1);
+    } else if (goalText.includes('lose') || goalText.includes('loss') || status.includes('over') || status.includes('obese') || bmi >= 25) {
+      calories -= 300;
+      protein = Math.round(w * 1.9);
+    } else {
+      protein = Math.round(w * 1.8);
+    }
   } else if (w > 0) {
-    calories = Math.round(w * 33);
-    protein = Math.round(w * 1.8);
+    calories = Math.round(w * 33 * (activityFactor / 1.375));
+
+    if (goalText.includes('gain')) {
+      calories += 300;
+      protein = Math.round(w * 2.1);
+    } else if (goalText.includes('lose') || goalText.includes('loss')) {
+      calories -= 300;
+      protein = Math.round(w * 1.9);
+    } else {
+      protein = Math.round(w * 1.8);
+    }
   }
+
   const fat = Math.round((calories * 0.25) / 9);
   const carbs = Math.round((calories - protein * 4 - fat * 9) / 4);
   return { calories, protein, carbs, fat };
@@ -165,16 +237,29 @@ export default function NutritionTracker({ user }) {
   const [saving, setSaving] = useState(false);
   const [saveState, setSaveState] = useState(null); // 'saving' | 'saved' | 'error'
   const [mealForm, setMealForm] = useState({ name: '', calories: '', protein: '', carbs: '', fat: '' });
+  const [activityFactor, setActivityFactor] = useState(() => loadActivity(user?.id) || 1.375);
   const saveTimer = useRef(null);
 
   const today = new Date().toISOString().split('T')[0];
-  const goals = getGoals(user);
+  const goals = getGoals(user, activityFactor);
+  const goalText = getDerivedProfileGoal(user);
+  const goalLabel = goalText ? goalText.replace(/\b\w/g, (c) => c.toUpperCase()) : 'Maintain healthy weight';
+  const hasProfile = Number(user?.weight) > 0 && Number(user?.height) > 0;
   const remaining = goals.calories - data.calories;
   const pct = goals.calories > 0 ? Math.min(Math.round((data.calories / goals.calories) * 100), 100) : 0;
   const RING_R = 64;
   const RING_C = 2 * Math.PI * RING_R;
   const ringOffset = RING_C - (pct / 100) * RING_C;
   const overGoal = remaining < 0;
+
+  const handleActivityChange = (value) => {
+    setActivityFactor(value);
+    try {
+      window.localStorage.setItem(getActivityKey(user.id), JSON.stringify(value));
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   useEffect(() => {
     if (!user) return;
@@ -320,7 +405,36 @@ export default function NutritionTracker({ user }) {
           </div>
         </div>
       </div>
-      <p className="mb-5 text-[12px] text-text-muted/70">Daily goal is auto-estimated from your profile stats (age, weight, height) — defaults to 2000 kcal.</p>
+      <div className="mb-5 rounded-2xl border border-border-pink/40 bg-bg-dark/60 p-5">
+        <p className="mb-3 flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-text-muted font-quick">
+          <TargetIcon className="h-3.5 w-3.5 text-brand-pink" /> Activity Level
+        </p>
+        <div className="flex flex-wrap gap-2">
+          {ACTIVITY_LEVELS.map((a) => {
+            const active = Math.abs(activityFactor - a.value) < 0.0001;
+            return (
+              <button
+                key={a.value}
+                type="button"
+                onClick={() => handleActivityChange(a.value)}
+                title={a.hint}
+                className={`rounded-full px-4 py-2.5 text-xs font-bold transition-colors ${active
+                  ? 'bg-brand-pink text-white shadow-sm'
+                  : 'border border-border-pink bg-bg-dark text-text-muted hover:border-brand-pink hover:text-text-primary'}`}
+              >
+                {a.label}
+              </button>
+            );
+          })}
+        </div>
+        <p className="mt-3 text-[12px] leading-relaxed text-text-muted/70">
+          Your <span className="font-bold text-text-primary">{goalLabel}</span> goal of{' '}
+          <span className="font-bold text-text-primary">{goals.calories} kcal</span> and{' '}
+          <span className="font-bold text-text-primary">{goals.protein} g protein</span> is calculated from your
+          weight, height, age and activity using the standard formula — carbs and fat follow automatically.
+          {!hasProfile && ' Add your weight and height to your profile for a fully personalized target.'}
+        </p>
+      </div>
 
       <div className="mb-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         <MacroBar label="Calories" icon={<FlameIcon />} value={data.calories} goal={goals.calories} barClass="from-brand-pink to-brand-pink-hover" />
