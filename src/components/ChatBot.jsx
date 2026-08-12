@@ -144,7 +144,7 @@ function ChatBot() {
 
       {/* Chat window */}
       {open && (
-          <div className="fixed bottom-24 right-6 z-[100] flex h-[560px] max-h-[calc(100vh-8rem)] w-[380px] max-w-[calc(100vw-3rem)] flex-col overflow-hidden rounded-[1.75rem] border border-brand-pink/25 bg-card-dark/95 shadow-[0_30px_80px_rgba(0,0,0,0.7)] backdrop-blur-2xl animate-fadeIn">
+          <div className="fixed bottom-24 right-6 z-[100] flex h-[560px] max-h-[calc(100vh-8rem)] w-[380px] max-w-[calc(100vw-3rem)] flex-col overflow-hidden rounded-2xl border border-brand-pink/25 bg-card-dark/95 backdrop-blur-2xl animate-fadeIn">
           {/* Header */}
           <div className="flex items-center gap-3 border-b border-border-pink/40 bg-sidebar-gradient px-5 py-4">
             <div className="flex h-11 w-11 items-center justify-center rounded-full bg-brand-pink text-white">

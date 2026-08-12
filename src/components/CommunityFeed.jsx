@@ -123,7 +123,7 @@ export default function CommunityFeed({ user }) {
   };
 
   return (
-    <div className="bg-card-dark rounded-3xl p-6 border border-brand-cocoa/30 shadow-xl animate-fadeIn h-[620px] flex flex-col">
+    <div className="bg-card-dark rounded-3xl p-6 border border-brand-cocoa/30 shadow-sm animate-fadeIn h-[620px] flex flex-col">
       <div className="mb-4 flex items-center justify-between gap-3 border-b border-border-pink/30 pb-4">
         <div className="flex items-center gap-3">
           <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-brand-pink/25 bg-brand-pink/10">

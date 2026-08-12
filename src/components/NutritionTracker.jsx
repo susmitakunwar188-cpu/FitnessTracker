@@ -245,7 +245,7 @@ export default function NutritionTracker({ user }) {
   if (loading) return <div className="text-text-primary text-center py-8">Loading Nutrition...</div>;
 
   return (
-    <div className="bg-card-dark rounded-3xl p-6 border border-brand-cocoa/30 shadow-xl animate-fadeIn">
+    <div className="bg-card-dark rounded-3xl p-6 border border-brand-cocoa/30 shadow-sm animate-fadeIn">
       <div className="mb-5 flex items-center gap-3 border-b border-border-pink/30 pb-4">
         <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-brand-pink/25 bg-brand-pink/10">
           <NutritionIcon />

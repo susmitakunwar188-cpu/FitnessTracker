@@ -20,8 +20,8 @@
   --soft-pill-bg: rgba(239, 111, 143, 0.12);
   --soft-pill-text: #F7C6D3;
   --soft-pill-border: rgba(239, 111, 143, 0.2);
-  --sidebar-bg: linear-gradient(180deg, #080812 0%, #06060E 55%, #030308 100%);
-  --chocolate-bg: linear-gradient(135deg, #0A0A14 0%, #151522 50%, #05050A 100%);
+  --sidebar-bg: #080812;
+  --chocolate-bg: #0A0A14;
   --scrollbar-track: rgba(11, 9, 9, 0.95);
 }
 
@@ -44,8 +44,8 @@
   --soft-pill-bg: rgba(255, 46, 147, 0.08);
   --soft-pill-text: #C21E6E;
   --soft-pill-border: rgba(255, 46, 147, 0.25);
-  --sidebar-bg: linear-gradient(180deg, #FFFFFF 0%, #F0F3F9 55%, #E9EDF5 100%);
-  --chocolate-bg: linear-gradient(135deg, #FFFFFF 0%, #F2F5FA 50%, #E9EDF5 100%);
+  --sidebar-bg: #F0F3F9;
+  --chocolate-bg: #FFFFFF;
   --scrollbar-track: rgba(220, 224, 235, 0.9);
 }
 
@@ -115,7 +115,7 @@ body {
 .glass-panel {
   background: var(--panel-bg);
   border: 1px solid var(--panel-border);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
 }
@@ -123,7 +123,7 @@ body {
 .glass-panel-strong {
   background: var(--panel-bg-strong);
   border: 1px solid var(--panel-border-strong);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
 }
@@ -131,7 +131,7 @@ body {
 .surface-card {
   background: var(--surface-bg);
   border: 1px solid var(--surface-border);
-  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   transition: border-color 0.3s ease, transform 0.3s ease;
@@ -183,25 +183,25 @@ body {
 .glow-button {
   background: var(--color-brand-pink);
   color: #FFFFFF;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   transition: background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .glow-button:hover {
   background: var(--color-brand-pink-hover);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.22);
 }
 
 .glow-button-cocoa {
   background: var(--color-brand-cocoa-hover);
   color: #FFFFFF;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   transition: background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .glow-button-cocoa:hover {
   background: var(--color-brand-cocoa);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.22);
 }
 
 .glow-input {

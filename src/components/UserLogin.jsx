@@ -149,7 +149,7 @@ function UserLogin({ goHome, onLoginSuccess, showRegister }) {
 
   return (
     <div className="page-shell flex items-center justify-center p-6 md:p-12 lg:p-16">
-      <div className="glass-panel relative flex min-h-[660px] w-full max-w-5xl flex-col overflow-hidden rounded-[2rem] border border-border-pink/40 lg:flex-row">
+      <div className="glass-panel relative flex min-h-[660px] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-border-pink/40 lg:flex-row">
         
         {/* Floating Close Button at top-right corner to exit/go home */}
         <button
@@ -169,7 +169,7 @@ function UserLogin({ goHome, onLoginSuccess, showRegister }) {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
           <div className="absolute bottom-10 left-10 right-10 z-10">
-            <p className="font-display text-2xl font-bold text-white mb-2 drop-shadow-md">Forge Your Legacy</p>
+            <p className="font-display text-2xl font-bold text-white mb-2">Forge Your Legacy</p>
             <p className="font-sans text-accent-cocoa-light text-sm font-semibold">Join thousands of athletes track their daily progression.</p>
           </div>
         </div>
@@ -279,7 +279,7 @@ function UserLogin({ goHome, onLoginSuccess, showRegister }) {
                 <div className="mt-4.5">
                   <button
                     onClick={handleGoogleLogin}
-                    className="w-full bg-brand-cocoa/10 hover:bg-brand-cocoa/20 text-text-primary border border-brand-cocoa/40 hover:border-brand-cocoa py-4 rounded-xl font-display text-sm font-semibold transition duration-200 flex items-center justify-center gap-3.5 shadow-md shadow-brand-cocoa/5 cursor-pointer"
+                    className="w-full bg-brand-cocoa/10 hover:bg-brand-cocoa/20 text-text-primary border border-brand-cocoa/40 hover:border-brand-cocoa py-4 rounded-xl font-display text-sm font-semibold transition duration-200 flex items-center justify-center gap-3.5 cursor-pointer"
                   >
                     <GoogleIcon />
                     <span>Continue with Google</span>

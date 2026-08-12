@@ -246,7 +246,7 @@ function WorkoutDetails({ workout, goDashboard, user }) {
 
   return (
     <div className="page-shell flex items-center justify-center p-6 md:p-12 lg:p-16">
-      <div className="glass-panel-strong w-full max-w-5xl rounded-[2rem] border border-border-pink/40 p-8 shadow-[0_25px_65px_rgba(0,0,0,0.7)] md:p-12">
+      <div className="glass-panel-strong w-full max-w-5xl rounded-2xl border border-border-pink/40 p-8 md:p-12">
         
         {/* Header */}
         <div className="flex items-center justify-between gap-4 mb-8 pb-6 border-b border-border-pink/30 flex-wrap">
@@ -259,20 +259,20 @@ function WorkoutDetails({ workout, goDashboard, user }) {
           <div className="flex items-center gap-3">
             <button
               onClick={handleFinishWorkout}
-              className="bg-green-600 hover:bg-green-500 text-white font-display font-bold px-6 py-3 rounded-full shadow-lg shadow-green-500/10 hover:shadow-green-500/25 transition duration-200 cursor-pointer text-sm"
+              className="bg-green-600 hover:bg-green-500 text-white font-display font-bold px-6 py-3 rounded-full shadow-sm transition duration-200 cursor-pointer text-sm"
             >
               ✓ Finish Workout
             </button>
             <button
               onClick={goDashboard}
-              className="glow-button-cocoa font-display font-bold px-6 py-3 rounded-full shadow-lg transition duration-200 cursor-pointer text-sm"
+              className="glow-button-cocoa font-display font-bold px-6 py-3 rounded-full shadow-sm transition duration-200 cursor-pointer text-sm"
             >
               ← Back to Dashboard
             </button>
           </div>
         </div>
 
-        <div className="mb-8 overflow-hidden rounded-[2rem] border border-brand-cocoa/30 bg-bg-dark shadow-lg">
+        <div className="mb-8 overflow-hidden rounded-2xl border border-brand-cocoa/30 bg-bg-dark shadow-sm">
           <img
             src={getWorkoutVisual(workout)}
             alt={`${workoutName} workout preview`}
@@ -287,7 +287,7 @@ function WorkoutDetails({ workout, goDashboard, user }) {
         )}
 
         {streakMessage && (
-          <div className={`mb-8 rounded-2xl border px-6 py-4 text-center font-display font-bold shadow-lg ${streakMessage.includes("Congratulations") ? "border-brand-pink/40 bg-brand-pink/20 text-text-primary" : "border-amber-500/40 bg-amber-500/15 text-amber-600"}`}>
+          <div className={`mb-8 rounded-2xl border px-6 py-4 text-center font-display font-bold shadow-sm ${streakMessage.includes("Congratulations") ? "border-brand-pink/40 bg-brand-pink/20 text-text-primary" : "border-amber-500/40 bg-amber-500/15 text-amber-600"}`}>
             {streakMessage}
           </div>
         )}
@@ -350,7 +350,7 @@ function WorkoutDetails({ workout, goDashboard, user }) {
                 <div
                   className={`w-7 h-7 rounded-xl flex items-center justify-center border transition-all duration-300 ${
                     completedExercises[idx]
-                      ? "bg-green-500 border-green-500 text-white scale-110 shadow-lg shadow-green-500/20"
+                      ? "bg-green-500 border-green-500 text-white scale-110 shadow-sm"
                       : "border-border-pink/80 hover:border-brand-pink"
                   }`}
                 >
@@ -369,7 +369,7 @@ function WorkoutDetails({ workout, goDashboard, user }) {
             <h3 className="text-xs font-semibold text-text-muted tracking-widest uppercase font-quick mb-2">Workout Companion Timers</h3>
             
             {/* Stopwatch Widget */}
-            <div className="bg-card-dark/90 rounded-3xl border border-brand-cocoa/40 p-6 shadow-xl flex flex-col justify-between">
+            <div className="bg-card-dark/90 rounded-3xl border border-brand-cocoa/40 p-6 shadow-sm flex flex-col justify-between">
               <div className="mb-4">
                 <p className="font-quick text-xs font-bold text-text-muted tracking-widest uppercase">Workout Time</p>
                 <div className="font-mono text-4xl md:text-5xl font-extrabold text-text-primary mt-2 tracking-tight">
@@ -411,7 +411,7 @@ function WorkoutDetails({ workout, goDashboard, user }) {
             </div>
 
             {/* Rest Countdown Timer Widget */}
-            <div className="bg-card-dark/90 rounded-3xl border border-brand-cocoa/40 p-6 shadow-xl flex flex-col justify-between">
+            <div className="bg-card-dark/90 rounded-3xl border border-brand-cocoa/40 p-6 shadow-sm flex flex-col justify-between">
               <div className="mb-5">
                 <p className="font-quick text-xs font-bold text-text-muted tracking-widest uppercase mb-2">Rest Interval Timer</p>
                 
@@ -423,7 +423,7 @@ function WorkoutDetails({ workout, goDashboard, user }) {
                       onClick={() => handleSetPreset(sec)}
                       className={`text-xs font-display font-bold px-3.5 py-2 rounded-xl transition cursor-pointer border ${
                         initialCountdown === sec
-                          ? "bg-brand-cocoa border-brand-cocoa text-white shadow-md shadow-brand-cocoa/25"
+                          ? "bg-brand-cocoa border-brand-cocoa text-white shadow-sm"
                           : "bg-bg-dark/60 border-brand-cocoa/20 text-text-muted hover:text-text-primary hover:border-brand-cocoa/40"
                       }`}
                     >
@@ -456,7 +456,7 @@ function WorkoutDetails({ workout, goDashboard, user }) {
                   className={`flex-1 flex items-center justify-center gap-2 font-display font-bold py-3 px-4 rounded-xl text-sm transition-all duration-200 cursor-pointer shadow-md ${
                     isCountdownRunning
                       ? "bg-amber-600/20 hover:bg-amber-600/30 text-amber-400 border border-amber-500/30"
-                      : "bg-brand-cocoa hover:bg-brand-cocoa-hover text-white shadow-lg shadow-brand-cocoa/20"
+                      : "bg-brand-cocoa hover:bg-brand-cocoa-hover text-white shadow-sm"
                   }`}
                   disabled={countdownTime === 0}
                 >

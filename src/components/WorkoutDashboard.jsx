@@ -615,7 +615,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeC
             </div>
 
             <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
-              <form onSubmit={handleSaveProfile} className="bg-card-dark/90 rounded-[2rem] border border-brand-cocoa/40 p-8 shadow-[0_20px_50px_rgba(0,0,0,0.35)]">
+              <form onSubmit={handleSaveProfile} className="bg-card-dark/90 rounded-2xl border border-brand-cocoa/40 p-8">
                 {profileMessage && (
                   <div className="mb-6 rounded-xl border border-brand-pink/30 bg-brand-pink/10 px-4 py-3 text-sm text-brand-pink">
                     {profileMessage}
@@ -709,11 +709,11 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeC
                 </div>
               </form>
 
-              <div className="rounded-[2rem] border border-border-pink/40 bg-card-dark/80 p-8 shadow-[0_20px_50px_rgba(0,0,0,0.25)]">
+              <div className="rounded-2xl border border-border-pink/40 bg-card-dark/80 p-8">
                 <p className="mb-4 text-xs font-semibold uppercase tracking-[0.25em] text-text-muted">
                   Profile Preview
                 </p>
-                <div className="rounded-[1.6rem] border border-border-pink/30 bg-bg-dark/70 p-6">
+                <div className="rounded-2xl border border-border-pink/30 bg-bg-dark/70 p-6">
                   <div className="flex items-center gap-4">
                     <img
                       src={profileForm.avatarUrl || profilePlaceholder}
@@ -750,7 +750,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeC
 
             {/* Stats Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-              <div className="bg-card-dark rounded-3xl p-8 border border-brand-cocoa/30 hover:border-brand-pink/40 hover:-translate-y-1 transition duration-300 shadow-xl shadow-black/10">
+              <div className="bg-card-dark rounded-3xl p-8 border border-brand-cocoa/30 hover:border-brand-pink/40 hover:-translate-y-1 transition duration-300 shadow-sm">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-quick text-xs font-bold text-text-muted tracking-widest uppercase mb-1">Total Workouts</p>
@@ -764,7 +764,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeC
                 </div>
               </div>
 
-              <div className="bg-card-dark rounded-3xl p-8 border border-brand-cocoa/30 hover:border-brand-pink/40 hover:-translate-y-1 transition duration-300 shadow-xl shadow-black/10">
+              <div className="bg-card-dark rounded-3xl p-8 border border-brand-cocoa/30 hover:border-brand-pink/40 hover:-translate-y-1 transition duration-300 shadow-sm">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-quick text-xs font-bold text-text-muted tracking-widest uppercase mb-1">Current BMI</p>
@@ -778,7 +778,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeC
                 </div>
               </div>
 
-              <div className="bg-card-dark rounded-3xl p-8 border border-brand-cocoa/30 hover:border-brand-pink/40 hover:-translate-y-1 transition duration-300 shadow-xl shadow-black/10">
+              <div className="bg-card-dark rounded-3xl p-8 border border-brand-cocoa/30 hover:border-brand-pink/40 hover:-translate-y-1 transition duration-300 shadow-sm">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-quick text-xs font-bold text-text-muted tracking-widest uppercase mb-1">Weekly Goal</p>
@@ -796,7 +796,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeC
             {/* Hydration & Weekly Streaks Panel */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
               {/* Water Intake Tracker */}
-              <div className="bg-card-dark rounded-3xl p-8 border border-brand-cocoa/30 shadow-xl shadow-black/10 animate-fadeIn">
+              <div className="bg-card-dark rounded-3xl p-8 border border-brand-cocoa/30 shadow-sm animate-fadeIn">
                 <div className="flex justify-between items-start mb-6">
                   <div>
                     <h3 className="font-display text-xl font-bold text-text-primary">Daily Hydration Log</h3>
@@ -846,7 +846,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeC
               </div>
 
               {/* Weekly Streak & Active Days */}
-              <div className="bg-card-dark rounded-3xl p-8 border border-brand-cocoa/30 shadow-xl shadow-black/10 animate-fadeIn">
+              <div className="bg-card-dark rounded-3xl p-8 border border-brand-cocoa/30 shadow-sm animate-fadeIn">
                 <div className="flex justify-between items-start mb-6">
                   <div>
                     <h3 className="font-display text-xl font-bold text-text-primary">Active Training Days</h3>
@@ -889,7 +889,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeC
             </div>
 
             {/* Recent Activities Feed */}
-            <div className="bg-card-dark rounded-3xl p-8 border border-brand-cocoa/30 shadow-xl shadow-black/10 mb-12 animate-fadeIn">
+            <div className="bg-card-dark rounded-3xl p-8 border border-brand-cocoa/30 shadow-sm mb-12 animate-fadeIn">
               <div className="flex justify-between items-center mb-6 flex-wrap gap-4">
                 <div>
                   <h3 className="font-display text-xl font-bold text-text-primary">Recent Completed Sessions</h3>
@@ -960,7 +960,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeC
             </div>
 
             {/* Achievements & Badges */}
-            <div className="bg-card-dark rounded-3xl p-8 border border-brand-pink/30 shadow-xl shadow-black/10 mb-12 animate-fadeIn">
+            <div className="bg-card-dark rounded-3xl p-8 border border-brand-pink/30 shadow-sm mb-12 animate-fadeIn">
               <div className="mb-6">
                 <h3 className="font-display text-xl font-bold text-text-primary">Achievements & Badges</h3>
                 <p className="font-sans text-text-muted text-sm mt-1">Unlock badges by reaching new fitness milestones</p>
@@ -996,7 +996,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeC
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
                 {["Upper Body", "Cardio", "HIIT"].map((workout) => (
-                  <div key={workout} className="bg-card-dark rounded-3xl p-6 border border-brand-cocoa/30 flex items-center justify-between shadow-md">
+                  <div key={workout} className="bg-card-dark rounded-3xl p-6 border border-brand-cocoa/30 flex items-center justify-between shadow-sm">
                     <span className="font-display font-bold text-text-primary text-lg">{workout}</span>
                     <span className="bg-brand-cocoa/20 border border-brand-cocoa/30 text-accent-cocoa-light text-xs font-bold px-3 py-1.5 rounded-full uppercase font-quick">
                       Recommended
@@ -1007,7 +1007,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeC
             </div>
 
             {/* Short quick link summary */}
-            <div className="bg-card-dark rounded-3xl p-8 border border-brand-cocoa/30 shadow-lg flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="bg-card-dark rounded-3xl p-8 border border-brand-cocoa/30 shadow-sm flex flex-col md:flex-row justify-between items-center gap-6">
               <div>
                 <h3 className="font-display text-xl font-bold text-text-primary">Customize Your Routine</h3>
                 <p className="font-sans text-text-muted text-sm mt-1">Add, edit, or remove workout categories inside the Log panel.</p>
@@ -1081,7 +1081,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeC
 
             {/* Edit Workout Block */}
             {editingId && (
-              <div className="bg-card-dark rounded-[2rem] p-6 md:p-8 mb-8 border border-brand-cocoa/45 shadow-2xl animate-fadeIn">
+              <div className="bg-card-dark rounded-2xl p-6 md:p-8 mb-8 border border-brand-cocoa/45 shadow-sm animate-fadeIn">
                 <h3 className="text-xl font-display font-bold text-text-primary mb-6 border-b border-border-pink/30 pb-4">
                   Edit Workout Plan
                 </h3>
@@ -1232,7 +1232,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeC
                 {workouts.map((workout) => (
                   <div
                     key={workout.id}
-                    className="bg-card-dark rounded-[1.8rem] p-6 md:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between border border-brand-cocoa/30 hover:border-brand-pink/20 hover:shadow-lg hover:shadow-brand-cocoa/5 transition duration-200 gap-6"
+                    className="bg-card-dark rounded-2xl p-6 md:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between border border-brand-cocoa/30 hover:border-brand-pink/20 transition duration-200 gap-6"
                   >
                     <div className="flex items-center gap-6">
                       <div className="w-24 h-20 overflow-hidden rounded-2xl border border-brand-cocoa/20 bg-bg-dark shadow-inner">
@@ -1255,7 +1255,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeC
                     <div className="relative flex items-center gap-4 w-full sm:w-auto justify-end">
                       <button
                         onClick={() => startWorkout(workout)}
-                        className="glow-button font-display font-bold px-6 py-2.5 rounded-full text-sm shadow-md cursor-pointer"
+                        className="glow-button font-display font-bold px-6 py-2.5 rounded-full text-sm cursor-pointer"
                       >
                         Start Workout
                       </button>
@@ -1266,7 +1266,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeC
                         ⋮
                       </button>
                       {menuOpen === workout.id && (
-                        <div className="absolute right-0 top-12 bg-bg-dark rounded-2xl shadow-2xl border border-brand-cocoa/40 w-44 overflow-hidden z-20">
+                        <div className="absolute right-0 top-12 bg-bg-dark rounded-2xl shadow-sm border border-brand-cocoa/40 w-44 overflow-hidden z-20">
                           <button
                             onClick={() => startEdit(workout)}
                             className="w-full text-left px-5 py-3.5 font-sans text-sm hover:bg-card-dark text-text-primary hover:text-brand-pink transition flex items-center gap-2.5 cursor-pointer"
@@ -1306,7 +1306,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeC
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
               
               {/* Left Column: Calculator inputs */}
-              <div className="lg:col-span-7 bg-card-dark backdrop-blur-md rounded-3xl p-8 md:p-10 border border-brand-cocoa/30 shadow-xl flex flex-col justify-between">
+              <div className="lg:col-span-7 bg-card-dark backdrop-blur-md rounded-3xl p-8 md:p-10 border border-brand-cocoa/30 shadow-sm flex flex-col justify-between">
                 <div>
                   <h2 className="text-2xl md:text-3xl font-display font-bold text-text-primary mb-8 tracking-tight">
                     BMI Calculator
@@ -1353,7 +1353,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeC
               </div>
 
               {/* Right Column: Standard Guidelines reference table */}
-              <div className="lg:col-span-5 bg-card-dark/95 backdrop-blur-md rounded-3xl p-8 border border-brand-cocoa/25 shadow-xl flex flex-col justify-between">
+              <div className="lg:col-span-5 bg-card-dark/95 backdrop-blur-md rounded-3xl p-8 border border-brand-cocoa/25 shadow-sm flex flex-col justify-between">
                 <div>
                   <h3 className="text-xl font-display font-bold text-text-primary mb-4">BMI Standards Reference</h3>
                   <p className="font-sans text-text-muted text-sm mb-6 leading-relaxed">
@@ -1385,7 +1385,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeC
 
             {/* Calculated BMI Display Card */}
             {user?.bmi && (
-              <div className="bg-chocolate-gradient rounded-3xl p-8 md:p-12 border border-brand-cocoa/40 shadow-2xl animate-fadeIn">
+              <div className="bg-chocolate-gradient rounded-3xl p-8 md:p-12 border border-brand-cocoa/40 shadow-sm animate-fadeIn">
                 <div className="text-center">
                   <p className="font-quick text-xs font-bold text-brand-pink tracking-widest uppercase">YOUR BODY MASS INDEX</p>
                   <h1 className="text-6xl md:text-7xl font-display font-extrabold text-text-primary my-3 tracking-tight">

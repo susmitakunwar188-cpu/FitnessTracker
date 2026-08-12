@@ -146,7 +146,7 @@ function HomePage({ user, showLogin, showRegister, goDashboard, logout }) {
         </div>
         
         <div className="flex w-full flex-1 justify-center lg:w-auto">
-          <div className="glass-panel group relative aspect-[4/3] w-full max-w-2xl overflow-hidden rounded-[2rem] border border-border-pink lg:max-w-3xl">
+          <div className="glass-panel group relative aspect-[4/3] w-full max-w-2xl overflow-hidden rounded-2xl border border-border-pink lg:max-w-3xl">
             <img
               src="https://i.pinimg.com/736x/3c/56/b7/3c56b7bef8716d87e304c1eab3d3c23e.jpg"
               alt="Fitness motivation dumbbell artwork"
@@ -167,7 +167,7 @@ function HomePage({ user, showLogin, showRegister, goDashboard, logout }) {
             </p>
           </div>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-            <div className="surface-card flex min-h-[20rem] flex-col items-start rounded-[2rem] p-8 transition duration-300 hover:-translate-y-2 hover:border-brand-pink/40">
+            <div className="surface-card flex min-h-[20rem] flex-col items-start rounded-2xl p-8 transition duration-300 hover:-translate-y-2 hover:border-brand-pink/40">
             <div className="mb-8 flex h-16 w-16 items-center justify-center rounded-2xl bg-border-pink/30 border border-brand-pink/20">
               <ProgressIcon />
             </div>
@@ -176,7 +176,7 @@ function HomePage({ user, showLogin, showRegister, goDashboard, logout }) {
               Register an account to securely save and track your workout routines dynamically, anywhere, anytime.
             </p>
           </div>
-            <div className="surface-card flex min-h-[20rem] flex-col items-start rounded-[2rem] p-8 transition duration-300 hover:-translate-y-2 hover:border-brand-pink/40">
+            <div className="surface-card flex min-h-[20rem] flex-col items-start rounded-2xl p-8 transition duration-300 hover:-translate-y-2 hover:border-brand-pink/40">
               <div className="mb-8 flex h-16 w-16 items-center justify-center rounded-2xl border border-brand-pink/20 bg-border-pink/20">
                 <BmiIcon />
               </div>
@@ -185,7 +185,7 @@ function HomePage({ user, showLogin, showRegister, goDashboard, logout }) {
                 Keep tabs on weight status. Calculate body mass index in real-time, matching goals to your dynamic stats.
               </p>
             </div>
-            <div className="surface-card flex min-h-[20rem] flex-col items-start rounded-[2rem] p-8 transition duration-300 hover:-translate-y-2 hover:border-brand-pink/40">
+            <div className="surface-card flex min-h-[20rem] flex-col items-start rounded-2xl p-8 transition duration-300 hover:-translate-y-2 hover:border-brand-pink/40">
               <div className="mb-8 flex h-16 w-16 items-center justify-center rounded-2xl border border-brand-pink/20 bg-border-pink/20">
                 <WorkoutIcon />
               </div>
@@ -206,7 +206,7 @@ function HomePage({ user, showLogin, showRegister, goDashboard, logout }) {
             Want to say hello or ask a question? We’d love to hear from you.
           </p>
         </div>
-        <form onSubmit={handleSubmit} className="glass-panel rounded-[2rem] border border-border-pink p-8 md:p-12">
+        <form onSubmit={handleSubmit} className="glass-panel rounded-2xl border border-border-pink p-8 md:p-12">
           <div className="mb-8">
             <label className="block text-sm font-bold text-text-muted mb-3 tracking-widest font-quick uppercase">EMAIL ADDRESS</label>
             <input
