@@ -1,5 +1,7 @@
 const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
+const CSRF_KEY = 'csrfToken';
+
 const parseJsonResponse = async (res) => {
   const text = await res.text();
   if (!text) return null;
@@ -17,6 +19,30 @@ const getHeaders = () => {
     'Content-Type': 'application/json',
     ...(token ? { 'Authorization': `Bearer ${token}` } : {})
   };
+};
+
+// State-changing requests also send the CSRF token (defense-in-depth; the
+// backend rejects non-safe requests without a valid X-CSRF-Token header).
+const getMutationHeaders = () => {
+  const headers = getHeaders();
+  const csrf = localStorage.getItem(CSRF_KEY);
+  if (csrf) headers['X-CSRF-Token'] = csrf;
+  return headers;
+};
+
+const storeSession = (data) => {
+  if (data?.token) localStorage.setItem('token', data.token);
+  if (data?.csrfToken) localStorage.setItem(CSRF_KEY, data.csrfToken);
+  return data;
+};
+
+export const session = {
+  getToken: () => localStorage.getItem('token'),
+  getCsrfToken: () => localStorage.getItem(CSRF_KEY),
+  clear() {
+    localStorage.removeItem('token');
+    localStorage.removeItem(CSRF_KEY);
+  }
 };
 
 const getStoredData = (key, fallback = []) => {
@@ -63,7 +89,7 @@ export const api = {
     });
     const data = await parseJsonResponse(res);
     if (!res.ok) throw new Error(data?.error || data?.message || 'Login failed');
-    return data;
+    return storeSession(data);
   },
 
   async register(email, password) {
@@ -74,7 +100,7 @@ export const api = {
     });
     const data = await parseJsonResponse(res);
     if (!res.ok) throw new Error(data?.error || data?.message || 'Registration failed');
-    return data;
+    return storeSession(data);
   },
 
   async getProfile() {
@@ -89,7 +115,7 @@ export const api = {
   async updateProfile(stats) {
     const res = await fetch(`${API_BASE_URL}/auth/profile`, {
       method: 'PUT',
-      headers: getHeaders(),
+      headers: getMutationHeaders(),
       body: JSON.stringify(stats)
     });
     const data = await parseJsonResponse(res);
@@ -131,22 +157,22 @@ export const api = {
     }, 'dashboard_workouts', []);
   },
 
-  async createWorkout(name, exercises) {
+  async createWorkout(name, exercises, imageUrl) {
     const res = await fetch(`${API_BASE_URL}/workouts`, {
       method: 'POST',
-      headers: getHeaders(),
-      body: JSON.stringify({ name, exercises })
+      headers: getMutationHeaders(),
+      body: JSON.stringify({ name, exercises, imageUrl })
     });
     const data = await parseJsonResponse(res);
     if (!res.ok) throw new Error(data?.error || data?.message || 'Failed to create workout');
     return data;
   },
 
-  async updateWorkout(id, name, exercises) {
+  async updateWorkout(id, name, exercises, imageUrl) {
     const res = await fetch(`${API_BASE_URL}/workouts/${id}`, {
       method: 'PUT',
-      headers: getHeaders(),
-      body: JSON.stringify({ name, exercises })
+      headers: getMutationHeaders(),
+      body: JSON.stringify({ name, exercises, imageUrl })
     });
     const data = await parseJsonResponse(res);
     if (!res.ok) throw new Error(data?.error || data?.message || 'Failed to update workout');
@@ -156,7 +182,7 @@ export const api = {
   async deleteWorkout(id) {
     const res = await fetch(`${API_BASE_URL}/workouts/${id}`, {
       method: 'DELETE',
-      headers: getHeaders()
+      headers: getMutationHeaders()
     });
     const data = await parseJsonResponse(res);
     if (!res.ok) throw new Error(data?.error || data?.message || 'Failed to delete workout');
@@ -177,7 +203,7 @@ export const api = {
   async logWorkoutHistory(workoutName, duration, completedExercises) {
     const res = await fetch(`${API_BASE_URL}/workouts/history`, {
       method: 'POST',
-      headers: getHeaders(),
+      headers: getMutationHeaders(),
       body: JSON.stringify({ workoutName, duration, completedExercises })
     });
     const data = await parseJsonResponse(res);
@@ -188,7 +214,7 @@ export const api = {
   async clearWorkoutHistory() {
     const res = await fetch(`${API_BASE_URL}/workouts/history/all`, {
       method: 'DELETE',
-      headers: getHeaders()
+      headers: getMutationHeaders()
     });
     const data = await parseJsonResponse(res);
     if (!res.ok) throw new Error(data?.error || data?.message || 'Failed to clear history');
@@ -208,7 +234,7 @@ export const api = {
   async updateNutrition(nutritionData) {
     const res = await fetch(`${API_BASE_URL}/features/nutrition`, {
       method: 'POST',
-      headers: getHeaders(),
+      headers: getMutationHeaders(),
       body: JSON.stringify(nutritionData)
     });
     const data = await parseJsonResponse(res);
@@ -238,7 +264,7 @@ export const api = {
   async updateSleep(sleepData) {
     const res = await fetch(`${API_BASE_URL}/features/sleep`, {
       method: 'POST',
-      headers: getHeaders(),
+      headers: getMutationHeaders(),
       body: JSON.stringify(sleepData)
     });
     const data = await parseJsonResponse(res);
@@ -259,7 +285,7 @@ export const api = {
   async postFeed(feedData) {
     const res = await fetch(`${API_BASE_URL}/features/feed`, {
       method: 'POST',
-      headers: getHeaders(),
+      headers: getMutationHeaders(),
       body: JSON.stringify(feedData)
     });
     const data = await parseJsonResponse(res);
@@ -270,7 +296,7 @@ export const api = {
   async likePost(postId, userId) {
     const res = await fetch(`${API_BASE_URL}/features/feed/${postId}/like`, {
       method: 'POST',
-      headers: getHeaders(),
+      headers: getMutationHeaders(),
       body: JSON.stringify({ userId })
     });
     const data = await parseJsonResponse(res);
@@ -281,7 +307,7 @@ export const api = {
   async commentPost(postId, commentData) {
     const res = await fetch(`${API_BASE_URL}/features/feed/${postId}/comment`, {
       method: 'POST',
-      headers: getHeaders(),
+      headers: getMutationHeaders(),
       body: JSON.stringify(commentData)
     });
     const data = await parseJsonResponse(res);
@@ -292,7 +318,7 @@ export const api = {
   async deletePost(postId, userId) {
     const res = await fetch(`${API_BASE_URL}/features/feed/${postId}`, {
       method: 'DELETE',
-      headers: getHeaders(),
+      headers: getMutationHeaders(),
       body: JSON.stringify({ userId })
     });
     const data = await parseJsonResponse(res);

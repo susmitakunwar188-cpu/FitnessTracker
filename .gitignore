@@ -17,6 +17,9 @@ dist-ssr
 .env.*
 !.env.example
 
+# Backend local database state (JSON fallback store) - never commit
+backend/data/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -27,3 +30,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Local Netlify folder
+.netlify

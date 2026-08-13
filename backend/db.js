@@ -334,13 +334,14 @@ export const db = {
     return workouts;
   },
 
-  async createWorkout(userId, name, exercises) {
+  async createWorkout(userId, name, exercises, imageUrl) {
     if (isMongoConnected()) {
       try {
         const resolvedExercises = Array.isArray(exercises) ? exercises : getDefaultExercises(name);
         const workout = new Workout({
           userId,
           name,
+          imageUrl: imageUrl || '',
           exercises: resolvedExercises
         });
         await workout.save();
@@ -356,6 +357,7 @@ export const db = {
       id: `${Date.now()}-${Math.floor(Math.random() * 1000)}`,
       userId,
       name,
+      imageUrl: imageUrl || '',
       exercises: resolvedExercises
     };
     data.workouts.push(workout);
@@ -363,13 +365,16 @@ export const db = {
     return workout;
   },
 
-  async updateWorkout(workoutId, userId, name, exercises) {
+  async updateWorkout(workoutId, userId, name, exercises, imageUrl) {
     if (isMongoConnected()) {
       try {
         if (!mongoose.Types.ObjectId.isValid(workoutId)) return null;
         const updateData = { name };
         if (Array.isArray(exercises)) {
           updateData.exercises = exercises;
+        }
+        if (typeof imageUrl === 'string') {
+          updateData.imageUrl = imageUrl;
         }
         const updated = await Workout.findOneAndUpdate(
           { _id: workoutId, userId },
@@ -388,7 +393,8 @@ export const db = {
     data.workouts[index] = {
       ...data.workouts[index],
       name,
-      exercises: Array.isArray(exercises) ? exercises : data.workouts[index].exercises
+      exercises: Array.isArray(exercises) ? exercises : data.workouts[index].exercises,
+      ...(typeof imageUrl === 'string' ? { imageUrl } : {})
     };
     await writeFallbackData(data);
     return data.workouts[index];

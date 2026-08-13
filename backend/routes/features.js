@@ -3,8 +3,13 @@ import Nutrition from '../models/Nutrition.js';
 import Sleep from '../models/Sleep.js';
 import Feed from '../models/Feed.js';
 import { getUseFallback, readFallbackData, writeFallbackData } from '../db.js';
+import { authenticateToken, validateCsrf } from '../middleware/auth.js';
 
 const router = express.Router();
+
+// Require an authenticated session and CSRF token for all feature routes.
+// GET/HEAD/OPTIONS pass through validateCsrf untouched.
+router.use(authenticateToken, validateCsrf);
 
 const getQualityFromHours = (hours) => {
   if (hours < 6) return 'Poor';

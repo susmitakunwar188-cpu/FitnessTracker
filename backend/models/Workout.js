@@ -9,6 +9,7 @@ const exerciseSchema = new mongoose.Schema({
 const workoutSchema = new mongoose.Schema({
   userId: { type: String, required: true },
   name: { type: String, required: true },
+  imageUrl: { type: String, default: '' },
   exercises: [exerciseSchema]
 }, { timestamps: true });
 

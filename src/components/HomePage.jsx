@@ -193,7 +193,7 @@ function HomePage({ user, showLogin, showRegister, goDashboard, logout }) {
               </div>
               <h3 className="mb-4 font-display text-2xl font-bold text-text-primary">BMI Calculator</h3>
               <p className="font-sans text-base leading-relaxed text-text-muted">
-                Keep tabs on weight status. Calculate body mass index in real-time, matching goals to your dynamic stats.
+                Keep tabs on weight status. Calculate body mass index in real-time, track your daily macros and recovery.
               </p>
             </div>
             <div className="surface-card flex min-h-[20rem] flex-col items-start rounded-2xl p-8 transition duration-300 hover:-translate-y-2 hover:border-brand-pink/40">
@@ -202,7 +202,7 @@ function HomePage({ user, showLogin, showRegister, goDashboard, logout }) {
               </div>
               <h3 className="mb-4 font-display text-2xl font-bold text-text-primary">Workout Plans</h3>
               <p className="font-sans text-base leading-relaxed text-text-muted">
-                Edit, delete, and add custom workout categories. Securely backend-sync your customized exercise directories.
+                Follow given workout plans or create your own workout categories. Track your progress and earn daily streaks.
               </p>
             </div>
           </div>

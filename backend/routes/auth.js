@@ -2,7 +2,7 @@ import express from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { db } from '../db.js';
-import { JWT_SECRET, authenticateToken } from '../middleware/auth.js';
+import { JWT_SECRET, authenticateToken, generateCsrfToken, validateCsrf } from '../middleware/auth.js';
 
 const router = express.Router();
 
@@ -58,6 +58,7 @@ router.post('/register', async (req, res) => {
     res.status(201).json({
       message: 'User registered successfully',
       token,
+      csrfToken: generateCsrfToken(newUser.id),
       user: userWithoutPassword
     });
   } catch (err) {
@@ -94,6 +95,7 @@ router.post('/login', async (req, res) => {
     res.json({
       message: 'Login successful',
       token,
+      csrfToken: generateCsrfToken(user.id),
       user: userWithoutPassword
     });
   } catch (err) {
@@ -212,7 +214,7 @@ router.get('/profile', authenticateToken, async (req, res) => {
   }
 });
 
-router.put('/profile', authenticateToken, async (req, res) => {
+router.put('/profile', authenticateToken, validateCsrf, async (req, res) => {
   const { age, weight, height, bmi, status, goal, username, avatarUrl, bio } = req.body;
   try {
     const updatedUser = await db.updateUserStats(req.userId, {

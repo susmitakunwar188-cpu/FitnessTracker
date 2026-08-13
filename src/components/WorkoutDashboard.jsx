@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { api } from "../utils/api";
 import { getStoredWorkoutStreak } from "../utils/streak";
 import { toast } from "../utils/toast";
@@ -97,22 +97,88 @@ const getWorkoutVisual = (workout) => {
   if (workout?.imageUrl) return workout.imageUrl;
 
   const name = (workout?.name || "").toLowerCase();
+  if (name.includes("bicep") || name.includes("arm") || name.includes("curl")) {
+    return "https://i.pinimg.com/1200x/8b/8f/00/8b8f00f2e3fa149b01e4e9bec11213eb.jpg";
+  }
   if (name.includes("leg") || name.includes("squat") || name.includes("glute")) {
-    return "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=900&q=80";
+    return "https://i.pinimg.com/1200x/83/73/3e/83733e617babb52293b7eda6c5ed020f.jpg";
   }
   if (name.includes("back") || name.includes("pull")) {
-    return "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=900&q=80";
+    return "https://i.pinimg.com/1200x/c4/60/05/c46005b5805ff73aeb927b3863623bfd.jpg";
   }
   if (name.includes("chest") || name.includes("push") || name.includes("upper")) {
-    return "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=900&q=80";
+    return "https://i.pinimg.com/736x/d3/29/07/d3290730464f232887fbad77020fbb98.jpg";
   }
   if (name.includes("core") || name.includes("abs") || name.includes("cardio") || name.includes("hiit")) {
-    return "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=900&q=80";
+    return "https://i.pinimg.com/736x/02/fc/3c/02fc3ce26dbaee4231694dd531920727.jpg";
   }
   if (name.includes("yoga") || name.includes("mobility") || name.includes("flow")) {
     return "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=900&q=80";
   }
   return "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=900&q=80";
+};
+
+const CameraIcon = ({ className = "h-4 w-4" }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+    <circle cx="12" cy="13" r="4" />
+  </svg>
+);
+
+const WorkoutImagePicker = ({ image, onChange }) => {
+  const fileInputRef = useRef(null);
+
+  const handleFile = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (file.size > 3 * 1024 * 1024) {
+      toast.error("Image is too large. Please choose one under 3MB.");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (event) => onChange(event.target.result);
+    reader.readAsDataURL(file);
+    e.target.value = "";
+  };
+
+  return (
+    <div className="flex items-center gap-3">
+      <button
+        type="button"
+        onClick={() => fileInputRef.current?.click()}
+        className="flex items-center gap-1.5 rounded-xl border-2 border-dashed border-border-pink/40 bg-bg-dark px-3.5 py-2 text-xs font-semibold text-text-muted transition hover:border-brand-pink hover:text-brand-pink cursor-pointer"
+      >
+        <CameraIcon className="h-4 w-4" />
+        {image ? "Change photo" : "Add photo"}
+      </button>
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        onChange={handleFile}
+        className="hidden"
+      />
+      {image && (
+        <div className="relative">
+          <img
+            src={image}
+            alt="Workout preview"
+            className="h-14 w-24 rounded-xl border border-brand-pink/40 object-cover"
+          />
+          <button
+            type="button"
+            onClick={() => onChange("")}
+            className="absolute -right-2 -top-2 rounded-full bg-black/70 p-1 text-text-primary transition hover:bg-red-500/80 cursor-pointer"
+            aria-label="Remove photo"
+          >
+            <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M18 6L6 18M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      )}
+    </div>
+  );
 };
 
 function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeChange }) {
@@ -139,10 +205,12 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeC
   const [editingId, setEditingId] = useState(null);
   const [editingName, setEditingName] = useState("");
   const [editingExercises, setEditingExercises] = useState([]);
+  const [editingImage, setEditingImage] = useState("");
 
   // Add Workout states
   const [addingWorkout, setAddingWorkout] = useState(false);
   const [newWorkoutName, setNewWorkoutName] = useState("");
+  const [newWorkoutImage, setNewWorkoutImage] = useState("");
 
   // Water tracker state
   const [waterIntake, setWaterIntake] = useState(() => {
@@ -289,9 +357,10 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeC
     }
 
     try {
-      const newW = await api.createWorkout(newWorkoutName.trim(), "4 Exercises");
+      const newW = await api.createWorkout(newWorkoutName.trim(), [], newWorkoutImage || "");
       setWorkouts([...workouts, newW]);
       setNewWorkoutName("");
+      setNewWorkoutImage("");
       setAddingWorkout(false);
       setActiveTab("workouts");
     } catch (err) {
@@ -321,6 +390,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeC
   const startEdit = (workout) => {
     setEditingId(workout.id);
     setEditingName(workout.name);
+    setEditingImage(workout.imageUrl || "");
     const clonedExercises = Array.isArray(workout.exercises)
       ? workout.exercises.map(ex => ({ ...ex }))
       : [];
@@ -342,11 +412,12 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeC
       .filter(ex => ex.name !== "");
 
     try {
-      const updated = await api.updateWorkout(editingId, editingName.trim(), cleanedExercises);
+      const updated = await api.updateWorkout(editingId, editingName.trim(), cleanedExercises, editingImage);
       setWorkouts(workouts.map((w) => (w.id === editingId ? updated : w)));
       setEditingId(null);
       setEditingName("");
       setEditingExercises([]);
+      setEditingImage("");
     } catch (err) {
       toast.error(err.message || "Failed to save edit.");
     }
@@ -356,6 +427,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeC
     setEditingId(null);
     setEditingName("");
     setEditingExercises([]);
+    setEditingImage("");
   };
 
   // BMI calculation & save
@@ -1123,6 +1195,7 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeC
                       type="button"
                       onClick={() => {
                         setNewWorkoutName("");
+                        setNewWorkoutImage("");
                         setAddingWorkout(false);
                       }}
                       className="bg-bg-dark hover:bg-card-dark text-text-muted border border-border-pink/80 hover:text-text-primary font-display font-bold px-6 py-3.5 rounded-xl text-sm transition cursor-pointer"
@@ -1130,6 +1203,10 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeC
                       Cancel
                     </button>
                   </div>
+                </div>
+                <div className="mt-4 flex flex-col sm:flex-row items-start sm:items-center gap-3 border-t border-border-pink/20 pt-4">
+                  <span className="text-xs font-semibold text-text-muted tracking-widest uppercase font-quick">Photo</span>
+                  <WorkoutImagePicker image={newWorkoutImage} onChange={setNewWorkoutImage} />
                 </div>
               </form>
             )}
@@ -1153,6 +1230,12 @@ function WorkoutDashboard({ user, setUser, logout, startWorkout, theme, onThemeC
                       placeholder="e.g. Leg Day Burner"
                       autoFocus
                     />
+                  </div>
+
+                  {/* Workout Image */}
+                  <div>
+                    <label className="block text-xs font-semibold text-text-muted mb-2.5 tracking-widest uppercase font-quick">Photo</label>
+                    <WorkoutImagePicker image={editingImage} onChange={setEditingImage} />
                   </div>
 
                   {/* Exercises List in Form */}

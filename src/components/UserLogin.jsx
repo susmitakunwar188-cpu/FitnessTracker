@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { api } from "../utils/api";
-import { toast } from "../utils/toast";
 
 const MailIcon = () => (
   <svg viewBox="0 0 24 24" className="h-5 w-5 text-brand-pink" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -27,12 +26,6 @@ const WarningIcon = () => (
 const KeyIcon = () => (
   <svg viewBox="0 0 24 24" className="h-5 w-5 text-brand-pink" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
     <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4" />
-  </svg>
-);
-
-const GoogleIcon = () => (
-  <svg viewBox="0 0 24 24" className="h-5 w-5 text-text-primary" fill="currentColor">
-    <path d="M12.24 10.285V14.4h6.887c-.648 2.41-2.519 4.113-5.136 4.113-3.48 0-6.3-2.82-6.3-6.3s2.82-6.3 6.3-6.3c1.55 0 2.96.56 4.07 1.49l3.22-3.22C19.16 2.03 15.93 1 12.24 1 6.04 1 12.24 6.04 12.24 12.24s5.04 11.24 11.24 11.24c6.48 0 11.24-4.56 11.24-11.24 0-.76-.08-1.5-.22-2.22h-11.02z" />
   </svg>
 );
 
@@ -141,10 +134,6 @@ function UserLogin({ goHome, onLoginSuccess, showRegister }) {
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleGoogleLogin = () => {
-    toast.info("Continue with Google is currently a demo option.");
   };
 
   return (
@@ -275,16 +264,6 @@ function UserLogin({ goHome, onLoginSuccess, showRegister }) {
                     )}
                   </button>
                 </form>
-
-                <div className="mt-4.5">
-                  <button
-                    onClick={handleGoogleLogin}
-                    className="w-full bg-brand-cocoa/10 hover:bg-brand-cocoa/20 text-text-primary border border-brand-cocoa/40 hover:border-brand-cocoa py-4 rounded-xl font-display text-sm font-semibold transition duration-200 flex items-center justify-center gap-3.5 cursor-pointer"
-                  >
-                    <GoogleIcon />
-                    <span>Continue with Google</span>
-                  </button>
-                </div>
               </div>
             )}
 
