@@ -10,7 +10,7 @@ Fitique is a full-stack fitness tracking web application that helps users plan w
 - **Workout History** - Log completed workouts and track progress over time.
 - **Nutrition Tracker** - Track daily meals, calories, and macronutrients.
 - **Sleep & Recovery** - Log sleep duration and quality, with weekly recovery insights.
-- **Community Feed** - Photo posts with likes, comments, and user avatars.
+- **Community Feed** - Post and share your fitness journey with fellow app users.
 - **AI Fitness Assistant** - Built-in chatbot powered by Groq that answers fitness questions.
 - **Daily Streaks & Activity** - Track water intake, weekly activity, and workout streaks.
 - **Themes** - Dark and light mode.
