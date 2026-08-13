@@ -50,6 +50,11 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', time: new Date() });
 });
 
+// Friendly root response so the API link never shows "Cannot GET /"
+app.get('/', (req, res) => {
+  res.json({ message: 'Fitique API is running. Use the frontend at https://fitique-frontend.netlify.app', health: '/health' });
+});
+
 // Global Error Handler to prevent server crashes
 app.use((err, req, res, next) => {
   if (res.headersSent) {
