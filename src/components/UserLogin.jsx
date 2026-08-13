@@ -337,7 +337,7 @@ function UserLogin({ goHome, onLoginSuccess, showRegister }) {
                     Enter Reset Details
                   </h2>
                   <p className="font-sans text-text-muted text-base">
-                    A verification code has been logged to the server console log
+                    A 6-digit verification code has been sent to your email
                   </p>
                 </div>
 

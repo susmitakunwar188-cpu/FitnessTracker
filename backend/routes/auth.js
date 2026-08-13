@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { db } from '../db.js';
 import { JWT_SECRET, authenticateToken, generateCsrfToken, validateCsrf } from '../middleware/auth.js';
+import { sendPasswordResetEmail, isMailerConfigured } from '../utils/mailer.js';
 
 const router = express.Router();
 
@@ -120,9 +121,9 @@ router.post('/forgot-password', async (req, res) => {
 
   try {
     const user = await db.findUserByEmail(email);
-    
+
     // Always return success to prevent email enumeration attacks
-    const successMsg = { message: 'If the email exists, a 6-digit reset code has been logged to the server terminal console.' };
+    const successMsg = { message: 'If the email exists, a 6-digit reset code has been sent to it.' };
 
     if (!user) {
       console.log(`[DEBUG forgot-password] Email ${email} not registered. Silently bypassing.`);
@@ -138,12 +139,23 @@ router.post('/forgot-password', async (req, res) => {
       resetTokenExpiry
     });
 
-    console.log('\n========================================');
-    console.log(`[PASSWORD RESET DEBUGLOG]`);
-    console.log(`User: ${email}`);
-    console.log(`Reset Token: ${resetToken}`);
-    console.log(`Expires: ${new Date(resetTokenExpiry).toLocaleTimeString()}`);
-    console.log('========================================\n');
+    // Email the code to the user
+    try {
+      await sendPasswordResetEmail(email, resetToken);
+    } catch (err) {
+      console.warn('Failed to send password reset email:', err.message);
+      console.log('\n========================================');
+      console.log(`[PASSWORD RESET DEBUGLOG]`);
+      console.log(`User: ${email}`);
+      console.log(`Reset Token: ${resetToken}`);
+      console.log(`Expires: ${new Date(resetTokenExpiry).toLocaleTimeString()}`);
+      console.log('========================================\n');
+
+      if (!isMailerConfigured()) {
+        return res.status(503).json({ error: 'Email delivery is not configured on the server.' });
+      }
+      return res.status(500).json({ error: 'Failed to send the reset code. Please try again later.' });
+    }
 
     res.json(successMsg);
   } catch (err) {
