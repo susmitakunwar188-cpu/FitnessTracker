@@ -20,7 +20,7 @@ const PORT = process.env.PORT || 5000;
 app.use(cors({
   origin: '*', // Allow all for local dev simplicity
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-Token']
 }));
 
 app.use(express.json({ limit: '10mb' }));
