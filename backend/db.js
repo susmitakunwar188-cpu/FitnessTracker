@@ -24,9 +24,35 @@ const FALLBACK_DATA_TEMPLATE = {
 
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/fitique';
 
-mongoose.connect(MONGODB_URI)
-  .then(() => console.log('Successfully connected to MongoDB.'))
-  .catch(err => console.error('MongoDB connection error:', err));
+// Cache the connection promise so it is created exactly once (critical for
+// serverless cold starts, where the top-level connect() used to race ahead of
+// the first request and silently fall back to the JSON store).
+let connectPromise = null;
+
+export function connectDb() {
+  if (!connectPromise) {
+    connectPromise = mongoose
+      .connect(MONGODB_URI)
+      .then(() => {
+        console.log('Successfully connected to MongoDB.');
+        return mongoose.connection;
+      })
+      .catch((err) => {
+        console.error('MongoDB connection error:', err);
+        connectPromise = null; // allow a later retry
+        throw err;
+      });
+  }
+  return connectPromise;
+}
+
+export async function ensureDb() {
+  try {
+    await connectDb();
+  } catch {
+    // Not connected - callers fall back to the JSON store.
+  }
+}
 
 function isMongoConnected() {
   return mongoose.connection.readyState === 1;

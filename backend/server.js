@@ -8,6 +8,7 @@ dotenv.config({ path: path.join(__dirname, '.env') });
 
 import express from 'express';
 import cors from 'cors';
+import { ensureDb } from './db.js';
 import authRouter from './routes/auth.js';
 import workoutsRouter from './routes/workouts.js';
 import featuresRouter from './routes/features.js';
@@ -23,6 +24,14 @@ app.use(cors({
 }));
 
 app.use(express.json({ limit: '10mb' }));
+
+// Wait for the MongoDB connection to be established before serving requests.
+// On serverless platforms this runs on every cold start; on a long-running
+// server the cached promise resolves immediately.
+app.use(async (req, res, next) => {
+  await ensureDb();
+  next();
+});
 
 // Log requests
 app.use((req, res, next) => {
